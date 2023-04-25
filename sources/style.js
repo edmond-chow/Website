@@ -81,6 +81,19 @@ function inClient(node) {
 	let bottom = rect.y + node.offsetHeight > 0;
 	return (left && right) && (top && bottom);
 }
+function setLocked(node) {
+	let parentNode = node.parentElement;
+	if (node.tagName == 'a'.toUpperCase() && parentNode?.tagName == 'top'.toUpperCase()) {
+		let childNode = parentNode.querySelectorAll(':scope > a');
+		for (let i = 0; i < childNode.length; i++) {
+			if (childNode[i] == node) {
+				childNode[i].classList.add('lock');
+			} else {
+				childNode[i].classList.remove('lock');
+			}
+		}
+	}
+}
 let isLoaded = false;
 let hasScrolledInto = false;
 let load = setInterval(function() {
@@ -183,6 +196,26 @@ let load = setInterval(function() {
 				} else {
 					topNode[i].id = 'small';
 				};
+			}
+			/* locking an option and scrolling into the top when has been unlocked */
+			let topNotHoverNode = document.querySelectorAll('top:not(:hover)');
+			for (let i = 0; i < topNotHoverNode.length; i++) {
+				topNotHoverNode[i].classList.remove('unlocked');
+				let aLockNode = topNotHoverNode[i].querySelectorAll(':scope > a:not(.has-content).lock');
+				if (aLockNode.length == 0) {
+					let aNode = topNotHoverNode[i].querySelector(':scope > a:not(.has-content)');
+					aNode?.classList.add('lock');
+				} else {
+					topNotHoverNode[i].scrollTop = aLockNode[0].offsetTop;
+					for (let j = 1; j < aLockNode.length; j++) {
+						aLockNode[j].classList.remove('lock');
+					}
+				}
+			}
+			let topHoverNotUnlockedNode = document.querySelectorAll('top:hover:not(.unlocked)');
+			for (let i = 0; i < topHoverNotUnlockedNode.length; i++) {
+				topHoverNotUnlockedNode[i].classList.add('unlocked');
+				topHoverNotUnlockedNode[i].scrollTop = 0;
 			}
 			/* '.has-content' and '.icon' for the 'top > a's */
 			let aNode = document.querySelectorAll('top > a');
