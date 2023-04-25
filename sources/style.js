@@ -145,12 +145,12 @@ let load = setInterval(function() {
 			let dropdownNode = document.querySelectorAll('dropdown');
 			for (let i = 0; i < dropdownNode.length; i++) {
 				let innerNode = dropdownNode[i].querySelectorAll('inner-padding');
-				let outerNode = dropdownNode[i].querySelectorAll('outer-margin');
 				for (let j = 0; j < innerNode.length; j++) {
-					dropdownNode[i].removeChild(innerNode[j]);
+					innerNode[j].classList.add('hidden');
 				}
+				let outerNode = dropdownNode[i].querySelectorAll('outer-margin');
 				for (let j = 0; j < outerNode.length; j++) {
-					dropdownNode[i].removeChild(outerNode[j]);
+					outerNode[j].classList.add('hidden');
 				}
 			}
 		}
@@ -158,10 +158,16 @@ let load = setInterval(function() {
 			let dropdownNode = document.querySelectorAll('dropdown');
 			for (let i = 0; i < dropdownNode.length; i++) {
 				let targetNode = dropdownNode[i].querySelector(':scope > dropdown-content');
-				let innerNode = document.createElement('inner-padding');
-				let outerNode = document.createElement('outer-margin');
-				dropdownNode[i].insertBefore(innerNode, targetNode);
-				dropdownNode[i].insertBefore(outerNode, targetNode.nextSibling);
+				if (targetNode.previousSibling.tagName != 'inner-padding'.toUpperCase()) {
+					let innerNode = document.createElement('inner-padding');
+					dropdownNode[i].insertBefore(innerNode, targetNode);
+				}
+				targetNode.previousSibling.classList.remove('hidden');
+				if (targetNode.nextSibling.tagName != 'outer-margin'.toUpperCase()) {
+					let outerNode = document.createElement('outer-margin');
+					dropdownNode[i].insertBefore(outerNode, targetNode.nextSibling);
+				}
+				targetNode.nextSibling.classList.remove('hidden');
 			}
 		}
 	}

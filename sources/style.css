@@ -337,9 +337,15 @@ dropdown > inner-padding {
 	display: block;
 	padding: 2px 0px;
 }
+dropdown > inner-padding.hidden, dropdown > inner-padding > * {
+	display: none;
+}
 dropdown > outer-margin {
 	display: block;
 	margin: -4px 0px;
+}
+dropdown > outer-margin.hidden, dropdown > outer-margin > * {
+	display: none;
 }
 dropdown > dropdown-content {
 	vertical-align: top;

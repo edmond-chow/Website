@@ -36,3 +36,7 @@ body.scroll ::-webkit-scrollbar-thumb:hover {
     border-radius: 6px;
 	background-clip: padding-box;
 }
+* {
+	scrollbar-width: revert;
+	scrollbar-color: orange rgba(0, 0, 0, 0);
+}
