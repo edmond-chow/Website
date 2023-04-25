@@ -73,22 +73,6 @@ function hasTextOnly(parentNode) {
 	}
 	return true;
 }
-function leftInClient(element) {
-	let left = element.getBoundingClientRect().left;
-	return left > 0 && left < document.documentElement.clientWidth;
-}
-function topInClient(element) {
-	let top = element.getBoundingClientRect().top;
-	return top > 69 && top < document.documentElement.clientHeight;
-}
-function rightInClient(element) {
-	let right = element.getBoundingClientRect().right;
-	return right > 0 && right < document.documentElement.clientWidth;
-}
-function bottomInClient(element) {
-	let bottom = element.getBoundingClientRect().bottom;
-	return bottom > 0 && bottom < document.documentElement.clientHeight;
-}
 let isLoaded = false;
 let hasScrolledInto = false;
 let load = setInterval(function() {

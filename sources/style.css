@@ -533,7 +533,7 @@ content {
 	border-color: rgba(0,0,0,0);
 	text-align: center;
 	padding-top: 69px;
-	padding-bottom: 8px;
+	padding-bottom: 75px;
 	min-width: 1048px;
 }
 content > sub-content {
@@ -551,7 +551,6 @@ content > sub-content:not(:first-of-type) {
 /* blur-boundary */
 body#blur content > sub-content > post > sub-post {
 	position: relative;
-	overflow: hidden;
 }
 body#blur content > sub-content > post > sub-post:after {
 	display: block;
