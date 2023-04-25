@@ -73,6 +73,14 @@ function hasTextOnly(parentNode) {
 	}
 	return true;
 }
+function inClient(node) {
+    let rect = node.getBoundingClientRect();
+	let left = rect.x < (window.innerWidth || document.documentElement.clientWidth);
+	let top = rect.y < (window.innerHeight || document.documentElement.clientHeight);
+	let right = rect.x + node.offsetWidth > 0;
+	let bottom = rect.y + node.offsetHeight > 0;
+	return (left && right) && (top && bottom);
+}
 let isLoaded = false;
 let hasScrolledInto = false;
 let load = setInterval(function() {
@@ -233,27 +241,19 @@ let load = setInterval(function() {
 				}
 			}
 			/* setting the 'maxHeight' style for a 'dropdown-content' */
-			let dropdownHoverNode = document.querySelectorAll('dropdown:hover');
-			for (let i = 0; i < dropdownHoverNode.length; i++) {
-				let targetNode = dropdownHoverNode[i].querySelector(':scope > dropdown-content');
-				if (targetNode.classList.contains('positioned')) {
+			for (let i = 0; i < dropdownNode.length; i++) {
+				if (!inClient(dropdownNode[i])) {
 					continue;
 				}
-				let bottom = document.body.clientHeight - dropdownHoverNode[i].getBoundingClientRect().bottom;
-				if (bottom < 28) {
-					targetNode.style.display = 'none';
+				let targetNode = dropdownNode[i].querySelector(':scope > dropdown-content');
+				let bottom = document.body.clientHeight - dropdownNode[i].getBoundingClientRect().bottom;
+				if (bottom < 64) {
+					targetNode.classList.add('hidden');
+					targetNode.style.maxHeight = '';
 				} else {
+					targetNode.classList.remove('hidden');
 					targetNode.style.maxHeight = (bottom - 28).toString() + 'px';
 				}
-				targetNode.classList.add('positioned');
-			}
-			/* removing '.positioned' for a 'dropdown-content' */
-			let dropdownNotHoverNode = document.querySelectorAll('dropdown:not(:hover)');
-			for (let i = 0; i < dropdownNotHoverNode.length; i++) {
-				let targetNode = dropdownNotHoverNode[i].querySelector(':scope > dropdown-content');
-				targetNode.style.display = '';
-				targetNode.style.maxHeight = '';
-				targetNode.classList.remove('positioned');
 			}
 		}
 		/* button */ {

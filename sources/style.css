@@ -395,7 +395,7 @@ body#blur dropdown > dropdown-content > a:active {
 dropdown:not(.has-disabled):hover > dropdown-content {
 	display: block;
 }
-dropdown:hover > dropdown-content:not(:first-of-type) {
+dropdown:hover > dropdown-content:not(:first-of-type), dropdown:hover > dropdown-content.hidden {
 	display: none;
 }
 /* icons */
