@@ -138,6 +138,8 @@ button {
 	cursor: pointer;
 	color: white;
 	background-color: #4CAF50;
+	user-select: none;
+	cursor: default;
 }
 body#blur button {
 	border-radius: 8px;
@@ -207,13 +209,14 @@ post:last-of-type {
 	padding-bottom: 0px;
 }
 post > img.icon {
-	margin: 0px;
-	margin-bottom: -64px;
 	width: 64px;
-	z-index: 100;
+	aspect-ratio: 1;
+	z-index: 1;
 	position: relative;
 	top: 8px;
 	left: -32px;
+	margin: 0px 0px -64px 0px;
+	display: block;
 }
 post > sub-post {
 	width: auto;
@@ -379,6 +382,8 @@ dropdown > dropdown-content > a {
 	background-size: 24px;
 	background-position: 16px 6px;
 	background-repeat: no-repeat;
+	user-select: none;
+	cursor: default;
 }
 body#blur dropdown > dropdown-content > a {
 	color: rgb(10, 10, 10);
@@ -501,6 +506,8 @@ top > a {
 	line-height: 23px;
 	min-height: 23px;
 	font-size: 16px;
+	user-select: none;
+	cursor: default;
 }
 top > a.has-content {
 	display: none;

@@ -75,8 +75,8 @@ function hasTextOnly(parentNode) {
 }
 function inClient(node) {
     let rect = node.getBoundingClientRect();
-	let left = rect.x < (window.innerWidth || document.documentElement.clientWidth);
-	let top = rect.y < (window.innerHeight || document.documentElement.clientHeight);
+	let left = rect.x < document.body.clientWidth;
+	let top = rect.y < document.body.clientHeight;
 	let right = rect.x + node.offsetWidth > 0;
 	let bottom = rect.y + node.offsetHeight > 0;
 	return (left && right) && (top && bottom);
@@ -113,6 +113,20 @@ let load = setInterval(function() {
 			addFirst('post-leader', 'post-leader-order');
 			moveOutside('post-content', 'scroll-into');
 			addFirst('sub-post', 'scroll-into');
+		}
+		/* adding the icon for the 'post's */ {
+			let postNode = document.getElementsByTagName('post');
+			for (let i = 0; i < postNode.length; i++) {
+				if (postNode[i].hasAttribute('icon-src')) {
+					let imgNode = postNode[i].querySelector(':scope > img.icon');
+					if (imgNode == null) {
+						imgNode = document.createElement('img');
+						imgNode.classList.add('icon');
+					}
+					imgNode.setAttribute('src', postNode[i].getAttribute('icon-src'));
+					postNode[i].prepend(imgNode);
+				}
+			}
 		}
 		/* titling for the 'post's */ {
 			let titleNode = document.querySelectorAll('post > sub-post > post-leader > post-leader-title');
