@@ -234,7 +234,7 @@ let load = setInterval(function() {
 					topNode[i].id = 'small';
 				};
 			}
-			/* locking an option and scrolling into the top when has been unlocked */
+			/* locking an option and scrolling into the '.lock' when has been unlocked */
 			let topNotHoverNode = document.querySelectorAll('top:not(:hover)');
 			for (let i = 0; i < topNotHoverNode.length; i++) {
 				topNotHoverNode[i].classList.remove('unlocked');
