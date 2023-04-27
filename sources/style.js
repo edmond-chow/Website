@@ -317,7 +317,7 @@ let load = setInterval(function() {
 					dropdownNode[i].classList.add('has-disabled');
 				}
 			}
-			/* 'dropdown-content's should exist atleast 1 from a 'dropdown' */
+			/* 'dropdown-content's should exist from a 'dropdown' */
 			for (let i = 0; i < dropdownNode.length; i++) {
 				if (dropdownNode[i].querySelectorAll(':scope > dropdown-content').length == 0) {
 					let targetNode = document.createElement('dropdown-content');
