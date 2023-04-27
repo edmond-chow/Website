@@ -45,12 +45,35 @@ function surroundedBy(parent, childNode) {
 	surroundingNode.append(childNode);
 	parentNode.append(surroundingNode);
 }
+function removeSpace(text) {
+	return text.replace(/\t/g, '').replace(/\r/g, '').replace(/\n/g, '').replace(/\f/g, '')
+		.replace(/\u0020/g, '')
+		.replace(/\u00A0/g, '')
+		.replace(/\u1680/g, '')
+		.replace(/\u180E/g, '')
+		.replace(/\u2000/g, '')
+		.replace(/\u2001/g, '')
+		.replace(/\u2002/g, '')
+		.replace(/\u2003/g, '')
+		.replace(/\u2004/g, '')
+		.replace(/\u2005/g, '')
+		.replace(/\u2006/g, '')
+		.replace(/\u2007/g, '')
+		.replace(/\u2008/g, '')
+		.replace(/\u2009/g, '')
+		.replace(/\u200A/g, '')
+		.replace(/\u200B/g, '')
+		.replace(/\u202F/g, '')
+		.replace(/\u205F/g, '')
+		.replace(/\u3000/g, '')
+		.replace(/\uFEFF/g, '');
+}
 function hasSubstance(parentNode) {
 	let childNode = parentNode.childNodes;
 	for (let i = 0; i < childNode.length; i++) {
 		if (childNode[i].nodeName == '#comment') {
 			continue;
-		} else if (childNode[i].nodeName == '#text' && childNode[i].wholeText.replace(/\n/g, '').replace(/ /g, '') == '') {
+		} else if (childNode[i].nodeName == '#text' && removeSpace(childNode[i].wholeText) == '') {
 			continue;
 		} else if (childNode[i].nodeName == 'br'.toUpperCase()) {
 			continue;
@@ -250,6 +273,14 @@ let load = setInterval(function() {
 			for (let i = 0; i < notANode.length; i++) {
 				surroundedBy('a', notANode[i]);
 			}
+			/* '.no-content' for the 'top > a's */
+			for (let i = 0; i < aNode.length; i++) {
+				if (hasSubstance(aNode[i])) {
+					aNode[i].classList.remove('no-content');
+				} else {
+					aNode[i].classList.add('no-content');
+				}
+			}
 		}
 		/* post */ {
 			/* '.no-content' for the 'post > sub-post > post-content's */
@@ -308,6 +339,15 @@ let load = setInterval(function() {
 					targetNode.style.maxHeight = (bottom - 28).toString() + 'px';
 				}
 			}
+			/* '.no-option' for a 'dropdown-content' */
+			let dropdownContentNode = document.querySelectorAll('dropdown > dropdown-content');
+			for (let i = 0; i < dropdownContentNode.length; i++) {
+				if (hasSubstance(dropdownContentNode[i])) {
+					dropdownContentNode[i].classList.remove('no-option');
+				} else {
+					dropdownContentNode[i].classList.add('no-option');
+				}
+			}
 		}
 		/* button */ {
 			/* '.icon' and '.no-content' for the 'button.advance's */
@@ -341,7 +381,7 @@ let load = setInterval(function() {
 			for (let i = 0; i < anyNode.length; i++) {
 				let childNode = anyNode[i].childNodes;
 				for (let j = 0; j < childNode.length; j++) {
-					if (childNode[j].nodeName == '#text' && childNode[j].wholeText.replace(/\n/g, '').replace(/ /g, '') == '') {
+					if (childNode[j].nodeName == '#text' && removeSpace(childNode[j].wholeText) == '') {
 						childNode[j].textContent = '';
 					}
 				}

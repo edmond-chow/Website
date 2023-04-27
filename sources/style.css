@@ -140,6 +140,7 @@ button {
 	background-color: #4CAF50;
 	user-select: none;
 	cursor: default;
+	-webkit-user-drag: none;
 }
 body#blur button {
 	border-radius: 8px;
@@ -217,6 +218,7 @@ post > img.icon {
 	left: -32px;
 	margin: 0px 0px -64px 0px;
 	display: block;
+	-webkit-user-drag: none;
 }
 post > sub-post {
 	width: auto;
@@ -357,6 +359,7 @@ dropdown > dropdown-content {
 	overflow: auto;
 	background-color: rgb(40, 40, 40);
 	min-width: 175px;
+	min-height: 36px;
 	width: auto;
 	box-shadow: 0 0 32px rgba(0, 0, 0, 0.5);
 	margin: 0px 4px;
@@ -364,6 +367,16 @@ dropdown > dropdown-content {
 	border: 0px;
 	padding: 8px 0px;
 	z-index: 0;
+}
+dropdown > dropdown-content.no-option:after {
+	content: '(Nothing)';
+	padding: 16px 55px;
+	top: 0px;
+	left: 0px;
+	position: absolute;
+	font-size: 14px;
+	line-height: 20px;
+	color: rgb(0, 0, 0, 0.5);
 }
 body#blur dropdown > dropdown-content {
 	border-radius: 5px;
@@ -384,6 +397,7 @@ dropdown > dropdown-content > a {
 	background-repeat: no-repeat;
 	user-select: none;
 	cursor: default;
+	-webkit-user-drag: none;
 }
 body#blur dropdown > dropdown-content > a {
 	color: rgb(10, 10, 10);
@@ -499,8 +513,8 @@ top:hover {
 top > a {
 	float: left;
 	display: block;
-	color: #666;
 	text-align: center;
+	color: #666;
 	padding: 14px 16px;
 	text-decoration: none;
 	line-height: 23px;
@@ -508,6 +522,7 @@ top > a {
 	font-size: 16px;
 	user-select: none;
 	cursor: default;
+	-webkit-user-drag: none;
 }
 top > a.has-content {
 	display: none;
@@ -517,6 +532,11 @@ top > a.icon {
 	background-repeat: no-repeat;
 	background-position: 10px 10px;
 	padding-left: 49px;
+}
+top > a.icon.no-content {
+	padding: 14px;
+	width: 23px;
+	height: 23px;
 }
 top > a:hover {
 	background-color: rgba(221, 221, 221, 0.7);
