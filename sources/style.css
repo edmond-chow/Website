@@ -265,6 +265,7 @@ body#blur post > sub-post > post-leader {
 }
 post > sub-post > post-leader > post-leader-order {
 	width: auto;
+	max-width: 40px;
 	vertical-align: top;
 	display: inline-block;
 	padding: 20px 20px 27px 20px;
@@ -282,6 +283,7 @@ body#blur post > sub-post > post-leader > post-leader-order {
 }
 post > sub-post > post-leader > post-leader-title {
 	width: auto;
+	max-width: calc(60% - 100px);
 	vertical-align: top;
 	display: inline-block;
 	padding: 20px 20px 27px 20px;
@@ -299,7 +301,9 @@ body#blur post > sub-post > post-leader > post-leader-title {
 }
 post > sub-post > post-leader > post-leader-advance {
 	width: auto;
+	max-width: calc(40% - 56px);
 	float: right;
+	text-align: right;
 	vertical-align: top;
 	display: inline-block;
 	padding: 16px 16px 16px 20px;
