@@ -608,3 +608,36 @@ body#blur content > sub-content > post > sub-post:after {
 	background-size: cover;
 	clip-path: inset(20px 20px 20px 20px round 8px);
 }
+/* scroll */
+::-webkit-scrollbar {
+	width: 12px;
+	height: 12px;
+}
+::-webkit-scrollbar-track, ::-webkit-scrollbar-corner {
+	background: rgba(0, 0, 0, 0);
+}
+body::-webkit-scrollbar-track, body::-webkit-scrollbar-corner {
+	background: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+	background: #888;
+	border: 3px solid rgba(0, 0, 0, 0);
+	background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+	background: #555;
+	border: 3px solid rgba(0, 0, 0, 0);
+	background-clip: padding-box;
+}
+body:not(#blur) dropdown > dropdown-content::-webkit-scrollbar-thumb:hover {
+	background: rgba(192, 192, 192, 1);
+	border: 3px solid rgba(0, 0, 0, 0);
+	background-clip: padding-box;
+}
+body#blur::-webkit-scrollbar-thumb, body#blur ::-webkit-scrollbar-thumb {
+	border-radius: 6px;
+}
+* {
+	scrollbar-width: revert;
+	scrollbar-color: orange rgba(0, 0, 0, 0);
+}
