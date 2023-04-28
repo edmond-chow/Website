@@ -117,9 +117,18 @@ function setLocked(node) {
 		}
 	}
 }
+Element.prototype.has = function(selector)
+{
+	return this.querySelector(selector) != null;
+}
+Element.prototype.get = function(selector)
+{
+	return this.querySelector(selector);
+}
 let isLoaded = false;
 let hasScrolledInto = false;
-let load = setInterval(function() {
+let load = setTimeout(function delegate() {
+	/* [ structured-tag ] */
 	if (document.readyState == 'complete' && isLoaded == false) {
 		isLoaded = true;
 		/* structuring for the 'content' */ {
@@ -129,98 +138,85 @@ let load = setInterval(function() {
 			insertSurround('post', 'sub-post');
 			insertSurround('sub-post', 'post-content');
 			moveOutside('post-content', 'post-leader');
+			switchFirst('sub-post', 'post-leader');
 			addFirst('sub-post', 'post-leader');
 			switchFirst('post-leader', 'post-leader-title');
 			addFirst('post-leader', 'post-leader-title');
 			switchFirst('post-leader', 'post-leader-order');
 			addFirst('post-leader', 'post-leader-order');
 			moveOutside('post-content', 'scroll-into');
+			switchFirst('sub-post', 'scroll-into');
 			addFirst('sub-post', 'scroll-into');
 		}
+		let postNode = document.getElementsByTagName('post');
 		/* adding the icon for the 'post's */ {
-			let postNode = document.getElementsByTagName('post');
 			for (let i = 0; i < postNode.length; i++) {
-				if (postNode[i].hasAttribute('icon-src')) {
-					let imgNode = postNode[i].querySelector(':scope > img.icon');
-					if (imgNode == null) {
-						imgNode = document.createElement('img');
-						imgNode.classList.add('icon');
-					}
-					imgNode.setAttribute('src', postNode[i].getAttribute('icon-src'));
-					postNode[i].prepend(imgNode);
+				let imgNode;
+				if (postNode[i].has(':scope > img.icon')) {
+					imgNode = postNode[i].get(':scope > img.icon');
+				} else {
+					imgNode = document.createElement('img');
+					imgNode.classList.add('icon');
 				}
+				let iconSrc = '';
+				if (postNode[i].hasAttribute('icon-src')) {
+					iconSrc = postNode[i].getAttribute('icon-src');
+				}
+				imgNode.setAttribute('src', iconSrc);
+				postNode[i].prepend(imgNode);
 			}
 		}
 		/* titling for the 'post's */ {
-			let titleNode = document.querySelectorAll('post > sub-post > post-leader > post-leader-title');
-			for (let i = 0; i < titleNode.length; i++) {
-				let targetNode = titleNode[i].parentElement.parentElement.parentElement;
-				if (targetNode.hasAttribute('headline')) {
-					titleNode[i].innerText = targetNode.getAttribute('headline');
+			for (let i = 0; i < postNode.length; i++) {
+				if (postNode[i].hasAttribute('headline')) {
+					postNode[i].get(':scope > sub-post > post-leader > post-leader-title').innerText = postNode[i].getAttribute('headline');
 				}
 			}
 		}
 		/* transferring 'inner-class'-list for the 'post's */ {
-			let postNode = document.getElementsByTagName('post');
 			for (let i = 0; i < postNode.length; i++) {
 				if (postNode[i].hasAttribute('inner-class')) {
-					postNode[i].querySelector(':scope > sub-post > post-content').setAttribute('class', postNode[i].getAttribute('inner-class'));
+					postNode[i].get(':scope > sub-post > post-content').setAttribute('class', postNode[i].getAttribute('inner-class'));
 				}
 			}
 		}
 		/* ordering and hashing for the 'post's */ {
 			let orderSelector = ':scope > sub-post > post-leader > post-leader-order';
 			let scrollSelector = ':scope > sub-post > scroll-into';
-			function subPostOrdering(orderString, postNode) {
+			function subPostConducting(orderString, postNode) {
 				let subPostNode = postNode.querySelectorAll(':scope > sub-post > post-content > post');
-				if (subPostNode == null) {
-					return;
-				}
 				for (let i = 0; i < subPostNode.length; i++) {
 					let subOrderString = orderString + '.' + i.toString();
-					subPostNode[i].querySelector(orderSelector).innerText = '#' + subOrderString;
-					subPostNode[i].querySelector(scrollSelector).id = subOrderString;
-					subPostOrdering(subOrderString, subPostNode[i]);
+					subPostNode[i].get(orderSelector).innerText = '#' + subOrderString;
+					subPostNode[i].get(scrollSelector).id = subOrderString;
+					subPostConducting(subOrderString, subPostNode[i]);
 				}
 			}
 			let postNode = document.querySelectorAll('content > sub-content > post');
 			for (let i = 0; i < postNode.length; i++) {
 				let orderString = i.toString();
-				postNode[i].querySelector(orderSelector).innerText = '#' + orderString;
-				postNode[i].querySelector(scrollSelector).id = orderString;
-				subPostOrdering(orderString, postNode[i]);
+				postNode[i].get(orderSelector).innerText = '#' + orderString;
+				postNode[i].get(scrollSelector).id = orderString;
+				subPostConducting(orderString, postNode[i]);
 			}
 		}
-		/* disposing all the 'inner-padding's and 'outer-margin's for a 'dropdown' in use */ {
-			let dropdownNode = document.querySelectorAll('dropdown');
+		let dropdownNode = document.getElementsByTagName('dropdown');
+		/* structuring for the 'dropdown's */ {
+			insertSurround('dropdown', 'dropdown-content');
+			moveOutside('dropdown-content', 'outer-margin');
+			switchFirst('dropdown', 'outer-margin');
+			addFirst('dropdown', 'outer-margin');
+			switchFirst('dropdown', 'dropdown-content');
+			moveOutside('dropdown-content', 'inner-padding');
+			switchFirst('dropdown', 'inner-padding');
+			addFirst('dropdown', 'inner-padding');
 			for (let i = 0; i < dropdownNode.length; i++) {
-				let innerNode = dropdownNode[i].querySelectorAll('inner-padding');
-				for (let j = 0; j < innerNode.length; j++) {
-					innerNode[j].classList.add('hidden');
-				}
-				let outerNode = dropdownNode[i].querySelectorAll('outer-margin');
-				for (let j = 0; j < outerNode.length; j++) {
-					outerNode[j].classList.add('hidden');
-				}
-			}
-		}
-		/* adding all the 'inner-padding's and 'outer-margin's for a 'dropdown-content' to be placed in client */ {
-			let dropdownNode = document.querySelectorAll('dropdown');
-			for (let i = 0; i < dropdownNode.length; i++) {
-				let targetNode = dropdownNode[i].querySelector(':scope > dropdown-content');
-				if (targetNode.previousSibling.tagName != 'inner-padding'.toUpperCase()) {
-					let innerNode = document.createElement('inner-padding');
-					dropdownNode[i].insertBefore(innerNode, targetNode);
-				}
-				targetNode.previousSibling.classList.remove('hidden');
-				if (targetNode.nextSibling.tagName != 'outer-margin'.toUpperCase()) {
-					let outerNode = document.createElement('outer-margin');
-					dropdownNode[i].insertBefore(outerNode, targetNode.nextSibling);
-				}
-				targetNode.nextSibling.classList.remove('hidden');
+				let restNode = dropdownNode[i].querySelectorAll(':scope > :not(dropdown-content, inner-padding, outer-margin)');
+				dropdownNode[i].prepend(...restNode);
 			}
 		}
 	}
+	/* [ pseudo-style ] */
 	if (isLoaded == true) {
 		/* top */ {
 			/* resizing for the 'top' */
@@ -240,7 +236,7 @@ let load = setInterval(function() {
 				topNotHoverNode[i].classList.remove('unlocked');
 				let aLockNode = topNotHoverNode[i].querySelectorAll(':scope > a:not(.has-content).lock');
 				if (aLockNode.length == 0) {
-					let aNode = topNotHoverNode[i].querySelector(':scope > a:not(.has-content)');
+					let aNode = topNotHoverNode[i].get(':scope > a:not(.has-content)');
 					aNode?.classList.add('lock');
 				} else {
 					topNotHoverNode[i].scrollTop = aLockNode[0].offsetTop;
@@ -317,19 +313,12 @@ let load = setInterval(function() {
 					dropdownNode[i].classList.add('has-disabled');
 				}
 			}
-			/* 'dropdown-content's should exist from a 'dropdown' */
-			for (let i = 0; i < dropdownNode.length; i++) {
-				if (dropdownNode[i].querySelectorAll(':scope > dropdown-content').length == 0) {
-					let targetNode = document.createElement('dropdown-content');
-					dropdownNode[i].insertBefore(targetNode, dropdownNode[i].lastChild);
-				}
-			}
 			/* setting the 'maxHeight' style for a 'dropdown-content' */
 			for (let i = 0; i < dropdownNode.length; i++) {
-				if (!inClient(dropdownNode[i])) {
+				if (!inClient(dropdownNode[i]) || !dropdownNode[i].has(':scope > dropdown-content')) {
 					continue;
 				}
-				let targetNode = dropdownNode[i].querySelector(':scope > dropdown-content');
+				let targetNode = dropdownNode[i].get(':scope > dropdown-content');
 				let bottom = document.body.clientHeight - dropdownNode[i].getBoundingClientRect().bottom;
 				if (bottom < 64) {
 					targetNode.classList.add('hidden');
@@ -372,7 +361,7 @@ let load = setInterval(function() {
 				if (hash != '')
 				{
 					hash = hash.substring(1, hash.length);
-					document.getElementById(hash).scrollIntoView();
+					document.getElementById(hash)?.scrollIntoView();
 				}
 			}
 		}
@@ -388,4 +377,5 @@ let load = setInterval(function() {
 			}
 		}
 	}
+	load = setTimeout(delegate, 100);
 }, 100);

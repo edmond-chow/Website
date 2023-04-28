@@ -220,6 +220,12 @@ post > img.icon {
 	display: block;
 	-webkit-user-drag: none;
 }
+post > img.icon:not(:first-of-type) {
+	display: none;
+}
+post > img.icon[src=''] {
+	display: none;
+}
 post > sub-post {
 	width: auto;
 	vertical-align: top;
@@ -230,14 +236,14 @@ post > sub-post {
 	background-color: rgba(0, 0, 0, .5);
 	border: 1px solid rgba(247, 247, 247, .7);
 }
+post > sub-post:not(:first-of-type) {
+	display: none;
+}
 body#blur post > sub-post {
 	border-radius: 8px;
 	border: 0px;
 	box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.5);
 	background: rgba(255, 255, 255, 0.3);
-}
-post > sub-post:not(:first-of-type) {
-	display: none;
 }
 post > sub-post > post-leader {
 	width: calc(100% - 80px);
@@ -317,6 +323,9 @@ post > sub-post > scroll-into {
 	left: -8px;
 	top: -70px;
 }
+post > sub-post > scroll-into:not(:first-of-type) {
+	display: none;
+}
 body#blur post > sub-post > scroll-into {
 	top: -69px;
 }
@@ -334,7 +343,7 @@ dropdown:hover {
 dropdown.has-disabled {
 	pointer-events: none;
 }
-dropdown > :not(dropdown-content) {
+dropdown > :not(dropdown-content, inner-padding, outer-margin) {
 	position: relative;
 	z-index: 1;
 }
@@ -342,14 +351,14 @@ dropdown > inner-padding {
 	display: block;
 	padding: 2px 0px;
 }
-dropdown > inner-padding.hidden, dropdown > inner-padding > * {
+dropdown > inner-padding:not(:first-of-type) {
 	display: none;
 }
 dropdown > outer-margin {
 	display: block;
 	margin: -4px 0px;
 }
-dropdown > outer-margin.hidden, dropdown > outer-margin > * {
+dropdown > outer-margin:not(:first-of-type) {
 	display: none;
 }
 dropdown > dropdown-content {
@@ -417,11 +426,8 @@ dropdown > dropdown-content > a:active {
 body#blur dropdown > dropdown-content > a:active {
 	background-color: rgb(211, 211, 211);
 }
-dropdown:not(.has-disabled):hover > dropdown-content {
+dropdown:not(.has-disabled):hover > dropdown-content:first-of-type {
 	display: block;
-}
-dropdown:hover > dropdown-content:not(:first-of-type), dropdown:hover > dropdown-content.hidden {
-	display: none;
 }
 /* icons */
 .air-play {
