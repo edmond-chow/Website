@@ -176,6 +176,8 @@ let load = setTimeout(function delegate() {
 			moveOutside('post-content', 'post-leader');
 			switchFirst('sub-post', 'post-leader');
 			addFirst('sub-post', 'post-leader');
+			switchFirst('post-leader', 'post-leader-advance');
+			addFirst('post-leader', 'post-leader-advance');
 			switchFirst('post-leader', 'post-leader-title');
 			addFirst('post-leader', 'post-leader-title');
 			switchFirst('post-leader', 'post-leader-order');
