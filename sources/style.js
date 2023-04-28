@@ -128,6 +128,42 @@ Element.prototype.get = function(selector)
 let isLoaded = false;
 let hasScrolledInto = false;
 let load = setTimeout(function delegate() {
+	function marker() {
+		let markedNode = [];
+		let orderSelector = ':scope > sub-post > post-leader > post-leader-order';
+		let scrollSelector = ':scope > sub-post > scroll-into';
+		function subPostConducting(orderString, postNode) {
+			let subPostNode = postNode.querySelectorAll(':scope > sub-post > post-content > post');
+			for (let i = 0; i < subPostNode.length; i++) {
+				let subOrderString = orderString + '.' + i.toString();
+				markedNode[markedNode.length] = subPostNode[i];
+				subPostNode[i].setAttribute('marker', subOrderString);
+				subPostConducting(subOrderString, subPostNode[i]);
+			}
+		}
+		let postNode = document.querySelectorAll('content > sub-content > post');
+		for (let i = 0; i < postNode.length; i++) {
+			let orderString = i.toString();
+			markedNode[markedNode.length] = postNode[i];
+			postNode[i].setAttribute('marker', orderString);
+			subPostConducting(orderString, postNode[i]);
+		}
+		/* Clearing */ {
+			let postNode = document.getElementsByTagName('post');
+			for (let i = 0; i < postNode.length; i++) {
+				let isMarked = false;
+				for (let j = 0; j < markedNode.length; j++) {
+					if (markedNode[j] == postNode[i]) {
+						isMarked = true;
+						break;
+					}
+				}
+				if (!isMarked) {
+					postNode[i].removeAttribute('marker');
+				}
+			}
+		}
+	}
 	/* [ structured-tag ] */
 	if (document.readyState == 'complete' && isLoaded == false) {
 		isLoaded = true;
@@ -170,34 +206,31 @@ let load = setTimeout(function delegate() {
 			for (let i = 0; i < postNode.length; i++) {
 				if (postNode[i].hasAttribute('headline')) {
 					postNode[i].get(':scope > sub-post > post-leader > post-leader-title').innerText = postNode[i].getAttribute('headline');
+				} else {
+					postNode[i].get(':scope > sub-post > post-leader > post-leader-title').innerText = '{headline}';
 				}
 			}
 		}
 		/* transferring 'inner-class'-list for the 'post's */ {
+			let postNode = document.querySelectorAll('post[inner-class]');
 			for (let i = 0; i < postNode.length; i++) {
-				if (postNode[i].hasAttribute('inner-class')) {
-					postNode[i].get(':scope > sub-post > post-content').setAttribute('class', postNode[i].getAttribute('inner-class'));
-				}
+				postNode[i].get(':scope > sub-post > post-content').setAttribute('class', postNode[i].getAttribute('inner-class'));
 			}
 		}
 		/* ordering and hashing for the 'post's */ {
-			let orderSelector = ':scope > sub-post > post-leader > post-leader-order';
-			let scrollSelector = ':scope > sub-post > scroll-into';
-			function subPostConducting(orderString, postNode) {
-				let subPostNode = postNode.querySelectorAll(':scope > sub-post > post-content > post');
-				for (let i = 0; i < subPostNode.length; i++) {
-					let subOrderString = orderString + '.' + i.toString();
-					subPostNode[i].get(orderSelector).innerText = '#' + subOrderString;
-					subPostNode[i].get(scrollSelector).id = subOrderString;
-					subPostConducting(subOrderString, subPostNode[i]);
-				}
-			}
-			let postNode = document.querySelectorAll('content > sub-content > post');
+			marker();
+			let postNode = document.getElementsByTagName('post');
 			for (let i = 0; i < postNode.length; i++) {
-				let orderString = i.toString();
+				let orderSelector = ':scope > sub-post > post-leader > post-leader-order';
+				let scrollSelector = ':scope > sub-post > scroll-into';
+				let orderString = '{index}';
+				if (postNode[i].hasAttribute('hash-id')) {
+					orderString = postNode[i].getAttribute('hash-id');
+				} else if (postNode[i].hasAttribute('marker')) {
+					orderString = postNode[i].getAttribute('marker');
+				}
 				postNode[i].get(orderSelector).innerText = '#' + orderString;
 				postNode[i].get(scrollSelector).id = orderString;
-				subPostConducting(orderString, postNode[i]);
 			}
 		}
 		let dropdownNode = document.getElementsByTagName('dropdown');
@@ -286,6 +319,16 @@ let load = setTimeout(function delegate() {
 					postContentNode[i].classList.remove('no-content');
 				} else {
 					postContentNode[i].classList.add('no-content');
+				}
+			}
+			/* '.non-blur' for the 'post's */
+			marker();
+			let postNode = document.getElementsByTagName('post');
+			for (let i = 0; i < postNode.length; i++) {
+				if (postNode[i].hasAttribute('marker')) {
+					postNode[i].classList.remove('non-blur');
+				} else {
+					postNode[i].classList.add('non-blur');
 				}
 			}
 		}
