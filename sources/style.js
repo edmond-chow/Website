@@ -361,7 +361,7 @@ let load = setTimeout(function delegate() {
 					dropdownNode[i].classList.add('has-disabled');
 				}
 			}
-			/* setting the 'maxHeight' style for a 'dropdown-content' */
+			/* setting the 'maxHeight' and 'right' style for a 'dropdown-content' */
 			for (let i = 0; i < dropdownNode.length; i++) {
 				if (!inClient(dropdownNode[i]) || !dropdownNode[i].has(':scope > dropdown-content')) {
 					continue;
@@ -374,6 +374,18 @@ let load = setTimeout(function delegate() {
 				} else {
 					targetNode.classList.remove('hidden');
 					targetNode.style.maxHeight = (bottom - 28).toString() + 'px';
+				}
+				let left = dropdownNode[i].getBoundingClientRect().left;
+				if (left < 8) {
+					targetNode.style.left = (4 - left).toString() + 'px';
+				} else {
+					targetNode.style.left = '';
+				}
+				let right = document.body.clientWidth - dropdownNode[i].getBoundingClientRect().right;
+				if (right + dropdownNode[i].clientWidth < Math.max(targetNode.clientWidth, 175) + 8) {
+					targetNode.style.right = (4 - right).toString() + 'px';
+				} else {
+					targetNode.style.right = '';
 				}
 			}
 			/* '.no-option' for a 'dropdown-content' */
