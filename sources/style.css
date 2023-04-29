@@ -310,6 +310,15 @@ post > sub-post > post-leader > post-leader-advance {
 	margin: 0px;
 	min-height: 36px;
 }
+post > sub-post > post-leader > post-leader-advance > button.advance,
+post > sub-post > post-leader > post-leader-advance > dropdown,
+post > sub-post > post-leader > post-leader-advance > dropdown > button.advance:first-of-type {
+	display: inline-block;
+}
+post > sub-post > post-leader > post-leader-advance > *,
+post > sub-post > post-leader > post-leader-advance > dropdown > :not(dropdown-content, inner-padding, outer-margin) {
+	display: none;
+}
 post > sub-post > post-leader > post-leader-advance:not(:first-of-type) {
 	display: none;
 }
@@ -330,6 +339,9 @@ post > sub-post > post-content.no-content {
 body#blur post > sub-post > post-content.no-content {
 	border-bottom-left-radius: 8px;
 	border-bottom-right-radius: 8px;
+}
+post > sub-post > post-content > advance {
+	display: none;
 }
 post > sub-post > scroll-into {
 	width: auto;

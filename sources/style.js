@@ -170,6 +170,7 @@ let load = setTimeout(function delegate() {
 		/* structuring for the 'content' */ {
 			insertSurround('content', 'sub-content');
 		}
+		let postNode = document.getElementsByTagName('post');
 		/* structuring for the 'post's */ {
 			insertSurround('post', 'sub-post');
 			insertSurround('sub-post', 'post-content');
@@ -178,6 +179,10 @@ let load = setTimeout(function delegate() {
 			addFirst('sub-post', 'post-leader');
 			switchFirst('post-leader', 'post-leader-advance');
 			addFirst('post-leader', 'post-leader-advance');
+			for (let i = 0; i < postNode.length; i++) {
+				let advanceChildNode = postNode[i].querySelectorAll(':scope > sub-post > post-content > advance > *');
+				postNode[i].get('post > sub-post > post-leader > post-leader-advance').prepend(...advanceChildNode);
+			}
 			switchFirst('post-leader', 'post-leader-title');
 			addFirst('post-leader', 'post-leader-title');
 			switchFirst('post-leader', 'post-leader-order');
@@ -186,7 +191,6 @@ let load = setTimeout(function delegate() {
 			switchFirst('sub-post', 'scroll-into');
 			addFirst('sub-post', 'scroll-into');
 		}
-		let postNode = document.getElementsByTagName('post');
 		/* adding the icon for the 'post's */ {
 			for (let i = 0; i < postNode.length; i++) {
 				let imgNode;
@@ -221,7 +225,6 @@ let load = setTimeout(function delegate() {
 		}
 		/* ordering and hashing for the 'post's */ {
 			marker();
-			let postNode = document.getElementsByTagName('post');
 			for (let i = 0; i < postNode.length; i++) {
 				let orderSelector = ':scope > sub-post > post-leader > post-leader-order';
 				let scrollSelector = ':scope > sub-post > scroll-into';
