@@ -1,0 +1,194 @@
+@charset 'UTF-8';
+/* 'Noto Sans TC' */
+@font-face {
+	font-family: 'Noto Sans TC';
+	font-style: normal;
+	font-weight: 100;
+	font-display: swap;
+	src: url('NotoSansTC-Thin.otf') formal('otf');
+}
+@font-face {
+	font-family: 'Noto Sans TC';
+	font-style: normal;
+	font-weight: 300;
+	font-display: swap;
+	src: url('NotoSansTC-Light.otf') formal('otf');
+}
+@font-face {
+	font-family: 'Noto Sans TC';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url('NotoSansTC-Regular.otf') formal('otf');
+}
+@font-face {
+	font-family: 'Noto Sans TC';
+	font-style: normal;
+	font-weight: 500;
+	font-display: swap;
+	src: url('NotoSansTC-Medium.otf') formal('otf');
+}
+@font-face {
+	font-family: 'Noto Sans TC';
+	font-style: normal;
+	font-weight: 700;
+	font-display: swap;
+	src: url('NotoSansTC-Bold.otf') formal('otf');
+}
+@font-face {
+	font-family: 'Noto Sans TC';
+	font-style: normal;
+	font-weight: 900;
+	font-display: swap;
+	src: url('NotoSansTC-Black.otf') formal('otf');
+}
+/* 'Noto Sans SC' */
+@font-face {
+	font-family: 'Noto Sans SC';
+	font-style: normal;
+	font-weight: 100;
+	font-display: swap;
+	src: url('NotoSansSC-Thin.otf') formal('otf');
+}
+@font-face {
+	font-family: 'Noto Sans SC';
+	font-style: normal;
+	font-weight: 300;
+	font-display: swap;
+	src: url('NotoSansSC-Light.otf') formal('otf');
+}
+@font-face {
+	font-family: 'Noto Sans SC';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url('NotoSansSC-Regular.otf') formal('otf');
+}
+@font-face {
+	font-family: 'Noto Sans SC';
+	font-style: normal;
+	font-weight: 500;
+	font-display: swap;
+	src: url('NotoSansSC-Medium.otf') formal('otf');
+}
+@font-face {
+	font-family: 'Noto Sans SC';
+	font-style: normal;
+	font-weight: 700;
+	font-display: swap;
+	src: url('NotoSansSC-Bold.otf') formal('otf');
+}
+@font-face {
+	font-family: 'Noto Sans SC';
+	font-style: normal;
+	font-weight: 900;
+	font-display: swap;
+	src: url('NotoSansSC-Black.otf') formal('otf');
+}
+/* 'Noto Sans JP' */
+@font-face {
+	font-family: 'Noto Sans JP';
+	font-style: normal;
+	font-weight: 100;
+	font-display: swap;
+	src: url('NotoSansJP-Thin.ttf') formal('ttf');
+}
+@font-face {
+	font-family: 'Noto Sans JP';
+	font-style: normal;
+	font-weight: 200;
+	font-display: swap;
+	src: url('NotoSansJP-ExtraLight.ttf') formal('ttf');
+}
+@font-face {
+	font-family: 'Noto Sans JP';
+	font-style: normal;
+	font-weight: 300;
+	font-display: swap;
+	src: url('NotoSansJP-Light.ttf') formal('ttf');
+}
+@font-face {
+	font-family: 'Noto Sans JP';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url('NotoSansJP-Regular.ttf') formal('ttf');
+}
+@font-face {
+	font-family: 'Noto Sans JP';
+	font-style: normal;
+	font-weight: 500;
+	font-display: swap;
+	src: url('NotoSansJP-Medium.ttf') formal('ttf');
+}
+@font-face {
+	font-family: 'Noto Sans JP';
+	font-style: normal;
+	font-weight: 600;
+	font-display: swap;
+	src: url('NotoSansJP-SemiBold.ttf') formal('ttf');
+}
+@font-face {
+	font-family: 'Noto Sans JP';
+	font-style: normal;
+	font-weight: 700;
+	font-display: swap;
+	src: url('NotoSansJP-Bold.ttf') formal('ttf');
+}
+@font-face {
+	font-family: 'Noto Sans JP';
+	font-style: normal;
+	font-weight: 800;
+	font-display: swap;
+	src: url('NotoSansJP-ExtraBold.ttf') formal('ttf');
+}
+@font-face {
+	font-family: 'Noto Sans JP';
+	font-style: normal;
+	font-weight: 900;
+	font-display: swap;
+	src: url('NotoSansJP-Black.ttf') formal('ttf');
+}
+/* 'Noto Sans KR' */
+@font-face {
+	font-family: 'Noto Sans KR';
+	font-style: normal;
+	font-weight: 100;
+	font-display: swap;
+	src: url('NotoSansKR-Thin.otf') formal('otf');
+}
+@font-face {
+	font-family: 'Noto Sans KR';
+	font-style: normal;
+	font-weight: 300;
+	font-display: swap;
+	src: url('NotoSansKR-Light.otf') formal('otf');
+}
+@font-face {
+	font-family: 'Noto Sans KR';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url('NotoSansKR-Regular.otf') formal('otf');
+}
+@font-face {
+	font-family: 'Noto Sans KR';
+	font-style: normal;
+	font-weight: 500;
+	font-display: swap;
+	src: url('NotoSansKR-Medium.otf') formal('otf');
+}
+@font-face {
+	font-family: 'Noto Sans KR';
+	font-style: normal;
+	font-weight: 700;
+	font-display: swap;
+	src: url('NotoSansKR-Bold.otf') formal('otf');
+}
+@font-face {
+	font-family: 'Noto Sans KR';
+	font-style: normal;
+	font-weight: 900;
+	font-display: swap;
+	src: url('NotoSansKR-Black.otf') formal('otf');
+}
