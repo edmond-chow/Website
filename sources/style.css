@@ -666,7 +666,7 @@ content.tiny > sub-content post > sub-post > post-leader > post-leader-advance {
 	width: calc(40% - 16px);
 }
 content.tiny > sub-content post > sub-post > post-content {
-	padding: 0px 16px 16px 16px;
+	padding: 0px 24px 16px 24px;
 }
 content.tiny > sub-content post:first-of-type {
 	padding-top: 16px;
