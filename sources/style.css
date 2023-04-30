@@ -630,7 +630,7 @@ content > sub-content:not(:first-of-type) {
 }
 content.tiny {
 	min-width: unset;
-	width: calc(100% - 80px);
+	width: calc(100% - 70px);
 	padding-left: 35px;
 	padding-right: 35px;
 	padding-bottom: 20px;
