@@ -192,6 +192,7 @@ let load = setTimeout(function delegate() {
 				for (let i = 0; i < postNode.length; i++) {
 					let advanceChildNode = postNode[i].getAll(':scope > sub-post > post-content > advance > *');
 					postNode[i].get('post > sub-post > post-leader > post-leader-advance').prepend(...advanceChildNode);
+					postNode[i].get('post > sub-post > post-leader > post-leader-advance').classList.add('no-space');
 				}
 				switchFirst('post-leader', 'post-leader-section');
 				addFirst('post-leader', 'post-leader-section');
