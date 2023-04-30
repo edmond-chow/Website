@@ -1,128 +1,128 @@
 @charset 'UTF-8';
 /* 'Noto Sans' */
 @font-face {
-	font-family: 'Noto Sans JP';
+	font-family: 'Noto Sans';
 	font-style: normal;
 	font-weight: 100;
 	font-display: swap;
-	src: url('NotoSansJP-Thin.ttf') formal('ttf');
+	src: url('NotoSans-Thin.ttf') formal('ttf');
 }
 @font-face {
-	font-family: 'Noto Sans JP';
+	font-family: 'Noto Sans';
 	font-style: italic;
 	font-weight: 100;
 	font-display: swap;
-	src: url('NotoSansJP-ThinItalic.ttf') formal('ttf');
+	src: url('NotoSans-ThinItalic.ttf') formal('ttf');
 }
 @font-face {
-	font-family: 'Noto Sans JP';
+	font-family: 'Noto Sans';
 	font-style: normal;
 	font-weight: 200;
 	font-display: swap;
-	src: url('NotoSansJP-ExtraLight.ttf') formal('ttf');
+	src: url('NotoSans-ExtraLight.ttf') formal('ttf');
 }
 @font-face {
-	font-family: 'Noto Sans JP';
+	font-family: 'Noto Sans';
 	font-style: italic;
 	font-weight: 200;
 	font-display: swap;
-	src: url('NotoSansJP-ExtraLightItalic.ttf') formal('ttf');
+	src: url('NotoSans-ExtraLightItalic.ttf') formal('ttf');
 }
 @font-face {
-	font-family: 'Noto Sans JP';
+	font-family: 'Noto Sans';
 	font-style: normal;
 	font-weight: 300;
 	font-display: swap;
-	src: url('NotoSansJP-Light.ttf') formal('ttf');
+	src: url('NotoSans-Light.ttf') formal('ttf');
 }
 @font-face {
-	font-family: 'Noto Sans JP';
+	font-family: 'Noto Sans';
 	font-style: italic;
 	font-weight: 300;
 	font-display: swap;
-	src: url('NotoSansJP-LightItalic.ttf') formal('ttf');
+	src: url('NotoSans-LightItalic.ttf') formal('ttf');
 }
 @font-face {
-	font-family: 'Noto Sans JP';
+	font-family: 'Noto Sans';
 	font-style: normal;
 	font-weight: 400;
 	font-display: swap;
-	src: url('NotoSansJP-Regular.ttf') formal('ttf');
+	src: url('NotoSans-Regular.ttf') formal('ttf');
 }
 @font-face {
-	font-family: 'Noto Sans JP';
+	font-family: 'Noto Sans';
 	font-style: italic;
 	font-weight: 400;
 	font-display: swap;
-	src: url('NotoSansJP-RegularItalic.ttf') formal('ttf');
+	src: url('NotoSans-RegularItalic.ttf') formal('ttf');
 }
 @font-face {
-	font-family: 'Noto Sans JP';
+	font-family: 'Noto Sans';
 	font-style: normal;
 	font-weight: 500;
 	font-display: swap;
-	src: url('NotoSansJP-Medium.ttf') formal('ttf');
+	src: url('NotoSans-Medium.ttf') formal('ttf');
 }
 @font-face {
-	font-family: 'Noto Sans JP';
+	font-family: 'Noto Sans';
 	font-style: italic;
 	font-weight: 500;
 	font-display: swap;
-	src: url('NotoSansJP-MediumItalic.ttf') formal('ttf');
+	src: url('NotoSans-MediumItalic.ttf') formal('ttf');
 }
 @font-face {
-	font-family: 'Noto Sans JP';
+	font-family: 'Noto Sans';
 	font-style: normal;
 	font-weight: 600;
 	font-display: swap;
-	src: url('NotoSansJP-SemiBold.ttf') formal('ttf');
+	src: url('NotoSans-SemiBold.ttf') formal('ttf');
 }
 @font-face {
-	font-family: 'Noto Sans JP';
+	font-family: 'Noto Sans';
 	font-style: italic;
 	font-weight: 600;
 	font-display: swap;
-	src: url('NotoSansJP-SemiBoldItalic.ttf') formal('ttf');
+	src: url('NotoSans-SemiBoldItalic.ttf') formal('ttf');
 }
 @font-face {
-	font-family: 'Noto Sans JP';
+	font-family: 'Noto Sans';
 	font-style: normal;
 	font-weight: 700;
 	font-display: swap;
-	src: url('NotoSansJP-Bold.ttf') formal('ttf');
+	src: url('NotoSans-Bold.ttf') formal('ttf');
 }
 @font-face {
-	font-family: 'Noto Sans JP';
+	font-family: 'Noto Sans';
 	font-style: italic;
 	font-weight: 700;
 	font-display: swap;
-	src: url('NotoSansJP-BoldItalic.ttf') formal('ttf');
+	src: url('NotoSans-BoldItalic.ttf') formal('ttf');
 }
 @font-face {
-	font-family: 'Noto Sans JP';
+	font-family: 'Noto Sans';
 	font-style: normal;
 	font-weight: 800;
 	font-display: swap;
-	src: url('NotoSansJP-ExtraBold.ttf') formal('ttf');
+	src: url('NotoSans-ExtraBold.ttf') formal('ttf');
 }
 @font-face {
-	font-family: 'Noto Sans JP';
+	font-family: 'Noto Sans';
 	font-style: italic;
 	font-weight: 800;
 	font-display: swap;
-	src: url('NotoSansJP-ExtraBoldItalic.ttf') formal('ttf');
+	src: url('NotoSans-ExtraBoldItalic.ttf') formal('ttf');
 }
 @font-face {
-	font-family: 'Noto Sans JP';
+	font-family: 'Noto Sans';
 	font-style: normal;
 	font-weight: 900;
 	font-display: swap;
-	src: url('NotoSansJP-Black.ttf') formal('ttf');
+	src: url('NotoSans-Black.ttf') formal('ttf');
 }
 @font-face {
-	font-family: 'Noto Sans JP';
+	font-family: 'Noto Sans';
 	font-style: italic;
 	font-weight: 900;
 	font-display: swap;
-	src: url('NotoSansJP-BlackItalic.ttf') formal('ttf');
+	src: url('NotoSans-BlackItalic.ttf') formal('ttf');
 }
