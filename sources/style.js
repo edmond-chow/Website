@@ -416,7 +416,7 @@ let load = setTimeout(function delegate() {
 						targetNode.style.left = '';
 					}
 					let right = document.body.clientWidth - dropdownNode[i].getBoundingClientRect().right;
-					if (right + dropdownNode[i].clientWidth < Math.max(targetNode.clientWidth, 175) + 12) {
+					if (right + dropdownNode[i].clientWidth < Math.max(targetNode.offsetWidth, 175) + 12) {
 						targetNode.style.right = (4 - right).toString() + 'px';
 					} else {
 						targetNode.style.right = '';
