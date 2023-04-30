@@ -249,11 +249,10 @@ body#blur post.non-blur > sub-post {
 	background: rgba(239, 239, 239, 0.9);
 }
 post > sub-post > post-leader {
+	max-width: calc(100% - 20px);
 	width: calc(100% - 20px);
 	vertical-align: top;
 	display: block;
-	min-width: calc(100% - 20px);
-	max-width: calc(100% - 20px);
 	padding: 0px 0px 0px 20px;
 }
 post > sub-post > post-leader:not(:first-of-type) {
@@ -263,7 +262,16 @@ body#blur post > sub-post > post-leader {
 	border-top-left-radius: 8px;
 	border-top-right-radius: 8px;
 }
-post > sub-post > post-leader > post-leader-order {
+post > sub-post > post-leader > post-leader-section {
+	vertical-align: top;
+	display: inline-block;
+	max-width: 60%;
+	width: 60%;
+}
+post > sub-post > post-leader > post-leader-section:not(:first-of-type) {
+	display: none;
+}
+post > sub-post > post-leader > post-leader-section > post-leader-order {
 	width: auto;
 	max-width: 40px;
 	vertical-align: top;
@@ -275,15 +283,15 @@ post > sub-post > post-leader > post-leader-order {
 	font-size: 16px;
 	color: white;
 }
-post > sub-post > post-leader > post-leader-order:not(:first-of-type) {
+post > sub-post > post-leader > post-leader-section > post-leader-order:not(:first-of-type) {
 	display: none;
 }
-body#blur post > sub-post > post-leader > post-leader-order {
+body#blur post > sub-post > post-leader > post-leader-section > post-leader-order {
 	color: rgba(0,0,0,0.5);
 }
-post > sub-post > post-leader > post-leader-title {
+post > sub-post > post-leader > post-leader-section > post-leader-title {
+	max-width: calc(100% - 120px);
 	width: auto;
-	max-width: calc(60% - 120px);
 	vertical-align: top;
 	display: inline-block;
 	padding: 20px 20px 27px 20px;
@@ -293,22 +301,24 @@ post > sub-post > post-leader > post-leader-title {
 	font-size: 16px;
 	color: white;
 }
-post > sub-post > post-leader > post-leader-title:not(:first-of-type) {
+post > sub-post > post-leader > post-leader-section > post-leader-title:not(:first-of-type) {
 	display: none;
 }
-body#blur post > sub-post > post-leader > post-leader-title {
+body#blur post > sub-post > post-leader > post-leader-section > post-leader-title {
 	color: rgba(0,0,0,0.5);
 }
 post > sub-post > post-leader > post-leader-advance {
-	width: auto;
-	max-width: calc(40% - 36px);
-	float: right;
+	max-width: calc(40% - 28px);
+	width: calc(40% - 28px);
 	text-align: right;
 	vertical-align: top;
 	display: inline-block;
-	padding: 16px 16px 16px 20px;
+	padding: 12px 12px 12px 16px;
 	margin: 0px;
 	min-height: 36px;
+}
+body#blur post > sub-post > post-leader > post-leader-advance {
+	border-top-right-radius: 8px;
 }
 post > sub-post > post-leader > post-leader-advance > button.advance,
 post > sub-post > post-leader > post-leader-advance > dropdown,
@@ -615,35 +625,54 @@ content > sub-content {
 	width: 848px;
 	display: inline-block;
 }
+content > sub-content:not(:first-of-type) {
+	display: none;
+}
 content.tiny {
 	min-width: unset;
 	width: calc(100% - 80px);
-	padding-left: 40px;
-	padding-right: 40px;
-	padding-bottom: 25px;
+	padding-left: 35px;
+	padding-right: 35px;
+	padding-bottom: 20px;
 }
 content.tiny > sub-content {
-	width: auto;
+	width: 100%;
+}
+content.tiny > sub-content post > img.icon {
+	width: 36px;
+	margin: 0px 0px -36px 0px;
+	left: -18px;
 }
 content.tiny > sub-content post > sub-post > post-leader {
-	padding: 0px 0px 0px 8px;
-	width: calc(100% - 8px);
-	min-width: calc(100% - 8px);
-	max-width: calc(100% - 8px);
+	max-width: calc(100% - 16px);
+    width: calc(100% - 16px);
+	padding: 0px 0px 0px 16px;
 }
-content.tiny > sub-content post > sub-post > post-leader > post-leader-order {
-	padding: 20px 8px 27px 8px;
+content.tiny > sub-content post > sub-post > post-leader > post-leader-section {
+	max-width: 60%;
+	width: 60%;
 }
-content.tiny > sub-content post > sub-post > post-leader > post-leader-title {
-	padding: 20px 8px 27px 8px;
-	max-width: calc(60% - 72px);
+content.tiny > sub-content post > sub-post > post-leader > post-leader-section > post-leader-order {
+	padding: 16px 8px 23px 8px;
+}
+content.tiny > sub-content post > sub-post > post-leader > post-leader-section > post-leader-title {
+	padding: 16px 8px 23px 8px;
+	max-width: calc(100% - 72px);
+	width: calc(100% - 72px);
 }
 content.tiny > sub-content post > sub-post > post-leader > post-leader-advance {
 	padding: 8px;
 	max-width: calc(40% - 16px);
+	width: calc(40% - 16px);
 }
-content > sub-content:not(:first-of-type) {
-	display: none;
+content.tiny > sub-content post > sub-post > post-content {
+	padding: 0px 16px 16px 16px;
+}
+content.tiny > sub-content post:first-of-type {
+	padding-top: 16px;
+}
+content.tiny > sub-content > post:first-of-type {
+	padding-top: 0px;
 }
 /* blur-boundary */
 body#blur content > sub-content > post > sub-post {

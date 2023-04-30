@@ -193,10 +193,12 @@ let load = setTimeout(function delegate() {
 					let advanceChildNode = postNode[i].getAll(':scope > sub-post > post-content > advance > *');
 					postNode[i].get('post > sub-post > post-leader > post-leader-advance').prepend(...advanceChildNode);
 				}
-				switchFirst('post-leader', 'post-leader-title');
-				addFirst('post-leader', 'post-leader-title');
-				switchFirst('post-leader', 'post-leader-order');
-				addFirst('post-leader', 'post-leader-order');
+				switchFirst('post-leader', 'post-leader-section');
+				addFirst('post-leader', 'post-leader-section');
+				switchFirst('post-leader-section', 'post-leader-title');
+				addFirst('post-leader-section', 'post-leader-title');
+				switchFirst('post-leader-section', 'post-leader-order');
+				addFirst('post-leader-section', 'post-leader-order');
 				moveOutside('post-content', 'scroll-into');
 				switchFirst('sub-post', 'scroll-into');
 				addFirst('sub-post', 'scroll-into');
@@ -221,9 +223,9 @@ let load = setTimeout(function delegate() {
 			/* titling for the 'post's */ {
 				for (let i = 0; i < postNode.length; i++) {
 					if (postNode[i].hasAttribute('headline')) {
-						postNode[i].get(':scope > sub-post > post-leader > post-leader-title').innerText = postNode[i].getAttribute('headline');
+						postNode[i].get(':scope > sub-post > post-leader > post-leader-section > post-leader-title').innerText = postNode[i].getAttribute('headline');
 					} else {
-						postNode[i].get(':scope > sub-post > post-leader > post-leader-title').innerText = '{headline}';
+						postNode[i].get(':scope > sub-post > post-leader > post-leader-section > post-leader-title').innerText = '{headline}';
 					}
 				}
 			}
@@ -236,7 +238,7 @@ let load = setTimeout(function delegate() {
 			/* ordering and hashing for the 'post's */ {
 				marker();
 				for (let i = 0; i < postNode.length; i++) {
-					let orderSelector = ':scope > sub-post > post-leader > post-leader-order';
+					let orderSelector = ':scope > sub-post > post-leader > post-leader-section > post-leader-order';
 					let scrollSelector = ':scope > sub-post > scroll-into';
 					let orderString = '{index}';
 					if (postNode[i].hasAttribute('hash-id')) {
@@ -269,6 +271,18 @@ let load = setTimeout(function delegate() {
 	}
 	/* [ pseudo-style ] */
 	if (isLoaded == true) {
+		/* content */ {
+			let contentNode = document.getElementsByTagName('content');
+			/* resizing for the 'content' */ {
+				for (let i = 0; i < contentNode.length; i++) {
+					if (document.body.clientWidth <= 750) {
+						contentNode[i].classList.add('tiny');
+					} else {
+						contentNode[i].classList.remove('tiny');
+					}
+				}
+			}
+		}
 		/* top */ {
 			let topNode = document.getElementsByTagName('top');
 			/* resizing for the 'top' */ {
