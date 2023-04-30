@@ -467,7 +467,7 @@ dropdown > dropdown-content > a:active {
 body#blur dropdown > dropdown-content > a:active {
 	background-color: rgb(211, 211, 211);
 }
-dropdown:not(.has-disabled):hover > dropdown-content:first-of-type {
+dropdown:not(.has-disabled):hover > dropdown-content:not(.hidden):first-of-type {
 	display: block;
 }
 /* icons */
