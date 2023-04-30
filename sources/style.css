@@ -442,7 +442,7 @@ dropdown > dropdown-content > a {
 body#blur dropdown > dropdown-content > a {
 	color: rgb(10, 10, 10);
 }
-dropdown > dropdown-content > a.has-content {
+dropdown > dropdown-content > a.has-node {
 	display: none;
 }
 dropdown > dropdown-content > a:hover {
@@ -561,7 +561,7 @@ top > a {
 	cursor: default;
 	-webkit-user-drag: none;
 }
-top > a.has-content {
+top > a.has-node {
 	display: none;
 }
 top > a.icon {
