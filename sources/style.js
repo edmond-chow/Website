@@ -77,6 +77,8 @@ function hasSubstance(parentNode) {
 			continue;
 		} else if (childNode[i].nodeName == 'br'.toUpperCase()) {
 			continue;
+		} else if (childNode[i] instanceof Element && window.getComputedStyle(childNode[i]).display == 'none') {
+			continue;
 		}
 		return true;
 	}
@@ -192,7 +194,7 @@ let load = setTimeout(function delegate() {
 				for (let i = 0; i < postNode.length; i++) {
 					let advanceChildNode = postNode[i].getAll(':scope > sub-post > post-content > advance > *');
 					postNode[i].get('post > sub-post > post-leader > post-leader-advance').prepend(...advanceChildNode);
-					postNode[i].get('post > sub-post > post-leader > post-leader-advance').classList.add('no-space');
+					postNode[i].get('post > sub-post > post-leader > post-leader-advance').classList.add('no-text');
 				}
 				switchFirst('post-leader', 'post-leader-section');
 				addFirst('post-leader', 'post-leader-section');
@@ -367,6 +369,14 @@ let load = setTimeout(function delegate() {
 					}
 				}
 			}
+			/* '.no-text' for the 'post > sub-post > post-leader > post-leader-advance > dropdown's */ {
+				for (let i = 0; i < postNode.length; i++) {
+					let dropdownNode = postNode[i].getAll(':scope > sub-post > post-leader > post-leader-advance > dropdown');
+					for (let j = 0; j < dropdownNode.length; j++) {
+						dropdownNode[j].classList.add('no-text');
+					}
+				}
+			}
 		}
 		/* dropdown */ {
 			let dropdownNode = document.getElementsByTagName('dropdown');
@@ -457,6 +467,17 @@ let load = setTimeout(function delegate() {
 				let childNode = anyNoSpaceNode[i].childNodes;
 				for (let j = 0; j < childNode.length; j++) {
 					if (childNode[j].nodeName == '#text' && removeSpace(childNode[j].wholeText) == '') {
+						childNode[j].textContent = '';
+					}
+				}
+			}
+		}
+		/* no-text */ {
+			let anyNoSpaceNode = document.getElementsByClassName('no-text');
+			for (let i = 0; i < anyNoSpaceNode.length; i++) {
+				let childNode = anyNoSpaceNode[i].childNodes;
+				for (let j = 0; j < childNode.length; j++) {
+					if (childNode[j].nodeName == '#text') {
 						childNode[j].textContent = '';
 					}
 				}

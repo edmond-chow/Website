@@ -197,17 +197,14 @@ post {
 body#blur post {
 	border-radius: 8px;
 }
-post:first-of-type {
-	padding-top: 20px;
-}
 post:first-child {
-	padding-top: 0px;
+	padding-top: 0px !important;
 }
-content > sub-content > post:first-of-type {
-	padding-top: 0px;
+post:first-of-type:not(:first-child) {
+	padding-top: 20px !important;
 }
 post:last-of-type {
-	padding-bottom: 0px;
+	padding-bottom: 0px !important;
 }
 post > img.icon {
 	width: 64px;
@@ -221,7 +218,7 @@ post > img.icon {
 	-webkit-user-drag: none;
 }
 post > img.icon:not(:first-of-type) {
-	display: none;
+	display: none !important;
 }
 post > img.icon[src=''] {
 	display: none;
@@ -236,8 +233,11 @@ post > sub-post {
 	background-color: rgba(0, 0, 0, .5);
 	border: 1px solid rgba(247, 247, 247, .7);
 }
+post > img.icon[src]:not([src='']) + sub-post {
+	min-height: 80px;
+}
 post > sub-post:not(:first-of-type) {
-	display: none;
+	display: none !important;
 }
 body#blur post > sub-post {
 	border-radius: 8px;
@@ -256,7 +256,7 @@ post > sub-post > post-leader {
 	padding: 0px 0px 0px 20px;
 }
 post > sub-post > post-leader:not(:first-of-type) {
-	display: none;
+	display: none !important;
 }
 body#blur post > sub-post > post-leader {
 	border-top-left-radius: 8px;
@@ -269,7 +269,7 @@ post > sub-post > post-leader > post-leader-section {
 	width: 60%;
 }
 post > sub-post > post-leader > post-leader-section:not(:first-of-type) {
-	display: none;
+	display: none !important;
 }
 post > sub-post > post-leader > post-leader-section > post-leader-order {
 	width: auto;
@@ -284,7 +284,7 @@ post > sub-post > post-leader > post-leader-section > post-leader-order {
 	color: white;
 }
 post > sub-post > post-leader > post-leader-section > post-leader-order:not(:first-of-type) {
-	display: none;
+	display: none !important;
 }
 body#blur post > sub-post > post-leader > post-leader-section > post-leader-order {
 	color: rgba(0,0,0,0.5);
@@ -302,7 +302,7 @@ post > sub-post > post-leader > post-leader-section > post-leader-title {
 	color: white;
 }
 post > sub-post > post-leader > post-leader-section > post-leader-title:not(:first-of-type) {
-	display: none;
+	display: none !important;
 }
 body#blur post > sub-post > post-leader > post-leader-section > post-leader-title {
 	color: rgba(0,0,0,0.5);
@@ -320,21 +320,17 @@ post > sub-post > post-leader > post-leader-advance {
 body#blur post > sub-post > post-leader > post-leader-advance {
 	border-top-right-radius: 8px;
 }
-post > sub-post > post-leader > post-leader-advance > button.advance,
-post > sub-post > post-leader > post-leader-advance > dropdown > button.advance:first-of-type {
-	max-width: calc(100% - 8px);
-	display: inline-block;
+post > sub-post > post-leader > post-leader-advance > button.advance, post > sub-post > post-leader > post-leader-advance > dropdown > button.advance:first-child {
+	max-width: calc(100% - 8px) !important;
 }
 post > sub-post > post-leader > post-leader-advance > dropdown {
-	max-width: 100%;
-	display: inline-block;
+	max-width: 100% !important;
 }
-post > sub-post > post-leader > post-leader-advance > *,
-post > sub-post > post-leader > post-leader-advance > dropdown > :not(dropdown-content:first-of-type, inner-padding:first-of-type, outer-margin:first-of-type) {
-	display: none;
+post > sub-post > post-leader > post-leader-advance > :not(button.advance, dropdown), post > sub-post > post-leader > post-leader-advance > dropdown > :not(button.advance:first-child, dropdown-content:first-of-type, inner-padding:first-of-type, outer-margin:first-of-type) {
+	display: none !important;
 }
 post > sub-post > post-leader > post-leader-advance:not(:first-of-type) {
-	display: none;
+	display: none !important;
 }
 post > sub-post > post-content {
 	width: auto;
@@ -345,10 +341,10 @@ post > sub-post > post-content {
 	padding: 0px 40px 20px 40px;
 }
 post > sub-post > post-content:not(:first-of-type) {
-	display: none;
+	display: none !important;
 }
 post > sub-post > post-content.no-content {
-	padding-bottom: 0px;
+	padding-bottom: 0px !important;
 }
 body#blur post > sub-post > post-content.no-content {
 	border-bottom-left-radius: 8px;
@@ -369,7 +365,7 @@ post > sub-post > scroll-into {
 	top: -70px;
 }
 post > sub-post > scroll-into:not(:first-of-type) {
-	display: none;
+	display: none !important;
 }
 body#blur post > sub-post > scroll-into {
 	top: -69px;
@@ -383,7 +379,7 @@ dropdown {
 	z-index: 0;
 }
 dropdown:hover {
-	z-index: 1;
+	z-index: 2;
 }
 dropdown.has-disabled {
 	pointer-events: none;
@@ -397,14 +393,14 @@ dropdown > inner-padding {
 	padding: 2px 0px;
 }
 dropdown > inner-padding:not(:first-of-type) {
-	display: none;
+	display: none !important;
 }
 dropdown > outer-margin {
 	display: block;
 	margin: -4px 0px;
 }
 dropdown > outer-margin:not(:first-of-type) {
-	display: none;
+	display: none !important;
 }
 dropdown > dropdown-content {
 	vertical-align: top;
@@ -501,7 +497,7 @@ dropdown:not(.has-disabled):hover > dropdown-content:not(.hidden):first-of-type 
 }
 /* layout */
 top {
-	z-index: 2147483647;
+	z-index: 3;
 	list-style-type: none;
 	margin: 0px;
 	padding: 0px;
@@ -558,7 +554,7 @@ body#blur top#large {
 }
 top:hover {
 	height: auto;
-	max-height: calc(100% - 18px);
+	max-height: calc(70% - 18px);
 	overflow: auto;
 }
 top > a {
@@ -630,7 +626,7 @@ content > sub-content {
 	display: inline-block;
 }
 content > sub-content:not(:first-of-type) {
-	display: none;
+	display: none !important;
 }
 content.tiny {
 	min-width: unset;
@@ -645,7 +641,11 @@ content.tiny > sub-content {
 content.tiny > sub-content post > img.icon {
 	width: 48px;
 	margin: 0px 0px -48px 0px;
+	top: 6px;
 	left: -24px;
+}
+content.tiny > sub-content post > img.icon[src]:not([src='']) + sub-post {
+	min-height: 60px;
 }
 content.tiny > sub-content post > sub-post > post-leader {
 	max-width: calc(100% - 15px);
@@ -672,11 +672,8 @@ content.tiny > sub-content post > sub-post > post-leader > post-leader-advance {
 content.tiny > sub-content post > sub-post > post-content {
 	padding: 0px 30px 15px 30px;
 }
-content.tiny > sub-content post:first-of-type {
-	padding-top: 16px;
-}
-content.tiny > sub-content > post:first-of-type {
-	padding-top: 0px;
+content.tiny > sub-content post:first-of-type:not(:first-child) {
+	padding-top: 16px !important;
 }
 /* blur-boundary */
 body#blur content > sub-content > post > sub-post {
