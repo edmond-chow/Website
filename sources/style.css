@@ -643,26 +643,26 @@ content.tiny > sub-content {
 	width: 100%;
 }
 content.tiny > sub-content post > img.icon {
-	width: 36px;
-	margin: 0px 0px -36px 0px;
-	left: -18px;
+	width: 48px;
+	margin: 0px 0px -48px 0px;
+	left: -24px;
 }
 content.tiny > sub-content post > sub-post > post-leader {
-	max-width: calc(100% - 16px);
-    width: calc(100% - 16px);
-	padding: 0px 0px 0px 16px;
+	max-width: calc(100% - 15px);
+    width: calc(100% - 15px);
+	padding: 0px 0px 0px 15px;
 }
 content.tiny > sub-content post > sub-post > post-leader > post-leader-section {
 	max-width: 60%;
 	width: 60%;
 }
 content.tiny > sub-content post > sub-post > post-leader > post-leader-section > post-leader-order {
-	padding: 16px 8px 23px 8px;
+	padding: 15px 15px 24px 15px;
 }
 content.tiny > sub-content post > sub-post > post-leader > post-leader-section > post-leader-title {
-	padding: 16px 8px 23px 8px;
-	max-width: calc(100% - 72px);
-	width: calc(100% - 72px);
+	padding: 15px 15px 24px 15px;
+	max-width: calc(100% - 100px);
+	width: calc(100% - 100px);
 }
 content.tiny > sub-content post > sub-post > post-leader > post-leader-advance {
 	padding: 8px;
@@ -670,7 +670,7 @@ content.tiny > sub-content post > sub-post > post-leader > post-leader-advance {
 	width: calc(40% - 16px);
 }
 content.tiny > sub-content post > sub-post > post-content {
-	padding: 0px 24px 16px 24px;
+	padding: 0px 30px 15px 30px;
 }
 content.tiny > sub-content post:first-of-type {
 	padding-top: 16px;
