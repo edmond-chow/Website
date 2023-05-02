@@ -99,7 +99,7 @@ function hasSubstance(parentNode) {
 			continue;
 		} else if (childNode[i].nodeName == '#text' && removeSpace(childNode[i].wholeText) == '') {
 			continue;
-		} else if (childNode[i].nodeName == 'br'.toUpperCase()) {
+		} else if (childNode[i] instanceof Element && childNode[i].nodeName == 'br'.toUpperCase()) {
 			continue;
 		} else if (childNode[i] instanceof Element && window.getComputedStyle(childNode[i]).display == 'none') {
 			continue;
@@ -115,7 +115,21 @@ function hasTextOnly(parentNode) {
 			continue;
 		} else if (childNode[i].nodeName == '#text') {
 			continue;
-		} else if (childNode[i].nodeName == 'br'.toUpperCase()) {
+		} else if (childNode[i] instanceof Element && childNode[i].nodeName == 'br'.toUpperCase()) {
+			continue;
+		}
+		return false;
+	}
+	return true;
+}
+function hasNoTextWithNode(parentNode) {
+	let childNode = parentNode.childNodes;
+	for (let i = 0; i < childNode.length; i++) {
+		if (childNode[i].nodeName == '#comment') {
+			continue;
+		} else if (childNode[i].nodeName == '#text' && removeSpace(childNode[i].wholeText) == '') {
+			continue;
+		} else if (childNode[i] instanceof Element && childNode[i].nodeName != 'br'.toUpperCase()) {
 			continue;
 		}
 		return false;
@@ -429,14 +443,14 @@ let load = setInterval(function() {
 						targetNode.style.maxHeight = (bottom - 28).toString() + 'px';
 					}
 					let left = dropdownNode[i].getBoundingClientRect().left;
-					if (left < 8) {
-						targetNode.style.left = (4 - left).toString() + 'px';
+					if (left < 6) {
+						targetNode.style.left = (6 - left).toString() + 'px';
 					} else {
 						targetNode.style.left = '';
 					}
 					let right = document.body.clientWidth - dropdownNode[i].getBoundingClientRect().right;
 					if (right + dropdownNode[i].clientWidth < Math.max(targetNode.offsetWidth, 175) + 12) {
-						targetNode.style.right = (4 - right).toString() + 'px';
+						targetNode.style.right = (6 - right).toString() + 'px';
 					} else {
 						targetNode.style.right = '';
 					}
@@ -449,6 +463,15 @@ let load = setInterval(function() {
 						dropdownContentNode[i].classList.remove('no-option');
 					} else {
 						dropdownContentNode[i].classList.add('no-option');
+					}
+				}
+			}
+			/* '.has-single-button' for the 'dropdown's */ {
+				for (let i = 0; i < dropdownNode.length; i++) {
+					if (dropdownNode[i].has(':scope > button:first-of-type:last-of-type') && hasNoTextWithNode(dropdownNode[i])) {
+						dropdownNode[i].classList.add('has-single-button');
+					} else {
+						dropdownNode[i].classList.remove('has-single-button');
 					}
 				}
 			}

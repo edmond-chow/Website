@@ -127,7 +127,7 @@ pre {
 button {
 	padding: 16px 32px;
 	font-size: 16px;
-	margin: 4px;
+	margin: 3px;
 	line-height: 21px;
 	font-family: 'Noto Sans', 'Microsoft JhengHei';
 	border: none;
@@ -340,19 +340,19 @@ body#blur post > sub-post > post-leader > post-leader-section > post-leader-titl
 	color: rgba(0,0,0,0.5);
 }
 post > sub-post > post-leader > post-leader-advance {
-	padding: 12px 12px 12px 16px;
-	max-width: calc(40% - 28px);
-	width: calc(40% - 28px);
+	padding: 13px 13px 13px 17px;
+	max-width: calc(40% - 30px);
+	width: calc(40% - 30px);
 	text-align: right;
 	vertical-align: top;
 	display: inline-block;
 	margin: 0px;
-	min-height: 44px;
+	min-height: 42px;
 }
 content.tiny > sub-content post > sub-post > post-leader > post-leader-advance {
-	padding: 8px 8px 8px 11px;
-	max-width: calc(40% - 19px);
-	width: calc(40% - 19px);
+	padding: 9px 9px 9px 12px;
+	max-width: calc(40% - 21px);
+	width: calc(40% - 21px);
 }
 body#blur post > sub-post > post-leader > post-leader-advance {
 	border-top-right-radius: 8px;
@@ -360,13 +360,16 @@ body#blur post > sub-post > post-leader > post-leader-advance {
 body#blur content.tiny > sub-content post > sub-post > post-leader > post-leader-advance {
 	border-top-right-radius: 6px;
 }
-post > sub-post > post-leader > post-leader-advance > button.advance, post > sub-post > post-leader > post-leader-advance > dropdown > button.advance:first-child {
-	max-width: calc(100% - 8px) !important;
+post > sub-post > post-leader > post-leader-advance > button.advance, post > sub-post > post-leader > post-leader-advance > dropdown {
+	max-width: calc(100% - 6px) !important;
 }
-post > sub-post > post-leader > post-leader-advance > dropdown {
+post > sub-post > post-leader > post-leader-advance > :not(button.advance, dropdown) {
+	display: none !important;
+}
+post > sub-post > post-leader > post-leader-advance > dropdown > button.advance:first-of-type:last-of-type {
 	max-width: 100% !important;
 }
-post > sub-post > post-leader > post-leader-advance > :not(button.advance, dropdown), post > sub-post > post-leader > post-leader-advance > dropdown > :not(button.advance:first-child, dropdown-content:first-of-type, inner-padding:first-of-type, outer-margin:first-of-type) {
+post > sub-post > post-leader > post-leader-advance > dropdown > :not(button.advance:first-of-type:last-of-type, dropdown-content:first-of-type, inner-padding:first-of-type, outer-margin:first-of-type) {
 	display: none !important;
 }
 post > sub-post > post-leader > post-leader-advance:not(:first-of-type) {
@@ -436,17 +439,23 @@ dropdown > :not(dropdown-content, inner-padding, outer-margin) {
 	z-index: 1;
 }
 dropdown > inner-padding {
-	display: block;
-	padding: 2px 0px;
+	display: none;
 }
-dropdown > inner-padding:not(:first-of-type) {
+dropdown:hover > inner-padding {
+	display: block;
+	padding: 3px 0px;
+}
+dropdown:hover > inner-padding:not(:first-of-type) {
 	display: none !important;
 }
 dropdown > outer-margin {
-	display: block;
-	margin: -4px 0px;
+	display: none;
 }
-dropdown > outer-margin:not(:first-of-type) {
+dropdown:hover > outer-margin {
+	display: block;
+	margin: -6px 0px;
+}
+dropdown:hover > outer-margin:not(:first-of-type) {
 	display: none !important;
 }
 dropdown > dropdown-content {
@@ -459,11 +468,17 @@ dropdown > dropdown-content {
 	min-height: 36px;
 	width: auto;
 	box-shadow: 0 0 32px rgba(0, 0, 0, 0.5);
-	margin: 0px 4px;
+	margin: 0px;
 	text-align: left;
 	border: 0px;
 	padding: 8px 0px;
 	z-index: 0;
+}
+dropdown.has-single-button {
+	margin: 3px;
+}
+dropdown.has-single-button > button:first-of-type:last-of-type {
+	margin: 0px;
 }
 dropdown > dropdown-content.no-option:after {
 	content: '(Nothing)';
