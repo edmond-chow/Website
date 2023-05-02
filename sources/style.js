@@ -1,26 +1,53 @@
+function forAll(selector) {
+	return document.querySelectorAll(selector);
+}
+function forAllTag(name) {
+	return document.getElementsByTagName(name);
+}
+function forAllClass(name) {
+	return document.getElementsByClassName(name);
+}
+Element.prototype.has = function(selector)
+{
+	return this.querySelector(selector) != null;
+}
+Element.prototype.get = function(selector)
+{
+	return this.querySelector(selector);
+}
+Element.prototype.getAll = function(selector)
+{
+	return this.querySelectorAll(selector);
+}
+function fragmentForChild(childNode, child) {
+	let fragment = document.createDocumentFragment();
+	for (let i = 0; i < childNode.length; i++) {
+		if (childNode[i].tagName == child.toUpperCase()) {
+			fragment.appendChild(childNode[i]);
+		}
+	}
+	return fragment.childNodes;
+}
 function insertSurround(parent, child) {
-	let parentNode = document.getElementsByTagName(parent);
+	let parentNode = forAll(parent);
 	for (let i = 0; i < parentNode.length; i++) {
-		let childNode = parentNode[i].getElementsByTagName(child);
-		if (childNode.length == 0) {
+		let childNode = parentNode[i].children;
+		if (fragmentForChild(childNode, child).length == 0) {
 			let substance = document.createElement(child);
-			substance.append(...parentNode[i].childNodes);
-			parentNode[i].append(substance);
+			substance.prepend(...parentNode[i].childNodes);
+			parentNode[i].prepend(substance);
 		}
 	}
 }
 function switchFirst(parent, child) {
-	let childNode = document.getElementsByTagName(child);
-	for (let i = 0; i < childNode.length; i++) {
-		let parentNode = childNode[i].parentElement;
-		if (parentNode?.tagName != parent.toUpperCase()) {
-			continue;
-		}
-		parentNode.prepend(childNode[i]);
+	let parentNode = forAll(parent);
+	for (let i = 0; i < parentNode.length; i++) {
+		let childNode = parentNode[i].children;
+		parentNode[i].prepend(...fragmentForChild(childNode, child));
 	}
 }
 function addFirst(parent, child) {
-	let parentNode = document.getElementsByTagName(parent);
+	let parentNode = forAll(parent);
 	for (let i = 0; i < parentNode.length; i++) {
 		if (parentNode[i].children.length > 0 && parentNode[i].children[0].tagName == child.toUpperCase()) {
 			continue;
@@ -30,13 +57,10 @@ function addFirst(parent, child) {
 	}
 }
 function moveOutside(parent, child) {
-	let childNode = document.getElementsByTagName(child);
-	for (let i = 0; i < childNode.length; i++) {
-		let parentNode = childNode[i].parentElement;
-		if (parentNode?.tagName != parent.toUpperCase()) {
-			continue;
-		}
-		parentNode.parentElement?.prepend(childNode[i]);
+	let parentNode = forAll(parent);
+	for (let i = 0; i < parentNode.length; i++) {
+		let childNode = parentNode[i].children;
+		parentNode[i].parentElement?.prepend(...fragmentForChild(childNode, child));
 	}
 }
 function surroundedBy(parent, childNode) {
@@ -119,21 +143,6 @@ function setLocked(node) {
 		}
 	}
 }
-function forAll(selector) {
-	return document.querySelectorAll(selector);
-}
-Element.prototype.has = function(selector)
-{
-	return this.querySelector(selector) != null;
-}
-Element.prototype.get = function(selector)
-{
-	return this.querySelector(selector);
-}
-Element.prototype.getAll = function(selector)
-{
-	return this.querySelectorAll(selector);
-}
 let isLoaded = false;
 let hasScrolledInto = false;
 let load = setInterval(function() {
@@ -145,7 +154,7 @@ let load = setInterval(function() {
 			let subPostNode = postNode.getAll(':scope > sub-post > post-content > post');
 			for (let i = 0; i < subPostNode.length; i++) {
 				let subOrderString = orderString + '.' + i.toString();
-				markedNode[markedNode.length] = subPostNode[i];
+				markedNode.push(subPostNode[i]);
 				subPostNode[i].setAttribute('marker', subOrderString);
 				subPostConducting(subOrderString, subPostNode[i]);
 			}
@@ -153,12 +162,12 @@ let load = setInterval(function() {
 		let postNode = forAll('content > sub-content > post');
 		for (let i = 0; i < postNode.length; i++) {
 			let orderString = i.toString();
-			markedNode[markedNode.length] = postNode[i];
+			markedNode.push(postNode[i]);
 			postNode[i].setAttribute('marker', orderString);
 			subPostConducting(orderString, postNode[i]);
 		}
 		/* Clearing */ {
-			let postNode = document.getElementsByTagName('post');
+			let postNode = forAllTag('post');
 			for (let i = 0; i < postNode.length; i++) {
 				let isMarked = false;
 				for (let j = 0; j < markedNode.length; j++) {
@@ -182,29 +191,29 @@ let load = setInterval(function() {
 			}
 		}
 		/* post */ {
-			let postNode = document.getElementsByTagName('post');
+			let postNode = forAllTag('post');
 			/* structuring for the 'post's */ {
 				insertSurround('post', 'sub-post');
-				insertSurround('sub-post', 'post-content');
-				moveOutside('post-content', 'post-leader');
-				switchFirst('sub-post', 'post-leader');
-				addFirst('sub-post', 'post-leader');
-				switchFirst('post-leader', 'post-leader-advance');
-				addFirst('post-leader', 'post-leader-advance');
+				insertSurround('post > sub-post', 'post-content');
+				moveOutside('post > sub-post > post-content', 'post-leader');
+				switchFirst('post > sub-post', 'post-leader');
+				addFirst('post > sub-post', 'post-leader');
+				switchFirst('post > sub-post > post-leader', 'post-leader-advance');
+				addFirst('post > sub-post > post-leader', 'post-leader-advance');
 				for (let i = 0; i < postNode.length; i++) {
 					let advanceChildNode = postNode[i].getAll(':scope > sub-post > post-content > advance > *');
 					postNode[i].get('post > sub-post > post-leader > post-leader-advance').prepend(...advanceChildNode);
 					postNode[i].get('post > sub-post > post-leader > post-leader-advance').classList.add('no-text');
 				}
-				switchFirst('post-leader', 'post-leader-section');
-				addFirst('post-leader', 'post-leader-section');
-				switchFirst('post-leader-section', 'post-leader-title');
-				addFirst('post-leader-section', 'post-leader-title');
-				switchFirst('post-leader-section', 'post-leader-order');
-				addFirst('post-leader-section', 'post-leader-order');
-				moveOutside('post-content', 'scroll-into');
-				switchFirst('sub-post', 'scroll-into');
-				addFirst('sub-post', 'scroll-into');
+				switchFirst('post > sub-post > post-leader', 'post-leader-section');
+				addFirst('post > sub-post > post-leader', 'post-leader-section');
+				switchFirst('post > sub-post > post-leader > post-leader-section', 'post-leader-title');
+				addFirst('post > sub-post > post-leader > post-leader-section', 'post-leader-title');
+				switchFirst('post > sub-post > post-leader > post-leader-section', 'post-leader-order');
+				addFirst('post > sub-post > post-leader > post-leader-section', 'post-leader-order');
+				moveOutside('post > sub-post > post-content', 'scroll-into');
+				switchFirst('post > sub-post', 'scroll-into');
+				addFirst('post > sub-post', 'scroll-into');
 			}
 			/* adding the icon for the 'post's */ {
 				for (let i = 0; i < postNode.length; i++) {
@@ -255,18 +264,18 @@ let load = setInterval(function() {
 			}
 		}
 		/* dropdown */ {
-			let dropdownNode = document.getElementsByTagName('dropdown');
+			let dropdownNode = forAllTag('dropdown');
 				/* structuring for the 'dropdown's */ {
 				insertSurround('dropdown', 'dropdown-content');
-				moveOutside('dropdown-content', 'outer-margin');
+				moveOutside('dropdown > dropdown-content', 'outer-margin');
 				switchFirst('dropdown', 'outer-margin');
 				addFirst('dropdown', 'outer-margin');
 				switchFirst('dropdown', 'dropdown-content');
-				moveOutside('dropdown-content', 'inner-padding');
+				moveOutside('dropdown > dropdown-content', 'inner-padding');
 				switchFirst('dropdown', 'inner-padding');
 				addFirst('dropdown', 'inner-padding');
 				for (let i = 0; i < dropdownNode.length; i++) {
-					let restNode = dropdownNode[i].querySelectorAll(':scope > :not(dropdown-content, inner-padding, outer-margin)');
+					let restNode = dropdownNode[i].getAll(':scope > :not(dropdown-content, inner-padding, outer-margin)');
 					dropdownNode[i].prepend(...restNode);
 				}
 			}
@@ -275,7 +284,7 @@ let load = setInterval(function() {
 	/* [ pseudo-style ] */
 	if (isLoaded == true) {
 		/* content */ {
-			let contentNode = document.getElementsByTagName('content');
+			let contentNode = forAllTag('content');
 			/* resizing for the 'content' */ {
 				for (let i = 0; i < contentNode.length; i++) {
 					if (document.body.clientWidth <= 750) {
@@ -287,7 +296,7 @@ let load = setInterval(function() {
 			}
 		}
 		/* top */ {
-			let topNode = document.getElementsByTagName('top');
+			let topNode = forAllTag('top');
 			/* resizing for the 'top' */ {
 				for (let i = 0; i < topNode.length; i++) {
 					if (document.body.clientWidth > 1226) {
@@ -348,7 +357,7 @@ let load = setInterval(function() {
 			}
 		}
 		/* post */ {
-			let postNode = document.getElementsByTagName('post');
+			let postNode = forAllTag('post');
 			/* '.no-content' for the 'post > sub-post > post-content's */ {
 				let postContentNode = forAll('post > sub-post > post-content');
 				for (let i = 0; i < postContentNode.length; i++) {
@@ -379,7 +388,7 @@ let load = setInterval(function() {
 			}
 		}
 		/* dropdown */ {
-			let dropdownNode = document.getElementsByTagName('dropdown');
+			let dropdownNode = forAllTag('dropdown');
 			/* '.has-node' for the 'dropdown > dropdown-content > a's */ {
 				let aNode = forAll('dropdown > dropdown-content > a');
 				for (let i = 0; i < aNode.length; i++) {
@@ -462,7 +471,7 @@ let load = setInterval(function() {
 			}
 		}
 		/* no-space */ {
-			let anyNoSpaceNode = document.getElementsByClassName('no-space');
+			let anyNoSpaceNode = forAllClass('no-space');
 			for (let i = 0; i < anyNoSpaceNode.length; i++) {
 				let childNode = anyNoSpaceNode[i].childNodes;
 				for (let j = 0; j < childNode.length; j++) {
@@ -473,7 +482,7 @@ let load = setInterval(function() {
 			}
 		}
 		/* no-text */ {
-			let anyNoSpaceNode = document.getElementsByClassName('no-text');
+			let anyNoSpaceNode = forAllClass('no-text');
 			for (let i = 0; i < anyNoSpaceNode.length; i++) {
 				let childNode = anyNoSpaceNode[i].childNodes;
 				for (let j = 0; j < childNode.length; j++) {
