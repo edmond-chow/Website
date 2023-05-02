@@ -449,7 +449,7 @@ let load = setInterval(function() {
 						targetNode.style.left = '';
 					}
 					let right = document.body.clientWidth - dropdownNode[i].getBoundingClientRect().right;
-					if (right + dropdownNode[i].clientWidth < Math.max(targetNode.offsetWidth, 175) + 12) {
+					if (right + dropdownNode[i].clientWidth < Math.max(targetNode.offsetWidth, 175) + 6) {
 						targetNode.style.right = (6 - right).toString() + 'px';
 					} else {
 						targetNode.style.right = '';

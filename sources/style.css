@@ -679,7 +679,7 @@ content {
 	min-width: 1048px;
 }
 content.tiny {
-	min-width: unset;
+	min-width: 500px;
 	width: calc(100% - 70px);
 	padding-left: 35px;
 	padding-right: 35px;
