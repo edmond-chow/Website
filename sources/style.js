@@ -136,7 +136,7 @@ Element.prototype.getAll = function(selector)
 }
 let isLoaded = false;
 let hasScrolledInto = false;
-let load = setTimeout(function delegate() {
+let load = setInterval(function() {
 	function marker() {
 		let markedNode = [];
 		let orderSelector = ':scope > sub-post > post-leader > post-leader-order';
@@ -495,5 +495,4 @@ let load = setTimeout(function delegate() {
 			}
 		}
 	}
-	load = setTimeout(delegate, 100);
 }, 100);
