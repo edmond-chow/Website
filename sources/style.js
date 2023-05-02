@@ -19,20 +19,20 @@ Element.prototype.getAll = function(selector)
 {
 	return this.querySelectorAll(selector);
 }
-function fragmentForChild(childNode, child) {
-	let fragment = document.createDocumentFragment();
+function arrayForChild(childNode, child) {
+	let array = document.createDocumentFragment();
 	for (let i = 0; i < childNode.length; i++) {
 		if (childNode[i].tagName == child.toUpperCase()) {
-			fragment.appendChild(childNode[i]);
+			array.push(childNode[i]);
 		}
 	}
-	return fragment.childNodes;
+	return array;
 }
 function insertSurround(parent, child) {
 	let parentNode = forAll(parent);
 	for (let i = 0; i < parentNode.length; i++) {
 		let childNode = parentNode[i].children;
-		if (fragmentForChild(childNode, child).length == 0) {
+		if (arrayForChild(childNode, child).length == 0) {
 			let substance = document.createElement(child);
 			substance.prepend(...parentNode[i].childNodes);
 			parentNode[i].prepend(substance);
@@ -43,7 +43,7 @@ function switchFirst(parent, child) {
 	let parentNode = forAll(parent);
 	for (let i = 0; i < parentNode.length; i++) {
 		let childNode = parentNode[i].children;
-		parentNode[i].prepend(...fragmentForChild(childNode, child));
+		parentNode[i].prepend(...arrayForChild(childNode, child));
 	}
 }
 function addFirst(parent, child) {
@@ -60,7 +60,7 @@ function moveOutside(parent, child) {
 	let parentNode = forAll(parent);
 	for (let i = 0; i < parentNode.length; i++) {
 		let childNode = parentNode[i].children;
-		parentNode[i].parentElement?.prepend(...fragmentForChild(childNode, child));
+		parentNode[i].parentElement?.prepend(...arrayForChild(childNode, child));
 	}
 }
 function surroundedBy(parent, childNode) {
