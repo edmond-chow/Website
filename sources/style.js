@@ -20,7 +20,7 @@ Element.prototype.getAll = function(selector)
 	return this.querySelectorAll(selector);
 }
 function arrayForChild(childNode, child) {
-	let array = document.createDocumentFragment();
+	let array = [];
 	for (let i = 0; i < childNode.length; i++) {
 		if (childNode[i].tagName == child.toUpperCase()) {
 			array.push(childNode[i]);
@@ -202,8 +202,8 @@ let load = setInterval(function() {
 				addFirst('post > sub-post > post-leader', 'post-leader-advance');
 				for (let i = 0; i < postNode.length; i++) {
 					let advanceChildNode = postNode[i].getAll(':scope > sub-post > post-content > advance > *');
-					postNode[i].get('post > sub-post > post-leader > post-leader-advance').prepend(...advanceChildNode);
-					postNode[i].get('post > sub-post > post-leader > post-leader-advance').classList.add('no-text');
+					postNode[i].get(':scope > sub-post > post-leader > post-leader-advance').prepend(...advanceChildNode);
+					postNode[i].get(':scope > sub-post > post-leader > post-leader-advance').classList.add('no-text');
 				}
 				switchFirst('post > sub-post > post-leader', 'post-leader-section');
 				addFirst('post > sub-post > post-leader', 'post-leader-section');
