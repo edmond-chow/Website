@@ -428,12 +428,19 @@ let load = setInterval(function() {
 					}
 				}
 			}
-			/* setting the 'maxHeight' and 'right' style for a 'dropdown-content' */ {
+			/* setting the 'maxHeight', 'left' and 'right' style, and '.hidden' for a 'dropdown-content' */ {
 				for (let i = 0; i < dropdownNode.length; i++) {
-					if (!inClient(dropdownNode[i]) || !dropdownNode[i].has(':scope > dropdown-content')) {
+					if (!dropdownNode[i].has(':scope > dropdown-content')) {
 						continue;
 					}
 					let targetNode = dropdownNode[i].get(':scope > dropdown-content');
+					if (!inClient(dropdownNode[i])) {
+						targetNode.classList.add('hidden');
+						targetNode.style.maxHeight = '';
+						targetNode.style.left = '';
+						targetNode.style.right = '';
+						continue;
+					}
 					let bottom = document.body.clientHeight - dropdownNode[i].getBoundingClientRect().bottom;
 					if (bottom < 64) {
 						targetNode.classList.add('hidden');
