@@ -218,6 +218,7 @@ post > img.icon {
 	left: -32px;
 	margin: 0px 0px -64px 0px;
 	display: block;
+	user-select: none;
 	-webkit-user-drag: none;
 }
 content.tiny > sub-content post > img.icon {
