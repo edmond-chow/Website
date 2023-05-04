@@ -1,8 +1,13 @@
 @charset 'UTF-8';
 @import url('font/font.css');
 /* initialization */
+@supports (text-size-adjust: 100%) html, body {
+	text-size-adjust: 100%; /* Prevent font scaling in landscape while allowing user zoom */
+}
+@supports (text-decoration-skip: none) html, body {
+	text-decoration-skip: none;
+}
 html, body {
-	-webkit-text-size-adjust: 100%; /* Prevent font scaling in landscape while allowing user zoom */
 	margin: 0px;
 	border: 0px;
 	padding: 0px;
@@ -14,7 +19,6 @@ html, body {
 	font-style: normal;
 	color: black;
 	text-decoration-style: solid;
-	text-decoration-skip: none;
 	text-decoration-skip-ink: none;
 	text-align: left;
 	word-break: normal;
@@ -203,7 +207,7 @@ post:first-child {
 post:first-of-type:not(:first-child) {
 	padding-top: 20px !important;
 }
-content.tiny > sub-content post:first-of-type:not(:first-child) {
+major.tiny > sub-major post:first-of-type:not(:first-child) {
 	padding-top: 16px !important;
 }
 post:last-of-type {
@@ -221,7 +225,7 @@ post > img.icon {
 	user-select: none;
 	-webkit-user-drag: none;
 }
-content.tiny > sub-content post > img.icon {
+major.tiny > sub-major post > img.icon {
 	width: 48px;
 	margin: 0px 0px -48px 0px;
 	top: 6px;
@@ -246,7 +250,7 @@ post > sub-post {
 post > img.icon[src]:not([src='']) + sub-post {
 	min-height: 80px;
 }
-content.tiny > sub-content post > img.icon[src]:not([src='']) + sub-post {
+major.tiny > sub-major post > img.icon[src]:not([src='']) + sub-post {
 	min-height: 60px;
 }
 post > sub-post:not(:first-of-type) {
@@ -258,7 +262,7 @@ body#blur post > sub-post {
 	box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.5);
 	background: rgba(255, 255, 255, 0.3);
 }
-body#blur content.tiny > sub-content post > sub-post {
+body#blur major.tiny > sub-major post > sub-post {
 	border-radius: 6px;
 }
 body#blur post.non-blur > sub-post {
@@ -271,7 +275,7 @@ post > sub-post > post-leader {
 	display: block;
 	padding: 0px 0px 0px 20px;
 }
-content.tiny > sub-content post > sub-post > post-leader {
+major.tiny > sub-major post > sub-post > post-leader {
 	max-width: calc(100% - 15px);
     width: calc(100% - 15px);
 	padding: 0px 0px 0px 15px;
@@ -283,7 +287,7 @@ body#blur post > sub-post > post-leader {
 	border-top-left-radius: 8px;
 	border-top-right-radius: 8px;
 }
-body#blur content.tiny > sub-content post > sub-post > post-leader {
+body#blur major.tiny > sub-major post > sub-post > post-leader {
 	border-top-left-radius: 6px;
 	border-top-right-radius: 6px;
 }
@@ -308,7 +312,7 @@ post > sub-post > post-leader > post-leader-section > post-leader-order {
 	font-size: 16px;
 	color: white;
 }
-content.tiny > sub-content post > sub-post > post-leader > post-leader-section > post-leader-order {
+major.tiny > sub-major post > sub-post > post-leader > post-leader-section > post-leader-order {
 	padding: 15px 15px 24px 15px;
 }
 post > sub-post > post-leader > post-leader-section > post-leader-order:not(:first-of-type) {
@@ -329,7 +333,7 @@ post > sub-post > post-leader > post-leader-section > post-leader-title {
 	font-size: 16px;
 	color: white;
 }
-content.tiny > sub-content post > sub-post > post-leader > post-leader-section > post-leader-title {
+major.tiny > sub-major post > sub-post > post-leader > post-leader-section > post-leader-title {
 	padding: 15px 15px 24px 15px;
 	max-width: calc(100% - 100px);
 	width: calc(100% - 100px);
@@ -350,7 +354,7 @@ post > sub-post > post-leader > post-leader-advance {
 	margin: 0px;
 	min-height: 42px;
 }
-content.tiny > sub-content post > sub-post > post-leader > post-leader-advance {
+major.tiny > sub-major post > sub-post > post-leader > post-leader-advance {
 	padding: 9px 9px 9px 12px;
 	max-width: calc(40% - 21px);
 	width: calc(40% - 21px);
@@ -358,7 +362,7 @@ content.tiny > sub-content post > sub-post > post-leader > post-leader-advance {
 body#blur post > sub-post > post-leader > post-leader-advance {
 	border-top-right-radius: 8px;
 }
-body#blur content.tiny > sub-content post > sub-post > post-leader > post-leader-advance {
+body#blur major.tiny > sub-major post > sub-post > post-leader > post-leader-advance {
 	border-top-right-radius: 6px;
 }
 post > sub-post > post-leader > post-leader-advance > button.advance, post > sub-post > post-leader > post-leader-advance > dropdown {
@@ -384,7 +388,7 @@ post > sub-post > post-content {
 	border: 0px;
 	padding: 0px 40px 20px 40px;
 }
-content.tiny > sub-content post > sub-post > post-content {
+major.tiny > sub-major post > sub-post > post-content {
 	padding: 0px 30px 15px 30px;
 }
 post > sub-post > post-content:not(:first-of-type) {
@@ -397,7 +401,7 @@ body#blur post > sub-post > post-content {
 	border-bottom-left-radius: 8px;
 	border-bottom-right-radius: 8px;
 }
-body#blur content.tiny > sub-content post > sub-post > post-content {
+body#blur major.tiny > sub-major post > sub-post > post-content {
 	border-bottom-left-radius: 6px;
     border-bottom-right-radius: 6px;
 }
@@ -672,7 +676,7 @@ top > a.active:hover {
 top > a.active:active {
 	background-color: #b8b8b8;
 }
-content {
+major {
 	width: auto;
 	vertical-align: top;
 	display: block;
@@ -686,14 +690,16 @@ content {
 	padding-bottom: 75px;
 	min-width: 1048px;
 }
-content.tiny {
+major.tiny {
 	min-width: 500px;
 	width: calc(100% - 70px);
+	vertical-align: top;
+	display: block;
 	padding-left: 35px;
 	padding-right: 35px;
 	padding-bottom: 20px;
 }
-content > sub-content {
+major > sub-major {
 	vertical-align: top;
 	margin: 0px;
 	padding: 0px;
@@ -702,17 +708,17 @@ content > sub-content {
 	width: 848px;
 	display: inline-block;
 }
-content > sub-content:not(:first-of-type) {
+major > sub-major:not(:first-of-type) {
 	display: none !important;
 }
-content.tiny > sub-content {
+major.tiny > sub-major {
 	width: 100%;
 }
 /* blur-boundary */
-body#blur content > sub-content > post > sub-post {
+body#blur major > sub-major > post > sub-post {
 	position: relative;
 }
-body#blur content > sub-content > post > sub-post:after {
+body#blur major > sub-major > post > sub-post:after {
 	display: block;
 	content: "";
 	position: absolute;

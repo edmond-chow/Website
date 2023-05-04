@@ -173,7 +173,7 @@ let load = setInterval(function() {
 				subPostConducting(subOrderString, subPostNode[i]);
 			}
 		}
-		let postNode = forAll('content > sub-content > post');
+		let postNode = forAll('major > sub-major > post');
 		for (let i = 0; i < postNode.length; i++) {
 			let orderString = i.toString();
 			markedNode.push(postNode[i]);
@@ -199,9 +199,9 @@ let load = setInterval(function() {
 	/* [ structured-tag ] */
 	if (document.readyState == 'complete' && isLoaded == false) {
 		isLoaded = true;
-		/* content */ {
-			/* structuring for the 'content' */ {
-				insertSurround('content', 'sub-content');
+		/* major */ {
+			/* structuring for the 'major' */ {
+				insertSurround('major', 'sub-major');
 			}
 		}
 		/* post */ {
@@ -232,11 +232,12 @@ let load = setInterval(function() {
 			/* adding the icon for the 'post's */ {
 				for (let i = 0; i < postNode.length; i++) {
 					let imgNode;
-					if (postNode[i].has(':scope > img.icon')) {
+					if (postNode[i].has(':scope > img.icon[alt=""]')) {
 						imgNode = postNode[i].get(':scope > img.icon');
 					} else {
 						imgNode = document.createElement('img');
 						imgNode.classList.add('icon');
+						imgNode.setAttribute('alt', '');
 					}
 					let iconSrc = '';
 					if (postNode[i].hasAttribute('icon-src')) {
@@ -297,14 +298,14 @@ let load = setInterval(function() {
 	}
 	/* [ pseudo-style ] */
 	if (isLoaded == true) {
-		/* content */ {
-			let contentNode = forAllTag('content');
-			/* resizing for the 'content' */ {
-				for (let i = 0; i < contentNode.length; i++) {
+		/* major */ {
+			let majorNode = forAllTag('major');
+			/* resizing for the 'major' */ {
+				for (let i = 0; i < majorNode.length; i++) {
 					if (document.body.clientWidth <= 750) {
-						contentNode[i].classList.add('tiny');
+						majorNode[i].classList.add('tiny');
 					} else {
-						contentNode[i].classList.remove('tiny');
+						majorNode[i].classList.remove('tiny');
 					}
 				}
 			}
