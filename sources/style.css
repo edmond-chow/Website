@@ -478,6 +478,13 @@ dropdown > dropdown-content {
 dropdown.has-single-button {
 	margin: 3px;
 }
+body#blur dropdown.has-single-button {
+	border-radius: 8px;
+}
+body#blur dropdown:hover.has-single-button {
+	border-bottom-left-radius: 0px;
+	border-bottom-right-radius: 0px;
+}
 dropdown.has-single-button > button:first-of-type:last-of-type {
 	margin: 0px;
 }
