@@ -4,9 +4,6 @@
 @supports (text-size-adjust: 100%) html, body {
 	text-size-adjust: 100%; /* Prevent font scaling in landscape while allowing user zoom */
 }
-@supports (text-decoration-skip: none) html, body {
-	text-decoration-skip: none;
-}
 html, body {
 	margin: 0px;
 	border: 0px;
@@ -33,11 +30,6 @@ body {
 	background-attachment: fixed;
 	background-position: center;
 	background-size: cover;
-	text-size-adjust: 100%;
-	-moz-text-size-adjust: 100%;
-	-webkit-text-size-adjust: 100%;
-	-o-text-size-adjust: 100%;
-	-ms-text-size-adjust: 100%;
 }
 div {
 	margin: 0px;
@@ -72,17 +64,17 @@ h1, h2, h3, h4, h5, h6, p, pre, code, samp, kbd, a, b, strong, em, var, s, sub, 
 p b, p strong, p em, p var, p s, p sub, p sup, p span {
 	display: inline;
 }
-h1 {line-height: 38px; font-size: 32px   ; font-weight: 500;}
-h2 {line-height: 29px; font-size: 24px   ; font-weight: 500;}
-h3 {line-height: 23px; font-size: 18.72px; font-weight: 500;}
-h4 {line-height: 19px; font-size: 16px   ; font-weight: 500;}
-h5 {line-height: 17px; font-size: 13.28px; font-weight: 500;}
-h6 {line-height: 13px; font-size: 10.72px; font-weight: 500;}
-p {line-height: 18px; font-size: 16px; font-weight: normal; font-family: 'Noto Sans', 'Microsoft JhengHei';}
-pre  {line-height: 15px; font-size: 13px; font-weight: normal; font-family: 'Menlo', 'consolas', 'monospace';}
-code {line-height: 15px; font-size: 13px; font-weight: normal; font-family: 'Menlo', 'consolas', 'monospace';}
-samp {line-height: 15px; font-size: 13px; font-weight: normal; font-family: 'Menlo', 'consolas', 'monospace';}
-kbd  {line-height: 15px; font-size: 13px; font-weight: normal; font-family: 'Menlo', 'consolas', 'monospace';}
+h1 { line-height: 38px; font-size: 32px   ; font-weight: 500; }
+h2 { line-height: 29px; font-size: 24px   ; font-weight: 500; }
+h3 { line-height: 23px; font-size: 18.72px; font-weight: 500; }
+h4 { line-height: 19px; font-size: 16px   ; font-weight: 500; }
+h5 { line-height: 17px; font-size: 13.28px; font-weight: 500; }
+h6 { line-height: 13px; font-size: 10.72px; font-weight: 500; }
+p	 { line-height: 18px; font-size: 16px; font-weight: normal; font-family: 'Noto Sans', 'Microsoft JhengHei'; }
+pre  { line-height: 15px; font-size: 13px; font-weight: normal; font-family: 'Menlo', 'consolas', 'monospace'; }
+code { line-height: 15px; font-size: 13px; font-weight: normal; font-family: 'Menlo', 'consolas', 'monospace'; }
+samp { line-height: 15px; font-size: 13px; font-weight: normal; font-family: 'Menlo', 'consolas', 'monospace'; }
+kbd  { line-height: 15px; font-size: 13px; font-weight: normal; font-family: 'Menlo', 'consolas', 'monospace'; }
 a {text-decoration: underline; display: inline;}
 b, strong {font-weight: bold;}
 em, var { font-style: italic;}
