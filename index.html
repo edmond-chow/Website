@@ -3,7 +3,7 @@
 <head>
 <?php header('X-Frame-Options:SAMEORIGIN',true);?>
 <meta charset="UTF-8">
-<meta name="viewport" content="user-scalable=no, width=device-width"/>
+<meta name="viewport" content="width=device-width, height=device-height, maximum-scale=0.75"/>
 <link rel="stylesheet" href="sources/style.css">
 <script src="sources/style.js"></script>
 <style>
@@ -51,11 +51,12 @@ body, body#blur major > sub-major > post > sub-post:after {
 	<a class="active tv-show">tv-show</a>
 	<a class="tv-show">tv-show</a>
 </top>
-<major>
+<major marker-reversed="true false" marker-started-with="3 5">
 <post headline="post" inner-class="no-space" icon-src="sources/icons8-air-play-64.png">
 <advance>
+<button class="advance">button</button>
 <dropdown>
-	<button class="advance external-link icon">external-link</button>
+	<button class="advance air-play icon">external-link</button>
 	<dropdown-content class="" style="">
 		<a class="air-play">air-play</a>
 		<a class="browse-page">browse-page</a>
@@ -442,9 +443,132 @@ body, body#blur major > sub-major > post > sub-post:after {
 		<a class="tv-show">tv-show</a>
 	</dropdown-content>
 </dropdown>
-<post headline="post" inner-class="no-space" icon-src="sources/icons8-music-record-64.png">
-<advance><button class="advance">button</button></advance>
+<post headline="post" inner-class="no-space" icon-src="sources/icons8-browse-page-64.png">
+<advance>
+<button class="advance">button</button>
+<dropdown>
+	<button class="advance browse-page icon">external-link</button>
+	<dropdown-content class="" style="">
+		<a class="air-play">air-play</a>
+		<a class="browse-page">browse-page</a>
+		<a class="download-from-cloud">download-from-cloud</a>
+		<a class="external-link">external-link</a>
+		<a class="music-record">music-record</a>
+		<a class="play-property">play-property</a>
+		<a class="share">share</a>
+		<a class="tv-show">tv-show</a>
+	</dropdown-content>
+</dropdown>
+</advance>
 </post>
+<post headline="post" inner-class="no-space" icon-src="sources/icons8-download-from-cloud-64.png">
+<advance>
+<button class="advance">button</button>
+<dropdown>
+	<button class="advance download-from-cloud icon">external-link</button>
+	<dropdown-content class="" style="">
+		<a class="air-play">air-play</a>
+		<a class="browse-page">browse-page</a>
+		<a class="download-from-cloud">download-from-cloud</a>
+		<a class="external-link">external-link</a>
+		<a class="music-record">music-record</a>
+		<a class="play-property">play-property</a>
+		<a class="share">share</a>
+		<a class="tv-show">tv-show</a>
+	</dropdown-content>
+</dropdown>
+</advance>
+</post>
+<post headline="post" inner-class="no-space" icon-src="sources/icons8-external-link-64.png">
+<advance>
+<button class="advance">button</button>
+<dropdown>
+	<button class="advance external-link icon">external-link</button>
+	<dropdown-content class="" style="">
+		<a class="air-play">air-play</a>
+		<a class="browse-page">browse-page</a>
+		<a class="download-from-cloud">download-from-cloud</a>
+		<a class="external-link">external-link</a>
+		<a class="music-record">music-record</a>
+		<a class="play-property">play-property</a>
+		<a class="share">share</a>
+		<a class="tv-show">tv-show</a>
+	</dropdown-content>
+</dropdown>
+</advance>
+</post>
+<post headline="post" inner-class="no-space" icon-src="sources/icons8-music-record-64.png">
+<advance>
+<button class="advance">button</button>
+<dropdown>
+	<button class="advance music-record icon">external-link</button>
+	<dropdown-content class="" style="">
+		<a class="air-play">air-play</a>
+		<a class="browse-page">browse-page</a>
+		<a class="download-from-cloud">download-from-cloud</a>
+		<a class="external-link">external-link</a>
+		<a class="music-record">music-record</a>
+		<a class="play-property">play-property</a>
+		<a class="share">share</a>
+		<a class="tv-show">tv-show</a>
+	</dropdown-content>
+</dropdown>
+</advance>
+</post>
+</post>
+<post headline="post" inner-class="no-space" icon-src="sources/icons8-play-property-64.png">
+<advance>
+<button class="advance">button</button>
+<dropdown>
+	<button class="advance play-property icon">external-link</button>
+	<dropdown-content class="" style="">
+		<a class="air-play">air-play</a>
+		<a class="browse-page">browse-page</a>
+		<a class="download-from-cloud">download-from-cloud</a>
+		<a class="external-link">external-link</a>
+		<a class="music-record">music-record</a>
+		<a class="play-property">play-property</a>
+		<a class="share">share</a>
+		<a class="tv-show">tv-show</a>
+	</dropdown-content>
+</dropdown>
+</advance>
+</post>
+<post headline="post" inner-class="no-space" icon-src="sources/icons8-share-64.png">
+<advance>
+<button class="advance">button</button>
+<dropdown>
+	<button class="advance share icon">external-link</button>
+	<dropdown-content class="" style="">
+		<a class="air-play">air-play</a>
+		<a class="browse-page">browse-page</a>
+		<a class="download-from-cloud">download-from-cloud</a>
+		<a class="external-link">external-link</a>
+		<a class="music-record">music-record</a>
+		<a class="play-property">play-property</a>
+		<a class="share">share</a>
+		<a class="tv-show">tv-show</a>
+	</dropdown-content>
+</dropdown>
+</advance>
+</post>
+<post headline="post" inner-class="no-space" icon-src="sources/icons8-tv-show-64.png">
+<advance>
+<button class="advance">button</button>
+<dropdown>
+	<button class="advance tv-show icon">external-link</button>
+	<dropdown-content class="" style="">
+		<a class="air-play">air-play</a>
+		<a class="browse-page">browse-page</a>
+		<a class="download-from-cloud">download-from-cloud</a>
+		<a class="external-link">external-link</a>
+		<a class="music-record">music-record</a>
+		<a class="play-property">play-property</a>
+		<a class="share">share</a>
+		<a class="tv-show">tv-show</a>
+	</dropdown-content>
+</dropdown>
+</advance>
 </post>
 </major>
 </body>
