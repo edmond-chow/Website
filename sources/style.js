@@ -164,17 +164,13 @@ let load = setInterval(function() {
 		function getMarker(majorNode, stackCount, postNode, index) {
 			let markerReversed = false;
 			if (majorNode.hasAttribute('marker-reversed')) {
-				let temporaryNode = document.createElement('temporary');
-				temporaryNode.className = majorNode.getAttribute('marker-reversed');
-				if (temporaryNode.classList[stackCount]?.toLowerCase() == 'true') {
+				if (majorNode.getAttribute('marker-reversed').split(' ')[stackCount]?.toLowerCase() == 'true') {
 					markerReversed = true;
 				};
 			}
 			let markerStartedWith = 0;
 			if (majorNode.hasAttribute('marker-started-with')) {
-				let temporaryNode = document.createElement('temporary');
-				temporaryNode.className = majorNode.getAttribute('marker-started-with');
-				let value = parseInt(temporaryNode.classList[stackCount]);
+				let value = parseInt(majorNode.getAttribute('marker-started-with').split(' ')[stackCount]);
 				if (!isNaN(value)) {
 					markerStartedWith = value;
 				};
