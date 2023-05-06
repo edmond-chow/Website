@@ -161,24 +161,55 @@ let isLoaded = false;
 let hasScrolledInto = false;
 let load = setInterval(function() {
 	function marker() {
+		function getMarker(majorNode, stackCount, postNode, index) {
+			let markerReversed = false;
+			if (majorNode.hasAttribute('marker-reversed')) {
+				let temporaryNode = document.createElement('temporary');
+				temporaryNode.className = majorNode.getAttribute('marker-reversed');
+				if (temporaryNode.classList[stackCount]?.toLowerCase() == 'true') {
+					markerReversed = true;
+				};
+			}
+			let markerStartedWith = 0;
+			if (majorNode.hasAttribute('marker-started-with')) {
+				let temporaryNode = document.createElement('temporary');
+				temporaryNode.className = majorNode.getAttribute('marker-started-with');
+				let value = parseInt(temporaryNode.classList[stackCount]);
+				if (!isNaN(value)) {
+					markerStartedWith = value;
+				};
+			}
+			if (markerReversed) {
+				markerStartedWith += postNode.length - 1 - index;
+			} else {
+				markerStartedWith += index;
+			}
+			return markerStartedWith;
+		}
 		let markedNode = [];
 		let orderSelector = ':scope > sub-post > post-leader > post-leader-order';
 		let scrollSelector = ':scope > sub-post > scroll-into';
-		function subPostConducting(orderString, postNode) {
+		function subPostConducting(majorNode, stackCount, orderString, postNode) {
 			let subPostNode = postNode.getAll(':scope > sub-post > post-content > post');
 			for (let i = 0; i < subPostNode.length; i++) {
-				let subOrderString = orderString + '.' + i.toString();
+				let subOrderString = orderString + '.' + getMarker(majorNode, stackCount + 1, subPostNode, i).toString();
 				markedNode.push(subPostNode[i]);
 				subPostNode[i].setAttribute('marker', subOrderString);
-				subPostConducting(subOrderString, subPostNode[i]);
+				subPostConducting(majorNode, stackCount + 1, subOrderString, subPostNode[i]);
 			}
 		}
-		let postNode = forAll('major > sub-major > post');
-		for (let i = 0; i < postNode.length; i++) {
-			let orderString = i.toString();
-			markedNode.push(postNode[i]);
-			postNode[i].setAttribute('marker', orderString);
-			subPostConducting(orderString, postNode[i]);
+		let majorNode = forAllTag('major');
+		for (let i = 0; i < majorNode.length; i++) {
+			if (!majorNode[i].has(':scope > sub-major')) {
+				continue;
+			}
+			let postNode = majorNode[i].get(':scope > sub-major').getAll(':scope > post');
+			for (let j = 0; j < postNode.length; j++) {
+				let orderString = getMarker(majorNode[i], 0, postNode, j).toString();
+				markedNode.push(postNode[j]);
+				postNode[j].setAttribute('marker', orderString);
+				subPostConducting(majorNode[i], 0, orderString, postNode[j]);
+			}
 		}
 		/* Clearing */ {
 			let postNode = forAllTag('post');
