@@ -160,7 +160,7 @@ function setLocked(node) {
 let isLoaded = false;
 let hasScrolledInto = false;
 let load = setInterval(function() {
-		function mobileCascading() {
+	function mobileCascading() {
 		let styleText = `
 @media (pointer:none), (pointer:coarse) {
 	body {
@@ -178,18 +178,21 @@ let load = setInterval(function() {
 	}
 }
 `;
-		let styleNode = forAll('head > style#mobile-cascading');
-		for (let i = 1; i < styleNode.length; i++) {
-			styleNode[i].remove();
-		}
-		if (styleNode.length == 0) {
-			styleNode = document.createElement('style');
-			styleNode.type = 'text/css';
-			styleNode.id = 'mobile-cascading';
-			document.head.append(styleNode);
-		} else {
-			styleNode = styleNode[0];
-		}
+		let styleNode = function() {
+			let pseudoNode = forAll('head > style#mobile-cascading');
+			if (pseudoNode.length == 0) {
+				let styleNode = document.createElement('style');
+				styleNode.type = 'text/css';
+				styleNode.id = 'mobile-cascading';
+				document.head.append(styleNode);
+				return styleNode;
+			} else {
+				for (let i = 1; i < pseudoNode.length; i++) {
+					pseudoNode[i].remove();
+				}
+				return pseudoNode[0];
+			}
+		}();
 		if (styleNode.childNodes.length != 1) {
 			while (styleNode.firstChild != null) {
 				styleNode.removeChild(styleNode.firstChild);
