@@ -157,9 +157,9 @@ function setLocked(node) {
 		}
 	}
 }
-let isLoaded = false;
+let isStructured = false;
 let hasScrolledInto = false;
-let load = setInterval(function() {
+let load = requestAnimationFrame(function delegate() {
 	function mobileCascading() {
 		let styleText = `
 @media (pointer:none), (pointer:coarse) {
@@ -265,9 +265,13 @@ let load = setInterval(function() {
 			}
 		}
 	}
+	requestAnimationFrame(delegate);
+	if (document.readyState != 'complete') {
+		return;
+	}
 	/* [ structured-tag ] */
-	if (document.readyState == 'complete' && isLoaded == false) {
-		isLoaded = true;
+	if (isStructured == false) {
+		isStructured = true;
 		/* major */ {
 			/* structuring for the 'major' */ {
 				insertSurround('major', 'sub-major');
@@ -366,7 +370,7 @@ let load = setInterval(function() {
 		}
 	}
 	/* [ pseudo-style ] */
-	if (isLoaded == true) {
+	if (isStructured == true) {
 		mobileCascading();
 		/* major */ {
 			let majorNode = forAllTag('major');
@@ -602,9 +606,7 @@ let load = setInterval(function() {
 					let scrollIntoNode = forAll('scroll-into');
 					for (let i = 0; i < scrollIntoNode.length; i++) {
 						if (scrollIntoNode[i].id == hash.substring(1, hash.length)) {
-							setTimeout(function() {
-								scrollIntoNode[i].scrollIntoView();
-							}, 500);
+							scrollIntoNode[i].scrollIntoView();
 							break;
 						}
 					}
@@ -612,4 +614,4 @@ let load = setInterval(function() {
 			}
 		}
 	}
-}, 100);
+});
