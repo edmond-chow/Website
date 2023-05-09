@@ -571,7 +571,7 @@ let load = setInterval(function() {
 				}
 			}
 		}
-		/* no-space */ {
+		/* .no-space */ {
 			let anyNoSpaceNode = forAllClass('no-space');
 			for (let i = 0; i < anyNoSpaceNode.length; i++) {
 				let childNode = anyNoSpaceNode[i].childNodes;
@@ -582,7 +582,7 @@ let load = setInterval(function() {
 				}
 			}
 		}
-		/* no-text */ {
+		/* .no-text */ {
 			let anyNoSpaceNode = forAllClass('no-text');
 			for (let i = 0; i < anyNoSpaceNode.length; i++) {
 				let childNode = anyNoSpaceNode[i].childNodes;
@@ -597,10 +597,17 @@ let load = setInterval(function() {
 			if (hasScrolledInto == false) {
 				hasScrolledInto = true;
 				let hash = document.location.hash;
-				if (hash != '')
+				if (hash.substring(0, 1) == '#')
 				{
-					hash = hash.substring(1, hash.length);
-					document.getElementById(hash)?.scrollIntoView();
+					let scrollIntoNode = forAll('scroll-into');
+					for (let i = 0; i < scrollIntoNode.length; i++) {
+						if (scrollIntoNode[i].id == hash.substring(1, hash.length)) {
+							setTimeout(function() {
+								scrollIntoNode[i].scrollIntoView();
+							}, 500);
+							break;
+						}
+					}
 				}
 			}
 		}

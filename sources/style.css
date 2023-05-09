@@ -25,12 +25,6 @@ html, body {
 	width: 100%;
 	height: 100%;
 }
-body {
-	background-repeat: no-repeat;
-	background-attachment: fixed;
-	background-position: center;
-	background-size: cover;
-}
 div {
 	margin: 0px;
 	border: 0px;
@@ -705,7 +699,7 @@ major > sub-major:not(:first-of-type) {
 major.tiny > sub-major {
 	width: 100%;
 }
-/* blur-boundary */
+/* background-image with blur-boundary */
 body#blur major > sub-major > post > sub-post {
 	position: relative;
 }
@@ -720,11 +714,13 @@ body#blur major > sub-major > post > sub-post:after {
 	filter: blur(20px);
 	pointer-events: none;
 	z-index: -1;
+	clip-path: inset(20px 20px 20px 20px round 8px);
+}
+body, body#blur major > sub-major > post > sub-post:after {
 	background-repeat: no-repeat;
 	background-attachment: fixed;
 	background-position: center;
 	background-size: cover;
-	clip-path: inset(20px 20px 20px 20px round 8px);
 }
 /* scroll */
 ::-webkit-scrollbar {
