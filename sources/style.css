@@ -722,6 +722,9 @@ body, body#blur major > sub-major > post > sub-post:after {
 	background-position: center;
 	background-size: cover;
 }
+body:not(.done) {
+	display: none;
+}
 /* scroll */
 ::-webkit-scrollbar {
 	width: 12px;

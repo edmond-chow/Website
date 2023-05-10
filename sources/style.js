@@ -160,30 +160,13 @@ function setLocked(node) {
 let isStructured = false;
 let hasScrolledInto = false;
 let load = requestAnimationFrame(function delegate() {
-	function mobileCascading() {
-		let styleText = `
-@media (pointer:none), (pointer:coarse) {
-	body {
-		min-height: ` + window.innerHeight.toString() + `px;
-	}
-	@media only screen and (max-width: 1048px) {
-		body {
-			min-width: 1048px;
-		}
-	}
-	@media only screen and (max-width: 570px) {
-		body {
-			min-width: 570px;
-		}
-	}
-}
-`;
+	function makeCascading(nodeId, styleText) {
 		let styleNode = function() {
-			let pseudoNode = forAll('head > style#mobile-cascading');
+			let pseudoNode = forAll('head > style#' + nodeId);
 			if (pseudoNode.length == 0) {
 				let styleNode = document.createElement('style');
 				styleNode.type = 'text/css';
-				styleNode.id = 'mobile-cascading';
+				styleNode.id = nodeId;
 				document.head.append(styleNode);
 				return styleNode;
 			} else {
@@ -370,8 +353,39 @@ let load = requestAnimationFrame(function delegate() {
 		}
 	}
 	/* [ pseudo-style ] */
-	if (isStructured == true) {
-		mobileCascading();
+	{
+		/* style#mobile-cascading */ {
+			if (document.body.hasAttribute('background-image')) {
+				let styleText = `
+body, body#blur major > sub-major > post > sub-post:after {
+	background-image: ` + document.body.getAttribute('background-image') + `;
+}
+`;
+				makeCascading('background-image', styleText);
+			} else {
+				makeCascading('background-image', '');
+			}
+		}
+		/* style#mobile-cascading */ {
+			let styleText = `
+@media (pointer:none), (pointer:coarse) {
+	body {
+		min-height: ` + window.innerHeight.toString() + `px;
+	}
+	@media only screen and (max-width: 1048px) {
+		body {
+			min-width: 1048px;
+		}
+	}
+	@media only screen and (max-width: 570px) {
+		body {
+			min-width: 570px;
+		}
+	}
+}
+`;
+			makeCascading('mobile-cascading', styleText);
+		}
 		/* major */ {
 			let majorNode = forAllTag('major');
 			/* resizing for the 'major' */ {
@@ -596,6 +610,9 @@ let load = requestAnimationFrame(function delegate() {
 					}
 				}
 			}
+		}
+		if (!document.body.classList.contains('done')) {
+			document.body.classList.add('done');
 		}
 		/* scroll-into */ {
 			if (hasScrolledInto == false) {
