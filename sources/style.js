@@ -631,8 +631,16 @@ body, body#blur major > sub-major > post > sub-post:after {
 					let scrollIntoNode = forAll('scroll-into');
 					for (let i = 0; i < scrollIntoNode.length; i++) {
 						if (scrollIntoNode[i].id == hash.substring(1, hash.length)) {
-							let rect = scrollIntoNode[i].getBoundingClientRect();
-							window.scrollBy(rect.left, rect.top);
+							let scrollIntoTask = setInterval(function() {
+								let rect = scrollIntoNode[i].getBoundingClientRect();
+								let directX = Math.round(rect.x) == 0 || window.innerWidth + Math.round(window.scrollX) >= document.body.scrollWidth;
+								let directY = Math.round(rect.y) == 0 || window.innerHeight + Math.round(window.scrollY) >= document.body.scrollHeight;
+								if (directX && directY) {
+									clearInterval(scrollIntoTask);
+								} else {
+									window.scrollBy(rect.x, rect.y);
+								}
+							}, 100);
 							break;
 						}
 					}
