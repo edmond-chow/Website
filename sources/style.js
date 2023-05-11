@@ -611,9 +611,6 @@ body, body#blur major > sub-major > post > sub-post:after {
 				}
 			}
 		}
-		if (!document.body.classList.contains('done')) {
-			document.body.classList.add('done');
-		}
 		/* scroll-into */ {
 			if (hasScrolledInto == false) {
 				hasScrolledInto = true;
@@ -623,7 +620,8 @@ body, body#blur major > sub-major > post > sub-post:after {
 					let scrollIntoNode = forAll('scroll-into');
 					for (let i = 0; i < scrollIntoNode.length; i++) {
 						if (scrollIntoNode[i].id == hash.substring(1, hash.length)) {
-							scrollIntoNode[i].scrollIntoView();
+							let rect = scrollIntoNode[i].getBoundingClientRect();
+							window.scrollBy(rect.left, rect.top);
 							break;
 						}
 					}
