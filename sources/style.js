@@ -159,7 +159,7 @@ function setLocked(node) {
 }
 let isLoaded = false;
 let hasScrolledInto = false;
-let load = requestAnimationFrame(function delegate() {
+requestAnimationFrame(function delegate() {
 	function makeCascading(nodeId, styleText) {
 		let styleNode = function() {
 			let pseudoNode = forAll('head > style#' + nodeId);
@@ -631,16 +631,15 @@ body, body#blur major > sub-major > post > sub-post:after {
 					let scrollIntoNode = forAll('scroll-into');
 					for (let i = 0; i < scrollIntoNode.length; i++) {
 						if (scrollIntoNode[i].id == hash.substring(1, hash.length)) {
-							let scrollIntoTask = setInterval(function() {
+							setTimeout(function request() {
 								let rect = scrollIntoNode[i].getBoundingClientRect();
 								let directX = Math.round(rect.x) == 0 || window.innerWidth + Math.round(window.scrollX) >= document.body.scrollWidth;
 								let directY = Math.round(rect.y) == 0 || window.innerHeight + Math.round(window.scrollY) >= document.body.scrollHeight;
-								if (directX && directY) {
-									clearInterval(scrollIntoTask);
-								} else {
+								if (!directX || !directY) {
 									window.scrollBy(rect.x, rect.y);
+									requestAnimationFrame(request);
 								}
-							}, 100);
+							}, 500);
 							break;
 						}
 					}
