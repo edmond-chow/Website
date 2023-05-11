@@ -157,7 +157,7 @@ function setLocked(node) {
 		}
 	}
 }
-let isStructured = false;
+let isLoaded = false;
 let hasScrolledInto = false;
 let load = requestAnimationFrame(function delegate() {
 	function makeCascading(nodeId, styleText) {
@@ -253,8 +253,8 @@ let load = requestAnimationFrame(function delegate() {
 		return;
 	}
 	/* [ structured-tag ] */
-	if (isStructured == false) {
-		isStructured = true;
+	if (isLoaded == false) {
+		isLoaded = true;
 		/* major */ {
 			/* structuring for the 'major' */ {
 				insertSurround('major', 'sub-major');
@@ -331,6 +331,13 @@ let load = requestAnimationFrame(function delegate() {
 					}
 					postNode[i].get(orderSelector).innerText = '#' + orderString;
 					postNode[i].get(scrollSelector).id = orderString;
+				}
+			}
+			/* dragging to the bottom for the 'post's */  {
+				for (let i = 0; i < postNode.length; i++) {
+					let postContentNode = postNode[i].get(':scope > sub-post > post-content');
+					let subPostNode = postContentNode.getAll(':scope > post');
+					postContentNode.append(...subPostNode);
 				}
 			}
 		}
@@ -462,12 +469,12 @@ body, body#blur major > sub-major > post > sub-post:after {
 		/* post */ {
 			let postNode = forAllTag('post');
 			/* '.no-content' for the 'post > sub-post > post-content's */ {
-				let postContentNode = forAll('post > sub-post > post-content');
-				for (let i = 0; i < postContentNode.length; i++) {
-					if (hasSubstance(postContentNode[i])) {
-						postContentNode[i].classList.remove('no-content');
+				for (let i = 0; i < postNode.length; i++) {
+					let postContentNode = postNode[i].get(':scope > sub-post > post-content');
+					if (hasSubstance(postContentNode)) {
+						postContentNode.classList.remove('no-content');
 					} else {
-						postContentNode[i].classList.add('no-content');
+						postContentNode.classList.add('no-content');
 					}
 				}
 			}
@@ -493,19 +500,23 @@ body, body#blur major > sub-major > post > sub-post:after {
 		/* dropdown */ {
 			let dropdownNode = forAllTag('dropdown');
 			/* '.has-node' for the 'dropdown > dropdown-content > a's */ {
-				let aNode = forAll('dropdown > dropdown-content > a');
-				for (let i = 0; i < aNode.length; i++) {
-					if (hasTextOnly(aNode[i])) {
-						aNode[i].classList.remove('has-node');
-					} else {
-						aNode[i].classList.add('has-node');
+				for (let i = 0; i < dropdownNode.length; i++) {
+					let aNode = dropdownNode[i].get(':scope > dropdown-content').getAll(':scope > a');
+					for (let j = 0; j < aNode.length; j++) {
+						if (hasTextOnly(aNode[j])) {
+							aNode[j].classList.remove('has-node');
+						} else {
+							aNode[j].classList.add('has-node');
+						}
 					}
 				}
 			}
 			/* ':not(a)'s surrounded by a 'a' for the 'dropdown > dropdown-content > :not(a)'s */ {
-				let notANode = forAll('dropdown > dropdown-content > :not(a)');
-				for (let i = 0; i < notANode.length; i++) {
-					surroundedBy('a', notANode[i]);
+				for (let i = 0; i < dropdownNode.length; i++) {
+					let notANode = dropdownNode[i].get(':scope > dropdown-content').getAll(':scope > :not(a)');
+					for (let j = 0; j < notANode.length; j++) {
+						surroundedBy('a', notANode[j]);
+					}
 				}
 			}
 			/* '.has-disabled' for the 'dropdown's existing 'button.disabled's */ {
@@ -553,12 +564,12 @@ body, body#blur major > sub-major > post > sub-post:after {
 				}
 			}
 			/* '.no-option' for a 'dropdown-content' */ {
-				let dropdownContentNode = forAll('dropdown > dropdown-content');
-				for (let i = 0; i < dropdownContentNode.length; i++) {
-					if (hasSubstance(dropdownContentNode[i])) {
-						dropdownContentNode[i].classList.remove('no-option');
+				for (let i = 0; i < dropdownNode.length; i++) {
+					let dropdownContentNode = dropdownNode[i].get(':scope > dropdown-content');
+					if (hasSubstance(dropdownContentNode)) {
+						dropdownContentNode.classList.remove('no-option');
 					} else {
-						dropdownContentNode[i].classList.add('no-option');
+						dropdownContentNode.classList.add('no-option');
 					}
 				}
 			}
