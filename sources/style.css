@@ -752,7 +752,7 @@ body, body#blur major > sub-major > post > sub-post:after {
 		background: #555;
 		border: 3px solid transparent;
 		background-clip: padding-box;
-}
+	}
 	body#blur::-webkit-scrollbar-thumb, body#blur ::-webkit-scrollbar-thumb {
 		border-radius: 6px;
 	}
