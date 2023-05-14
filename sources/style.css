@@ -723,35 +723,37 @@ body, body#blur major > sub-major > post > sub-post:after {
 	background-size: cover;
 }
 /* scroll */
-::-webkit-scrollbar {
-	width: 12px;
-	height: 12px;
+@supports selector(::-webkit-scrollbar) {
+	::-webkit-scrollbar {
+		width: 12px;
+		height: 12px;
+	}
+	::-webkit-scrollbar-track, ::-webkit-scrollbar-corner {
+		background: transparent;
+	}
+	body::-webkit-scrollbar-track, body::-webkit-scrollbar-corner {
+		background: #f1f1f1;
+	}
+	body#blur top::-webkit-scrollbar-track:vertical, body#blur dropdown > dropdown-content::-webkit-scrollbar-track:vertical {
+		border-top-right-radius: 5px;
+		border-bottom-right-radius: 5px;
+	}
+	::-webkit-scrollbar-thumb {
+		background: #888;
+		border: 3px solid transparent;
+		background-clip: padding-box;
+	}
+	::-webkit-scrollbar-thumb:hover {
+		background: #AAA;
+		border: 3px solid transparent;
+		background-clip: padding-box;
+	}
+	::-webkit-scrollbar-thumb:active {
+		background: #555;
+		border: 3px solid transparent;
+		background-clip: padding-box;
 }
-::-webkit-scrollbar-track, ::-webkit-scrollbar-corner {
-	background: rgba(0, 0, 0, 0);
-}
-body::-webkit-scrollbar-track, body::-webkit-scrollbar-corner {
-	background: #f1f1f1;
-}
-::-webkit-scrollbar-thumb {
-	background: #888;
-	border: 3px solid rgba(0, 0, 0, 0);
-	background-clip: padding-box;
-}
-::-webkit-scrollbar-thumb:hover {
-	background: #555;
-	border: 3px solid rgba(0, 0, 0, 0);
-	background-clip: padding-box;
-}
-body:not(#blur) dropdown > dropdown-content::-webkit-scrollbar-thumb:hover {
-	background: rgba(192, 192, 192, 1);
-	border: 3px solid rgba(0, 0, 0, 0);
-	background-clip: padding-box;
-}
-body#blur::-webkit-scrollbar-thumb, body#blur ::-webkit-scrollbar-thumb {
-	border-radius: 6px;
-}
-* {
-	scrollbar-width: revert;
-	scrollbar-color: orange rgba(0, 0, 0, 0);
+	body#blur::-webkit-scrollbar-thumb, body#blur ::-webkit-scrollbar-thumb {
+		border-radius: 6px;
+	}
 }
