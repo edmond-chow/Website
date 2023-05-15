@@ -287,8 +287,8 @@ post > sub-post > post-leader > post-leader-section:not(:first-of-type) {
 	display: none !important;
 }
 post > sub-post > post-leader > post-leader-section > post-leader-order {
-	width: auto;
 	max-width: 40px;
+	width: auto;
 	vertical-align: top;
 	display: inline-block;
 	padding: 20px 20px 27px 20px;
