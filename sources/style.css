@@ -725,8 +725,8 @@ body, body#blur major > sub-major > post > sub-post:after {
 /* scroll */
 @supports selector(::-webkit-scrollbar) {
 	::-webkit-scrollbar {
-		width: 12px;
-		height: 12px;
+		width: 14px;
+		height: 14px;
 	}
 	::-webkit-scrollbar-track, ::-webkit-scrollbar-corner {
 		background: transparent;
@@ -740,20 +740,20 @@ body, body#blur major > sub-major > post > sub-post:after {
 	}
 	::-webkit-scrollbar-thumb {
 		background: #888;
-		border: 3px solid transparent;
+		border: 4px solid transparent;
 		background-clip: padding-box;
 	}
 	::-webkit-scrollbar-thumb:hover {
 		background: #AAA;
-		border: 3px solid transparent;
+		border: 4px solid transparent;
 		background-clip: padding-box;
 	}
 	::-webkit-scrollbar-thumb:active {
 		background: #555;
-		border: 3px solid transparent;
+		border: 4px solid transparent;
 		background-clip: padding-box;
 	}
 	body#blur::-webkit-scrollbar-thumb, body#blur ::-webkit-scrollbar-thumb {
-		border-radius: 6px;
+		border-radius: 8px;
 	}
 }
