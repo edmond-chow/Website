@@ -322,8 +322,6 @@ post > sub-post > post-leader > post-leader-section > post-leader-title {
 	flex-grow: 1;
 }
 major.tiny > sub-major post > sub-post > post-leader > post-leader-section > post-leader-title {
-	max-width: calc(100% - 100px);
-	width: calc(100% - 100px);
 	padding: 15px 15px 24px 15px;
 }
 post > sub-post > post-leader > post-leader-section > post-leader-title:not(:first-of-type) {
@@ -347,8 +345,6 @@ post > sub-post > post-leader > post-leader-advance.no-content {
 }
 major.tiny > sub-major post > sub-post > post-leader > post-leader-advance {
 	padding: 9px 9px 9px 12px;
-	max-width: calc(40% - 21px);
-	width: calc(40% - 21px);
 }
 body#blur post > sub-post > post-leader > post-leader-advance {
 	border-top-right-radius: 8px;
