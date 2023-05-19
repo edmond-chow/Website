@@ -258,7 +258,7 @@ post > sub-post > post-leader {
 	max-width: calc(100% - 20px);
 	width: calc(100% - 20px);
 	vertical-align: top;
-	display: block;
+	display: flex;
 	padding: 0px 0px 0px 20px;
 }
 major.tiny > sub-major post > sub-post > post-leader {
@@ -278,16 +278,16 @@ body#blur major.tiny > sub-major post > sub-post > post-leader {
 	border-top-right-radius: 6px;
 }
 post > sub-post > post-leader > post-leader-section {
+	width: auto;
 	vertical-align: top;
-	display: inline-block;
-	max-width: 60%;
-	width: 60%;
+	display: inline-flex;
+	flex-grow: 1;
 }
 post > sub-post > post-leader > post-leader-section:not(:first-of-type) {
 	display: none !important;
 }
 post > sub-post > post-leader > post-leader-section > post-leader-order {
-	max-width: 40px;
+	max-width: 80px;
 	width: auto;
 	vertical-align: top;
 	display: inline-block;
@@ -297,6 +297,7 @@ post > sub-post > post-leader > post-leader-section > post-leader-order {
 	min-height: 21px;
 	font-size: 16px;
 	color: white;
+	overflow-wrap: break-word;
 }
 major.tiny > sub-major post > sub-post > post-leader > post-leader-section > post-leader-order {
 	padding: 15px 15px 24px 15px;
@@ -308,21 +309,22 @@ body#blur post > sub-post > post-leader > post-leader-section > post-leader-orde
 	color: rgba(0,0,0,0.5);
 }
 post > sub-post > post-leader > post-leader-section > post-leader-title {
-	max-width: calc(100% - 120px);
 	width: auto;
 	vertical-align: top;
-	display: inline-block;
+	display: inline-flex;
 	padding: 20px 20px 27px 20px;
 	margin: 0px;
 	line-height: 21px;
 	min-height: 21px;
 	font-size: 16px;
 	color: white;
+	overflow-wrap: break-word;
+	flex-grow: 1;
 }
 major.tiny > sub-major post > sub-post > post-leader > post-leader-section > post-leader-title {
-	padding: 15px 15px 24px 15px;
 	max-width: calc(100% - 100px);
 	width: calc(100% - 100px);
+	padding: 15px 15px 24px 15px;
 }
 post > sub-post > post-leader > post-leader-section > post-leader-title:not(:first-of-type) {
 	display: none !important;
@@ -331,14 +333,17 @@ body#blur post > sub-post > post-leader > post-leader-section > post-leader-titl
 	color: rgba(0,0,0,0.5);
 }
 post > sub-post > post-leader > post-leader-advance {
-	padding: 13px 13px 13px 17px;
 	max-width: calc(40% - 30px);
-	width: calc(40% - 30px);
-	text-align: right;
+	width: auto;
 	vertical-align: top;
 	display: inline-block;
+	padding: 13px 13px 13px 17px;
+	text-align: right;
 	margin: 0px;
 	min-height: 42px;
+}
+post > sub-post > post-leader > post-leader-advance.no-content {
+	padding: 13px 10px 13px 10px;
 }
 major.tiny > sub-major post > sub-post > post-leader > post-leader-advance {
 	padding: 9px 9px 9px 12px;
@@ -478,7 +483,7 @@ body#blur dropdown:hover.has-single-button {
 dropdown.has-single-button > button:first-of-type:last-of-type {
 	margin: 0px;
 }
-dropdown > dropdown-content.no-option:after {
+dropdown > dropdown-content.no-content:after {
 	content: '(Nothing)';
 	padding: 16px 55px;
 	top: 0px;

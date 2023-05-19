@@ -480,8 +480,14 @@ body, body#blur major > sub-major > post > sub-post:after {
 		}
 		/* post */ {
 			let postNode = forAllTag('post');
-			/* '.no-content' for the 'post > sub-post > post-content's */ {
+			/* '.no-content' for the pairs of 'post > sub-post > post-leader > post-leader-advance' and 'post > sub-post > post-content' */ {
 				for (let i = 0; i < postNode.length; i++) {
+					let postLeaderAdvanceNode = postNode[i].get(':scope > sub-post > post-leader > post-leader-advance');
+					if (hasSubstance(postLeaderAdvanceNode)) {
+						postLeaderAdvanceNode.classList.remove('no-content');
+					} else {
+						postLeaderAdvanceNode.classList.add('no-content');
+					}
 					let postContentNode = postNode[i].get(':scope > sub-post > post-content');
 					if (hasSubstance(postContentNode)) {
 						postContentNode.classList.remove('no-content');
@@ -575,13 +581,13 @@ body, body#blur major > sub-major > post > sub-post:after {
 					}
 				}
 			}
-			/* '.no-option' for a 'dropdown-content' */ {
+			/* '.no-content' for a 'dropdown-content' */ {
 				for (let i = 0; i < dropdownNode.length; i++) {
 					let dropdownContentNode = dropdownNode[i].get(':scope > dropdown-content');
 					if (hasSubstance(dropdownContentNode)) {
-						dropdownContentNode.classList.remove('no-option');
+						dropdownContentNode.classList.remove('no-content');
 					} else {
-						dropdownContentNode.classList.add('no-option');
+						dropdownContentNode.classList.add('no-content');
 					}
 				}
 			}
