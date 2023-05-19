@@ -319,7 +319,7 @@ post > sub-post > post-leader > post-leader-section > post-leader-title {
 	font-size: 16px;
 	color: white;
 	text-decoration: none;
-	overflow-wrap: break-word;
+	overflow-wrap: anywhere;
 	word-break: normal;
 	flex-grow: 1;
 }
