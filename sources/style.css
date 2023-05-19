@@ -340,11 +340,15 @@ post > sub-post > post-leader > post-leader-advance {
 	margin: 0px;
 	min-height: 42px;
 }
-post > sub-post > post-leader > post-leader-advance.no-content {
-	padding: 13px 10px 13px 10px;
-}
 major.tiny > sub-major post > sub-post > post-leader > post-leader-advance {
+	max-width: calc(40% - 21px);
 	padding: 9px 9px 9px 12px;
+}
+post > sub-post > post-leader > post-leader-advance.no-content {
+	padding: 13px 20px 13px 0px;
+}
+major.tiny > sub-major post > sub-post > post-leader > post-leader-advance.no-content {
+	padding: 9px 15px 9px 0px;
 }
 body#blur post > sub-post > post-leader > post-leader-advance {
 	border-top-right-radius: 8px;
