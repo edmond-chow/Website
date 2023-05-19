@@ -726,6 +726,7 @@ body, body#blur major > sub-major > post > sub-post:after {
 	background-attachment: fixed;
 	background-position: center;
 	background-size: cover;
+	background-image: url('lake.jpg');
 }
 /* scroll */
 @supports selector(::-webkit-scrollbar) {
