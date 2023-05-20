@@ -460,7 +460,7 @@ dropdown:hover > outer-margin:not(:first-of-type) {
 dropdown > dropdown-content {
 	vertical-align: top;
 	display: none;
-	position: absolute;
+	position: fixed;
 	overflow: auto;
 	background-color: rgb(40, 40, 40);
 	min-width: 175px;

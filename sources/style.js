@@ -140,8 +140,8 @@ function inClient(node) {
 	let rect = node.getBoundingClientRect();
 	let left = rect.x < document.body.clientWidth;
 	let top = rect.y < document.body.clientHeight;
-	let right = rect.x + node.offsetWidth > 0;
-	let bottom = rect.y + node.offsetHeight > 0;
+	let right = rect.x + rect.width > 0;
+	let bottom = rect.y + rect.height > 0;
 	return (left && right) && (top && bottom);
 }
 function setLocked(node) {
@@ -559,24 +559,26 @@ body, body#blur major > sub-major > post > sub-post:after {
 						targetNode.style.right = '';
 						continue;
 					}
+					let top = dropdownNode[i].getBoundingClientRect().bottom + 6;
 					let bottom = document.body.clientHeight - dropdownNode[i].getBoundingClientRect().bottom;
-					if (bottom < 64) {
+					if (top < 69 || bottom < 64) {
 						targetNode.classList.add('hidden');
 						targetNode.style.maxHeight = '';
+						targetNode.style.top = '';
 					} else {
 						targetNode.classList.remove('hidden');
 						targetNode.style.maxHeight = (bottom - 28).toString() + 'px';
+						targetNode.style.top = top.toString() + 'px';
 					}
 					let left = dropdownNode[i].getBoundingClientRect().left;
 					if (left < 6) {
-						targetNode.style.left = (6 - left).toString() + 'px';
-					} else {
+						targetNode.style.left = '6px';
+						targetNode.style.right = '';
+					} else if (document.body.clientWidth - left - 6 < targetNode.offsetWidth) {
 						targetNode.style.left = '';
-					}
-					let right = document.body.clientWidth - dropdownNode[i].getBoundingClientRect().right;
-					if (right + dropdownNode[i].clientWidth < Math.max(targetNode.offsetWidth, 175) + 6) {
-						targetNode.style.right = (6 - right).toString() + 'px';
+						targetNode.style.right = '6px';
 					} else {
+						targetNode.style.left = left.toString() + 'px';
 						targetNode.style.right = '';
 					}
 				}
