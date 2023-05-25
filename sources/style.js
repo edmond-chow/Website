@@ -157,34 +157,43 @@ function setLocked(node) {
 		}
 	}
 }
+function makeCascading(headNode, nodeId, styleText) {
+	let styleNode = function() {
+		let pseudoNode = function() {
+			let cascadingNode = headNode.getAll(':scope > style');
+			let filteredNode = [];
+			for (let i = 0; i < cascadingNode.length; i++) {
+				if (cascadingNode[i].id == nodeId) {
+					filteredNode.push(cascadingNode[i]);
+				}
+			}
+			return filteredNode;
+		}();
+		if (pseudoNode.length == 0) {
+			let styleNode = document.createElement('style');
+			styleNode.type = 'text/css';
+			styleNode.id = nodeId;
+			headNode.append(styleNode);
+			return styleNode;
+		} else {
+			for (let i = 1; i < pseudoNode.length; i++) {
+				pseudoNode[i].remove();
+			}
+			return pseudoNode[0];
+		}
+	}();
+	if (styleNode.childNodes.length != 1) {
+		while (styleNode.firstChild != null) {
+			styleNode.removeChild(styleNode.firstChild);
+		}
+		styleNode.append(document.createTextNode(styleText));
+	} else if (styleNode.firstChild.wholeText != styleText) {
+		styleNode.firstChild.textContent = styleText;
+	}
+}
 let isLoaded = false;
 let hasScrolledInto = false;
 requestAnimationFrame(function delegate() {
-	function makeCascading(nodeId, styleText) {
-		let styleNode = function() {
-			let pseudoNode = forAll('head > style#' + nodeId);
-			if (pseudoNode.length == 0) {
-				let styleNode = document.createElement('style');
-				styleNode.type = 'text/css';
-				styleNode.id = nodeId;
-				document.head.append(styleNode);
-				return styleNode;
-			} else {
-				for (let i = 1; i < pseudoNode.length; i++) {
-					pseudoNode[i].remove();
-				}
-				return pseudoNode[0];
-			}
-		}();
-		if (styleNode.childNodes.length != 1) {
-			while (styleNode.firstChild != null) {
-				styleNode.removeChild(styleNode.firstChild);
-			}
-			styleNode.append(document.createTextNode(styleText));
-		} else if (styleNode.firstChild.wholeText != styleText) {
-			styleNode.firstChild.textContent = styleText;
-		}
-	}
 	function marker() {
 		function getMarker(majorNode, stackCount, postNode, index) {
 			let markerReversed = false;
@@ -373,16 +382,20 @@ requestAnimationFrame(function delegate() {
 	}
 	/* [ pseudo-style ] */
 	{
-		/* style#mobile-cascading */ {
+		/* style#background-image */ {
 			if (document.body.hasAttribute('background-image')) {
 				let styleText = `
 body, body#blur major > sub-major > post > sub-post:after {
 	background-image: ` + document.body.getAttribute('background-image') + `;
 }
 `;
-				makeCascading('background-image', styleText);
+				makeCascading(document.head, 'background-image', styleText);
 			} else {
-				makeCascading('background-image', '');
+				let styleText = `
+body, body#blur major > sub-major > post > sub-post:after {
+}
+`;
+				makeCascading(document.head, 'background-image', styleText);
 			}
 		}
 		/* style#mobile-cascading */ {
@@ -403,7 +416,7 @@ body, body#blur major > sub-major > post > sub-post:after {
 	}
 }
 `;
-			makeCascading('mobile-cascading', styleText);
+			makeCascading(document.head, 'mobile-cascading', styleText);
 		}
 		/* major */ {
 			let majorNode = forAllTag('major');
@@ -552,19 +565,15 @@ body, body#blur major > sub-major > post > sub-post:after {
 						continue;
 					}
 					let targetNode = dropdownNode[i].get(':scope > dropdown-content');
-					if (!inClient(dropdownNode[i])) {
-						targetNode.classList.add('hidden');
-						targetNode.style.maxHeight = '';
-						targetNode.style.left = '';
-						targetNode.style.right = '';
-						continue;
-					}
 					let top = dropdownNode[i].getBoundingClientRect().bottom + 6;
 					let bottom = document.body.clientHeight - dropdownNode[i].getBoundingClientRect().bottom;
-					if (top < 69 || bottom < 64) {
+					if (top < 69 || bottom < 64 || !inClient(dropdownNode[i])) {
 						targetNode.classList.add('hidden');
 						targetNode.style.maxHeight = '';
 						targetNode.style.top = '';
+						targetNode.style.left = '';
+						targetNode.style.right = '';
+						continue;
 					} else {
 						targetNode.classList.remove('hidden');
 						targetNode.style.maxHeight = (bottom - 28).toString() + 'px';
