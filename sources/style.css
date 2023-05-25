@@ -144,7 +144,7 @@ button:hover {
 body#blur button:hover {
 	box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.5);
 }
-button:active {
+button:hover:active {
 	background-color: rgba(188, 188, 188, 0.9);
 }
 button.disabled {
@@ -534,10 +534,10 @@ dropdown > dropdown-content > a:hover {
 body#blur dropdown > dropdown-content > a:hover {
 	background-color: rgb(238, 238, 238);
 }
-dropdown > dropdown-content > a:active {
+dropdown > dropdown-content > a:hover:active {
 	background-color: rgb(80, 80, 80);
 }
-body#blur dropdown > dropdown-content > a:active {
+body#blur dropdown > dropdown-content > a:hover:active {
 	background-color: rgb(211, 211, 211);
 }
 dropdown:not(.has-disabled):hover > dropdown-content:not(.hidden):first-of-type {
@@ -663,7 +663,7 @@ top > a.icon.no-content {
 top > a:hover {
 	background-color: rgba(221, 221, 221, 0.7);
 }
-top > a:active {
+top > a:hover:active {
 	background-color: rgba(201, 201, 201, 0.7);
 	color: white;
 }
@@ -674,7 +674,7 @@ top > a.active {
 top > a.active:hover {
 	background-color: #cfcfcf;
 }
-top > a.active:active {
+top > a.active:hover:active {
 	background-color: #b8b8b8;
 }
 major {
