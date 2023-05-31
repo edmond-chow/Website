@@ -379,11 +379,13 @@ requestAnimationFrame(function delegate() {
 				}
 			}
 		}
-		/* body#safari-backdrop-support */ {
-			if (navigator.userAgent.includes('iPad') || navigator.userAgent.includes('Macintosh') || navigator.userAgent.includes('iPhone')) {
+		/* body.safari-backdrop-support */ {
+			if (document.body.classList.contains('safari-backdrop-mode') || navigator.userAgent.includes('iPad') || navigator.userAgent.includes('Macintosh') || navigator.userAgent.includes('iPhone')) {
 				document.body.classList.add('safari-backdrop-support');
 				switchFirst('body', 'background-image');
 				addFirst('body', 'background-image');
+			} else {
+				document.body.classList.remove('safari-backdrop-support');
 			}
 		}
 	}
@@ -519,7 +521,7 @@ body, body#blur major > sub-major > post > sub-post:after {
 			/* '.non-blur' for the 'post's */ {
 				marker();
 				for (let i = 0; i < postNode.length; i++) {
-					/* body#safari-backdrop-support */ {
+					/* body.safari-backdrop-support */ {
 						if (document.body.classList.contains('safari-backdrop-support')) {
 							postNode[i].classList.add('non-blur');
 							continue;
