@@ -722,14 +722,14 @@ body#blur major > sub-major > post > sub-post:after {
 	display: block;
 	content: "";
 	position: absolute;
-	width: calc(100% + 40px);
-	height: calc(100% + 40px);
-	top: -20px;
-	left: -20px;
+	width: calc(100% + 100px);
+	height: calc(100% + 100px);
+	top: -50px;
+	left: -50px;
 	filter: blur(20px);
 	pointer-events: none;
 	z-index: -1;
-	clip-path: inset(20px 20px 20px 20px round 8px);
+	clip-path: inset(50px 50px 50px 50px round 8px);
 }
 body, body#blur major > sub-major > post > sub-post:after {
 	background-repeat: no-repeat;
@@ -737,6 +737,32 @@ body, body#blur major > sub-major > post > sub-post:after {
 	background-position: center;
 	background-size: cover;
 	background-image: url('lake.jpg');
+}
+body#blur.safari-backdrop-support major > sub-major > post > sub-post:after {
+	content: unset;
+}
+body.safari-backdrop-support, body#blur.safari-backdrop-support major > sub-major > post > sub-post:after {
+	background-repeat: unset;
+	background-attachment: unset;
+	background-position: unset;
+	background-size: unset;
+	background-image: unset;
+}
+body > background-image {
+	display: none;
+}
+body.safari-backdrop-support > background-image:first-of-type {
+    display: block;
+    width: 100%;
+	height: 100%;
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    background-image: url('lake.jpg');
+    z-index: -1;
 }
 /* scroll */
 @supports selector(::-webkit-scrollbar) {
