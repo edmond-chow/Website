@@ -737,6 +737,7 @@ body, body#blur major > sub-major > post > sub-post:after {
 	background-position: center;
 	background-size: cover;
 	background-image: url('lake.jpg');
+	background-color: black;
 }
 body#blur.safari-backdrop-support major > sub-major > post > sub-post:after {
 	content: unset;
@@ -747,6 +748,7 @@ body.safari-backdrop-support, body#blur.safari-backdrop-support major > sub-majo
 	background-position: unset;
 	background-size: unset;
 	background-image: unset;
+	background-color: unset;
 }
 body > background-image {
 	display: none;
