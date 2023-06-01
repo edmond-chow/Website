@@ -379,14 +379,13 @@ requestAnimationFrame(function delegate() {
 				}
 			}
 		}
-		/* body.safari-backdrop-support */ {
-			if (document.body.classList.contains('safari-backdrop-mode') || navigator.userAgent.includes('iPad') || navigator.userAgent.includes('Macintosh') || navigator.userAgent.includes('iPhone')) {
-				document.body.classList.add('safari-backdrop-support');
-				switchFirst('body', 'background-image');
-				addFirst('body', 'background-image');
-			} else {
-				document.body.classList.remove('safari-backdrop-support');
-			}
+		/* background-image with 'basis-layer, backdrop-container > blurred-filter' */ {
+			switchFirst('body', 'basis-layer');
+			addFirst('body', 'basis-layer');
+			switchFirst('major > sub-major > post > sub-post', 'backdrop-container');
+			addFirst('major > sub-major > post > sub-post', 'backdrop-container');
+			switchFirst('major > sub-major > post > sub-post > backdrop-container', 'blurred-filter');
+			addFirst('major > sub-major > post > sub-post > backdrop-container', 'blurred-filter');
 		}
 	}
 	/* [ pseudo-style ] */
@@ -394,14 +393,14 @@ requestAnimationFrame(function delegate() {
 		/* style#background-image */ {
 			if (document.body.hasAttribute('background-image')) {
 				let styleText = `
-body, body#blur major > sub-major > post > sub-post:after {
+basis-layer, backdrop-container > blurred-filter {
 	background-image: ` + document.body.getAttribute('background-image') + `;
 }
 `;
 				makeCascading(document.head, 'background-image', styleText);
 			} else {
 				let styleText = `
-body, body#blur major > sub-major > post > sub-post:after {
+basis-layer, backdrop-container > blurred-filter {
 }
 `;
 				makeCascading(document.head, 'background-image', styleText);
@@ -521,12 +520,6 @@ body, body#blur major > sub-major > post > sub-post:after {
 			/* '.non-blur' for the 'post's */ {
 				marker();
 				for (let i = 0; i < postNode.length; i++) {
-					/* body.safari-backdrop-support */ {
-						if (document.body.classList.contains('safari-backdrop-support')) {
-							postNode[i].classList.add('non-blur');
-							continue;
-						}
-					}
 					if (postNode[i].hasAttribute('marker')) {
 						postNode[i].classList.remove('non-blur');
 					} else {
