@@ -716,7 +716,7 @@ major.tiny > sub-major {
 	width: 100%;
 }
 /* background-image with 'basis-layer, backdrop-container > blurred-filter' */
-basis-layer {
+body > basis-layer {
 	display: block;
 	position: fixed;
 	width: 100%;
@@ -725,10 +725,10 @@ basis-layer {
 	left: 0px;
 	z-index: -1;
 }
-basis-layer:not(:first-child) {
+body > basis-layer:not(:first-child) {
 	display: none !important;
 }
-backdrop-container {
+major > sub-major > post > sub-post > backdrop-container {
 	display: block;
 	position: absolute;
 	width: 100%;
@@ -737,10 +737,13 @@ backdrop-container {
 	background-color: black;
 	z-index: -1;
 }
-backdrop-container:not(:first-child) {
+major > sub-major > post > sub-post > backdrop-container:not(:first-child) {
 	display: none !important;
 }
-backdrop-container > blurred-filter {
+major > sub-major > post > sub-post > backdrop-container.suspended {
+	display: none !important;
+}
+major > sub-major > post > sub-post > backdrop-container > blurred-filter {
 	display: block;
 	position: fixed;
 	width: calc(100% + 100px);
@@ -750,13 +753,13 @@ backdrop-container > blurred-filter {
 	z-index: 0;
 	filter: blur(20px);
 }
-basis-layer, backdrop-container > blurred-filter {
+body > basis-layer, major > sub-major > post > sub-post > backdrop-container > blurred-filter {
 	background-repeat: no-repeat;
 	background-position: center;
 	background-size: cover;
 	background-image: url('lake.jpg');
 }
-backdrop-container > blurred-filter:not(:first-child) {
+major > sub-major > post > sub-post > backdrop-container > blurred-filter:not(:first-child) {
 	display: none !important;
 }
 /* scroll */

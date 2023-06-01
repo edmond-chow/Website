@@ -393,14 +393,14 @@ requestAnimationFrame(function delegate() {
 		/* style#background-image */ {
 			if (document.body.hasAttribute('background-image')) {
 				let styleText = `
-basis-layer, backdrop-container > blurred-filter {
+body > basis-layer, major > sub-major > post > sub-post > backdrop-container > blurred-filter {
 	background-image: ` + document.body.getAttribute('background-image') + `;
 }
 `;
 				makeCascading(document.head, 'background-image', styleText);
 			} else {
 				let styleText = `
-basis-layer, backdrop-container > blurred-filter {
+body > basis-layer, major > sub-major > post > sub-post > backdrop-container > blurred-filter {
 }
 `;
 				makeCascading(document.head, 'background-image', styleText);
@@ -656,6 +656,20 @@ basis-layer, backdrop-container > blurred-filter {
 					if (childNode[j].nodeName == '#text') {
 						childNode[j].textContent = '';
 					}
+				}
+			}
+		}
+		/* background-image with 'basis-layer, backdrop-container > blurred-filter' */ {
+			let postNode = forAll('major > sub-major > post');
+			for (let i = 0; i < postNode.length; i++) {
+				if (!postNode[i].has(':scope > sub-post > backdrop-container')) {
+					continue;
+				}
+				let backdropContainerNode = postNode[i].get(':scope > sub-post > backdrop-container');
+				if (!navigator.userAgent.includes('mobile') || inClient(postNode[i])) {
+					backdropContainerNode.classList.remove('suspended');
+				} else {
+					backdropContainerNode.classList.add('suspended');
 				}
 			}
 		}
