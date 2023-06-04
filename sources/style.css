@@ -477,10 +477,10 @@ post > sub-post > post-content.no-content {
 	padding: 0px !important;
 	height: 0px !important;
 }
-post > sub-post > post-content.has-only-post > post:first-of-type {
+post > sub-post > post-content:not(.has-only-post) > post:first-of-type {
 	padding-top: 20px !important;
 }
-major.tiny > sub-major post > sub-post > post-content.has-only-post > post:first-of-type {
+major.tiny > sub-major post > sub-post > post-content:not(.has-only-post) > post:first-of-type {
 	padding-top: 16px !important;
 }
 body#blur post > sub-post > post-content {
