@@ -517,6 +517,34 @@ body > basis-layer, major > sub-major > post > sub-post > backdrop-container > b
 					}
 				}
 			}
+			/* '.has-only-post' for the 'post > sub-post > post-content's */ {
+				for (let i = 0; i < postNode.length; i++) {
+					let postContentNode = postNode[i].get(':scope > sub-post > post-content');
+					function hasOnlyPost(parentNode) {
+						let childNode = parentNode.childNodes;
+						for (let i = 0; i < childNode.length; i++) {
+							if (childNode[i].nodeName == '#comment') {
+								continue;
+							} else if (childNode[i].nodeName == '#text' && removeSpace(childNode[i].wholeText) == '') {
+								continue;
+							} else if (childNode[i] instanceof Element && childNode[i].nodeName == 'br'.toUpperCase()) {
+								continue;
+							} else if (childNode[i] instanceof Element && childNode[i].nodeName == 'post'.toUpperCase()) {
+								continue;
+							} else if (childNode[i] instanceof Element && window.getComputedStyle(childNode[i]).display == 'none') {
+								continue;
+							}
+							return false;
+						}
+						return true;
+					}
+					if (hasOnlyPost(postContentNode)) {
+						postContentNode.classList.add('has-only-post');
+					} else {
+						postContentNode.classList.remove('has-only-post');
+					}
+				}
+			}
 			/* '.non-blur' for the 'post's */ {
 				marker();
 				for (let i = 0; i < postNode.length; i++) {
