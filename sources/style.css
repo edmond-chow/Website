@@ -276,14 +276,8 @@ post {
 body#blur post {
 	border-radius: 8px;
 }
-post:first-child {
+post:first-of-type {
 	padding-top: 0px !important;
-}
-post:first-of-type:not(:first-child) {
-	padding-top: 20px !important;
-}
-major.tiny > sub-major post:first-of-type:not(:first-child) {
-	padding-top: 16px !important;
 }
 post:last-of-type {
 	padding-bottom: 0px !important;
@@ -480,8 +474,14 @@ post > sub-post > post-content:not(:first-of-type) {
 	display: none !important;
 }
 post > sub-post > post-content.no-content {
-	padding-bottom: 0px !important;
+	padding: 0px !important;
 	height: 0px !important;
+}
+post > sub-post > post-content:not(.no-content) > post:first-of-type {
+	padding-top: 20px !important;
+}
+major.tiny > sub-major post > sub-post > post-content:not(.no-content) > post:first-of-type {
+	padding-top: 16px !important;
 }
 body#blur post > sub-post > post-content {
 	border-bottom-left-radius: 8px;
@@ -726,7 +726,7 @@ body > basis-layer {
 	left: 0px;
 	z-index: -1;
 }
-body > basis-layer:not(:first-child) {
+body > basis-layer:not(:first-of-type) {
 	display: none !important;
 }
 major > sub-major > post > sub-post > backdrop-container {
@@ -738,7 +738,7 @@ major > sub-major > post > sub-post > backdrop-container {
 	background-color: black;
 	z-index: -1;
 }
-major > sub-major > post > sub-post > backdrop-container:not(:first-child) {
+major > sub-major > post > sub-post > backdrop-container:not(:first-of-type) {
 	display: none !important;
 }
 major > sub-major > post > sub-post > backdrop-container.suspended {
@@ -754,14 +754,14 @@ major > sub-major > post > sub-post > backdrop-container > blurred-filter {
 	z-index: 0;
 	filter: blur(20px);
 }
+major > sub-major > post > sub-post > backdrop-container > blurred-filter:not(:first-of-type) {
+	display: none !important;
+}
 body > basis-layer, major > sub-major > post > sub-post > backdrop-container > blurred-filter {
 	background-repeat: no-repeat;
 	background-position: center;
 	background-size: cover;
 	background-image: url('lake.jpg');
-}
-major > sub-major > post > sub-post > backdrop-container > blurred-filter:not(:first-child) {
-	display: none !important;
 }
 /* scroll */
 @supports selector(::-webkit-scrollbar) {
