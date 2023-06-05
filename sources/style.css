@@ -693,28 +693,28 @@ button.advance.icon.no-content {
 }
 /* icons */
 .air-play {
-	background-image: url(icons8-air-play-64.png);
+	background-image: url('icons8-air-play-64.png');
 }
 .browse-page {
-	background-image: url(icons8-browse-page-64.png);
+	background-image: url('icons8-browse-page-64.png');
 }
 .download-from-cloud {
-	background-image: url(icons8-download-from-cloud-64.png);
+	background-image: url('icons8-download-from-cloud-64.png');
 }
 .external-link {
-	background-image: url(icons8-external-link-64.png);
+	background-image: url('icons8-external-link-64.png');
 }
 .music-record {
-	background-image: url(icons8-music-record-64.png);
+	background-image: url('icons8-music-record-64.png');
 }
 .play-property {
-	background-image: url(icons8-play-property-64.png);
+	background-image: url('icons8-play-property-64.png');
 }
 .share {
-	background-image: url(icons8-share-64.png);
+	background-image: url('icons8-share-64.png');
 }
 .tv-show {
-	background-image: url(icons8-tv-show-64.png);
+	background-image: url('icons8-tv-show-64.png');
 }
 /* background-image with 'basis-layer, backdrop-container > blurred-filter' */
 body > basis-layer {
