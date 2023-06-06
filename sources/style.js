@@ -507,11 +507,19 @@ body > basis-layer, major > sub-major > post > sub-post > backdrop-container > b
 			let postNode = forAllTag('post');
 			/* '.no-content' for the pairs of 'post > sub-post > post-leader > post-leader-advance' and 'post > sub-post > post-content' */ {
 				for (let i = 0; i < postNode.length; i++) {
+					if (!postNode[i].has(':scope > sub-post > post-leader > post-leader-advance')) {
+						continue;
+					}
 					let postLeaderAdvanceNode = postNode[i].get(':scope > sub-post > post-leader > post-leader-advance');
 					if (hasSubstance(postLeaderAdvanceNode)) {
 						postLeaderAdvanceNode.classList.remove('no-content');
 					} else {
 						postLeaderAdvanceNode.classList.add('no-content');
+					}
+				}
+				for (let i = 0; i < postNode.length; i++) {
+					if (!postNode[i].has(':scope > sub-post > post-content')) {
+						continue;
 					}
 					let postContentNode = postNode[i].get(':scope > sub-post > post-content');
 					if (hasSubstance(postContentNode)) {
@@ -523,6 +531,9 @@ body > basis-layer, major > sub-major > post > sub-post > backdrop-container > b
 			}
 			/* '.has-only-post' for the 'post > sub-post > post-content's */ {
 				for (let i = 0; i < postNode.length; i++) {
+					if (!postNode[i].has(':scope > sub-post > post-content')) {
+						continue;
+					}
 					let postContentNode = postNode[i].get(':scope > sub-post > post-content');
 					function hasOnlyPost(parentNode) {
 						let childNode = parentNode.childNodes;
@@ -572,6 +583,9 @@ body > basis-layer, major > sub-major > post > sub-post > backdrop-container > b
 			let dropdownNode = forAllTag('dropdown');
 			/* '.has-node' for the 'dropdown > dropdown-content > a's */ {
 				for (let i = 0; i < dropdownNode.length; i++) {
+					if (!dropdownNode[i].has(':scope > dropdown-content')) {
+						continue;
+					}
 					let aNode = dropdownNode[i].get(':scope > dropdown-content').getAll(':scope > a');
 					for (let j = 0; j < aNode.length; j++) {
 						if (hasTextOnly(aNode[j])) {
@@ -584,6 +598,9 @@ body > basis-layer, major > sub-major > post > sub-post > backdrop-container > b
 			}
 			/* ':not(a)'s surrounded by a 'a' for the 'dropdown > dropdown-content > :not(a)'s */ {
 				for (let i = 0; i < dropdownNode.length; i++) {
+					if (!dropdownNode[i].has(':scope > dropdown-content')) {
+						continue;
+					}
 					let notANode = dropdownNode[i].get(':scope > dropdown-content').getAll(':scope > :not(a)');
 					for (let j = 0; j < notANode.length; j++) {
 						surroundedBy('a', notANode[j]);
@@ -634,6 +651,9 @@ body > basis-layer, major > sub-major > post > sub-post > backdrop-container > b
 			}
 			/* '.no-content' for a 'dropdown-content' */ {
 				for (let i = 0; i < dropdownNode.length; i++) {
+					if (!dropdownNode[i].has(':scope > dropdown-content')) {
+						continue;
+					}
 					let dropdownContentNode = dropdownNode[i].get(':scope > dropdown-content');
 					if (hasSubstance(dropdownContentNode)) {
 						dropdownContentNode.classList.remove('no-content');
