@@ -348,7 +348,11 @@ requestAnimationFrame(function delegate() {
 					if (postNode[i].hasAttribute('hash-id')) {
 						orderString = postNode[i].getAttribute('hash-id');
 					} else if (postNode[i].hasAttribute('marker')) {
-						orderString = postNode[i].getAttribute('marker');
+						if (postNode[i].hasAttribute('partial-hash-id')) {
+							orderString = postNode[i].getAttribute('marker').substring(0, postNode[i].getAttribute('marker').lastIndexOf('.') + 1) + postNode[i].getAttribute('partial-hash-id');
+						} else {
+							orderString = postNode[i].getAttribute('marker');
+						}
 					}
 					postNode[i].get(orderSelector).innerText = '#' + orderString;
 					postNode[i].get(scrollSelector).id = orderString;
