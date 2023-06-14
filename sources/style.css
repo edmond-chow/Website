@@ -9,6 +9,7 @@
 	background-color: #5F2BDE;
 }
 html, body {
+	display: block;
 	margin: 0px;
 	border: 0px;
 	padding: 0px;
@@ -27,17 +28,17 @@ html, body {
 	letter-spacing: 0px;
 	width: 100%;
 	height: 100%;
-	display: block;
 }
 div {
+	display: block;
 	margin: 0px;
 	border: 0px;
 	padding: 0px;
 	width: auto;
 	vertical-align: top;
-	display: block;
 }
 h1, h2, h3, h4, h5, h6, p, pre, code, samp, kbd, a, b, strong, em, var, s, sub, sup, span {
+	display: block;
 	margin: 0px;
 	border: 0px;
 	padding: 0px;
@@ -56,7 +57,6 @@ h1, h2, h3, h4, h5, h6, p, pre, code, samp, kbd, a, b, strong, em, var, s, sub, 
 	overflow-wrap: inherit;
 	background: inherit;
 	vertical-align: baseline;
-	display: block;
 }
 p b, p strong, p em, p var, p s, p sub, p sup, p span {
 	display: inline;
@@ -118,21 +118,22 @@ pre {
 }
 /* top */
 top {
-	z-index: 3;
+	position: fixed;
+	display: block;
+	transition-duration: 0.5s;
 	list-style-type: none;
-	margin: 0px;
+	margin: 0px -1px;
 	padding: 0px;
 	overflow: hidden;
 	border: 1px solid #e7e7e7;
 	background-color: #f3f3f3;
-	position: fixed;
-	height: 51px;
+	height: auto;
+	max-height: 51px;
 	width: 84%;
 	top: 8px;
 	left: 8%;
 	right: 8%;
-	margin-left: -1px;
-	margin-right: -1px;
+	z-index: 3;
 }
 body#blur top {
 	border-radius: 5px;
@@ -173,14 +174,24 @@ body#blur top#large {
 	margin-left: 0px;
 	margin-right: 0px;
 }
+@keyframes show-top {
+	from {
+		overflow: hidden;
+	}
+	to {
+		overflow: hidden;
+	}
+}
 top:hover {
-	height: auto;
 	max-height: calc(70% - 18px);
 	overflow: auto;
+	animation-name: show-top;
+	animation-duration: 0.5s;
 }
 top > a {
-	float: left;
 	display: block;
+	float: left;
+	transition-duration: 0.2s;
 	padding: 14px 16px;
 	line-height: 23px;
 	min-height: 23px;
@@ -200,8 +211,11 @@ top > a.has-node {
 top > a.icon {
 	background-size: 31px;
 	background-repeat: no-repeat;
-	background-position: 10px center;
+	background-position: 10px 10px;
 	padding-left: 49px;
+}
+top:hover > a.icon {
+	background-position: 10px center;
 }
 top > a.icon.no-content {
 	padding: 14px;
@@ -227,9 +241,9 @@ top > a.active:hover:active {
 }
 /* major */
 major {
+	display: block;
 	width: auto;
 	vertical-align: top;
-	display: block;
 	margin: 0px;
 	padding: 0px;
 	border: 0px;
@@ -243,19 +257,17 @@ major {
 major.tiny {
 	min-width: 500px;
 	width: calc(100% - 70px);
-	vertical-align: top;
-	display: block;
 	padding-left: 35px;
 	padding-right: 35px;
 }
 major > sub-major {
+	display: inline-block;
 	vertical-align: top;
 	margin: 0px;
 	padding: 0px;
 	border: 0px;
 	text-align: left;
 	width: 848px;
-	display: inline-block;
 }
 major > sub-major:not(:first-of-type) {
 	display: none !important;
@@ -265,9 +277,9 @@ major.tiny > sub-major {
 }
 /* post */
 post {
+	display: block;
 	width: auto;
 	vertical-align: top;
-	display: block;
 	margin: 0px;
 	border: 0px;
 	padding: 0px;
@@ -284,16 +296,16 @@ post:last-of-type {
 	padding-bottom: 0px !important;
 }
 post > img.icon {
+	position: relative;
+	display: block;
 	width: 64px;
 	aspect-ratio: 1;
-	z-index: 1;
-	position: relative;
 	top: 8px;
 	left: -32px;
 	margin: 0px 0px -64px 0px;
-	display: block;
 	user-select: none;
 	-webkit-user-drag: none;
+	z-index: 1;
 }
 major.tiny > sub-major post > img.icon {
 	width: 48px;
@@ -308,13 +320,13 @@ post > img.icon[src=''] {
 	display: none;
 }
 post > sub-post {
+	position: relative;
+	display: block;
 	width: auto;
 	vertical-align: top;
-	display: block;
 	margin: 0px;
 	border: 0px;
 	padding: 0px;
-	position: relative;
 	background-color: rgba(0, 0, 0, .5);
 	border: 1px solid rgba(247, 247, 247, .7);
 }
@@ -340,10 +352,10 @@ body#blur post.non-blur > sub-post {
 	background: rgba(239, 239, 239, 0.9);
 }
 post > sub-post > post-leader {
+	display: flex;
 	max-width: calc(100% - 20px);
 	width: calc(100% - 20px);
 	vertical-align: top;
-	display: flex;
 	padding: 0px 0px 0px 20px;
 }
 major.tiny > sub-major post > sub-post > post-leader {
@@ -363,19 +375,19 @@ body#blur major.tiny > sub-major post > sub-post > post-leader {
 	border-top-right-radius: 6px;
 }
 post > sub-post > post-leader > post-leader-section {
+	display: inline-flex;
 	width: auto;
 	vertical-align: top;
-	display: inline-flex;
 	flex-grow: 1;
 }
 post > sub-post > post-leader > post-leader-section:not(:first-of-type) {
 	display: none !important;
 }
 post > sub-post > post-leader > post-leader-section > post-leader-order {
+	display: inline-block;
 	max-width: 80px;
 	width: auto;
 	vertical-align: top;
-	display: inline-block;
 	padding: 20px 20px 27px 20px;
 	margin: 0px;
 	line-height: 21px;
@@ -396,9 +408,9 @@ body#blur post > sub-post > post-leader > post-leader-section > post-leader-orde
 	color: rgba(0,0,0,0.5);
 }
 post > sub-post > post-leader > post-leader-section > post-leader-title {
+	display: inline-flex;
 	width: auto;
 	vertical-align: top;
-	display: inline-flex;
 	padding: 20px 20px 27px 20px;
 	margin: 0px;
 	line-height: 21px;
@@ -420,10 +432,10 @@ body#blur post > sub-post > post-leader > post-leader-section > post-leader-titl
 	color: rgba(0,0,0,0.5);
 }
 post > sub-post > post-leader > post-leader-advance {
+	display: inline-block;
 	max-width: calc(40% - 30px);
 	width: auto;
 	vertical-align: top;
-	display: inline-block;
 	padding: 13px 13px 13px 17px;
 	text-align: right;
 	margin: 0px;
@@ -461,9 +473,9 @@ post > sub-post > post-leader > post-leader-advance:not(:first-of-type) {
 	display: none !important;
 }
 post > sub-post > post-content {
+	display: block;
 	width: auto;
 	vertical-align: top;
-	display: block;
 	margin: 0px;
 	border: 0px;
 	padding: 0px 40px 20px 40px;
@@ -496,13 +508,13 @@ post > sub-post > post-content > advance {
 	display: none;
 }
 post > sub-post > scroll-into {
+	position: relative;
+	display: block;
 	width: auto;
 	vertical-align: top;
-	display: block;
 	margin: 0px;
 	border: 0px;
 	padding: 0px;
-	position: relative;
 	left: -8px;
 	top: -70px;
 }
@@ -514,10 +526,10 @@ body#blur post > sub-post > scroll-into {
 }
 /* dropdown */
 dropdown {
-	width: auto;
-	vertical-align: top;
 	position: relative;
 	display: inline-block;
+	width: auto;
+	vertical-align: top;
 	z-index: 0;
 }
 dropdown:hover {
@@ -551,9 +563,9 @@ dropdown:hover > outer-margin:not(:first-of-type) {
 	display: none !important;
 }
 dropdown > dropdown-content {
-	vertical-align: top;
-	display: none;
 	position: fixed;
+	display: none;
+	vertical-align: top;
 	overflow: auto;
 	background-color: rgb(40, 40, 40);
 	min-width: 175px;
@@ -580,11 +592,11 @@ dropdown.has-single-button > button:first-of-type:last-of-type {
 	margin: 0px;
 }
 dropdown > dropdown-content.no-content:after {
+	position: absolute;
 	content: '(Nothing)';
 	padding: 16px 55px;
 	top: 0px;
 	left: 0px;
-	position: absolute;
 	font-size: 14px;
 	line-height: 20px;
 	color: rgb(0, 0, 0, 0.5);
@@ -594,6 +606,7 @@ body#blur dropdown > dropdown-content {
 	background-color: white;
 }
 dropdown > dropdown-content > a {
+	display: block;
 	font-size: 14px;
 	line-height: 20px;
 	color: white;
@@ -601,7 +614,6 @@ dropdown > dropdown-content > a {
 	text-decoration: none;
 	word-break: break-word;
 	overflow-wrap: normal;
-	display: block;
 	width: 150px;
 	min-height: 20px;
 	background-size: 24px;
@@ -629,11 +641,22 @@ dropdown > dropdown-content > a:hover:active {
 body#blur dropdown > dropdown-content > a:hover:active {
 	background-color: rgb(211, 211, 211);
 }
+@keyframes show-dropdown-content {
+	from {
+		transform: translateY(-6px);
+	}
+	to {
+		transform: translateY(0px);
+	}
+}
 dropdown:not(.has-disabled):hover > dropdown-content:not(.hidden):first-of-type {
 	display: block;
+	animation-name: show-dropdown-content;
+	animation-duration: 0.5s;
 }
 /* button */
 button {
+	display: inline-block;
 	padding: 16px 32px;
 	font-size: 16px;
 	margin: 3px;
@@ -642,7 +665,6 @@ button {
 	border: none;
 	text-align: center;
 	text-decoration: none;
-	display: inline-block;
 	transition-duration: 0.4s;
 	cursor: pointer;
 	color: white;
@@ -719,8 +741,8 @@ button.advance.icon.no-content {
 }
 /* background-image with 'basis-layer, backdrop-container > blurred-filter' */
 body > basis-layer {
-	display: block;
 	position: fixed;
+	display: block;
 	width: 100%;
 	height: 100%;
 	top: 0px;
@@ -731,8 +753,8 @@ body > basis-layer:not(:first-of-type) {
 	display: none !important;
 }
 major > sub-major > post > sub-post > backdrop-container {
-	display: block;
 	position: absolute;
+	display: block;
 	width: 100%;
 	height: 100%;
 	clip-path: inset(0px round 8px);
@@ -746,14 +768,14 @@ major > sub-major > post > sub-post > backdrop-container.suspended {
 	display: none !important;
 }
 major > sub-major > post > sub-post > backdrop-container > blurred-filter {
-	display: block;
 	position: fixed;
+	display: block;
 	width: calc(100% + 100px);
 	height: calc(100% + 100px);
 	top: -50px;
 	left: -50px;
-	z-index: 0;
 	filter: blur(20px);
+	z-index: 0;
 }
 major > sub-major > post > sub-post > backdrop-container > blurred-filter:not(:first-of-type) {
 	display: none !important;
