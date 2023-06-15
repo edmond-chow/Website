@@ -397,14 +397,14 @@ requestAnimationFrame(function delegate() {
 		/* style#background-image */ {
 			if (document.body.hasAttribute('background-image')) {
 				let styleText = `
-body > basis-layer, major > sub-major > post > sub-post > backdrop-container > blurred-filter {
+body > basis-layer, body#blur major > sub-major > post > sub-post > backdrop-container > blurred-filter {
 	background-image: ` + document.body.getAttribute('background-image') + `;
 }
 `;
 				makeCascading(document.head, 'background-image', styleText);
 			} else {
 				let styleText = `
-body > basis-layer, major > sub-major > post > sub-post > backdrop-container > blurred-filter {
+body > basis-layer, body#blur major > sub-major > post > sub-post > backdrop-container > blurred-filter {
 }
 `;
 				makeCascading(document.head, 'background-image', styleText);

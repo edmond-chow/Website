@@ -29,13 +29,20 @@ html, body {
 	width: 100%;
 	height: 100%;
 }
-div {
+body * {
+	vertical-align: top;
+	text-align: left;
+	overflow-wrap: anywhere;
+	word-break: normal;
+	text-decoration: none;
+	overflow: visible;
+	position: static;
 	display: block;
 	margin: 0px;
 	border: 0px;
 	padding: 0px;
 	width: auto;
-	vertical-align: top;
+	height: auto;
 }
 h1, h2, h3, h4, h5, h6, p, pre, code, samp, kbd, a, b, strong, em, var, s, sub, sup, span {
 	display: block;
@@ -79,6 +86,9 @@ s { text-decoration: line-through; }
 sub { vertical-align: sub  ; font-size: smaller; }
 sup { vertical-align: super; font-size: smaller; }
 span { cursor: text; }
+button {
+	font-family: 'Noto Sans', 'Microsoft JhengHei';
+}
 table {
 	border-collapse: collapse;
 }
@@ -117,17 +127,13 @@ pre {
 	line-height: 18px;
 }
 /* top */
-top {
-	position: fixed;
-	display: block;
-	transition-duration: 0.5s;
-	list-style-type: none;
-	margin: 0px -1px;
-	padding: 0px;
+top /* -> */ {
 	overflow: hidden;
+	position: fixed;
+	margin: 0px -1px;
 	border: 1px solid #e7e7e7;
+	transition-duration: 0.5s;
 	background-color: #f3f3f3;
-	height: auto;
 	max-height: 51px;
 	width: 84%;
 	top: 8px;
@@ -188,21 +194,19 @@ top:hover {
 	animation-name: show-top;
 	animation-duration: 0.5s;
 }
-top > a {
+top > a /* -> */ {
+	text-align: center;
+	text-decoration: none;
 	display: block;
-	float: left;
-	transition-duration: 0.2s;
 	padding: 14px 16px;
+	transition-duration: 0.2s;
+	float: left;
 	line-height: 23px;
 	min-height: 23px;
 	font-size: 16px;
 	color: #666;
-	text-decoration: none;
-	overflow-wrap: normal;
-	word-break: break-word;
-	text-align: center;
-	user-select: none;
 	cursor: default;
+	user-select: none;
 	-webkit-user-drag: none;
 }
 top > a.has-node {
@@ -240,18 +244,9 @@ top > a.active:hover:active {
 	background-color: #b8b8b8;
 }
 /* major */
-major {
-	display: block;
-	width: auto;
-	vertical-align: top;
-	margin: 0px;
-	padding: 0px;
-	border: 0px;
-	background-color: rgba(0,0,0,0);
-	border-color: rgba(0,0,0,0);
+major /* -> */ {
 	text-align: center;
-	padding-top: 69px;
-	padding-bottom: 75px;
+	padding: 69px 0px 75px 0px;
 	min-width: 1048px;
 }
 major.tiny {
@@ -260,13 +255,8 @@ major.tiny {
 	padding-left: 35px;
 	padding-right: 35px;
 }
-major > sub-major {
+major > sub-major /* -> */ {
 	display: inline-block;
-	vertical-align: top;
-	margin: 0px;
-	padding: 0px;
-	border: 0px;
-	text-align: left;
 	width: 848px;
 }
 major > sub-major:not(:first-of-type) {
@@ -276,15 +266,8 @@ major.tiny > sub-major {
 	width: 100%;
 }
 /* post */
-post {
-	display: block;
-	width: auto;
-	vertical-align: top;
-	margin: 0px;
-	border: 0px;
-	padding: 0px;
-	padding-top: 4px;
-	padding-bottom: 4px;
+post /* -> */ {
+	padding: 4px 0px;
 }
 body#blur post {
 	border-radius: 8px;
@@ -295,14 +278,13 @@ post:first-of-type {
 post:last-of-type {
 	padding-bottom: 0px !important;
 }
-post > img.icon {
+post > img.icon /* -> */ {
 	position: relative;
-	display: block;
+	margin: 0px 0px -64px 0px;
 	width: 64px;
 	aspect-ratio: 1;
 	top: 8px;
 	left: -32px;
-	margin: 0px 0px -64px 0px;
 	user-select: none;
 	-webkit-user-drag: none;
 	z-index: 1;
@@ -319,16 +301,10 @@ post > img.icon:not(:first-of-type) {
 post > img.icon[src=''] {
 	display: none;
 }
-post > sub-post {
+post > sub-post /* -> */ {
 	position: relative;
-	display: block;
-	width: auto;
-	vertical-align: top;
-	margin: 0px;
-	border: 0px;
-	padding: 0px;
-	background-color: rgba(0, 0, 0, .5);
 	border: 1px solid rgba(247, 247, 247, .7);
+	background-color: rgba(0, 0, 0, .5);
 }
 post > img.icon[src]:not([src='']) + sub-post {
 	min-height: 80px;
@@ -342,26 +318,25 @@ post > sub-post:not(:first-of-type) {
 body#blur post > sub-post {
 	border-radius: 8px;
 	border: 0px;
+	background-color: rgba(255, 255, 255, 0.3);
 	box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.5);
-	background: rgba(255, 255, 255, 0.3);
 }
 body#blur major.tiny > sub-major post > sub-post {
 	border-radius: 6px;
 }
 body#blur post.non-blur > sub-post {
-	background: rgba(239, 239, 239, 0.9);
+	background-color: rgba(239, 239, 239, 0.9);
 }
-post > sub-post > post-leader {
+post > sub-post > post-leader /* -> */ {
 	display: flex;
-	max-width: calc(100% - 20px);
-	width: calc(100% - 20px);
-	vertical-align: top;
 	padding: 0px 0px 0px 20px;
+	width: calc(100% - 20px);
+	max-width: calc(100% - 20px);
 }
 major.tiny > sub-major post > sub-post > post-leader {
+	padding: 0px 0px 0px 15px;
 	max-width: calc(100% - 15px);
 	width: calc(100% - 15px);
-	padding: 0px 0px 0px 15px;
 }
 post > sub-post > post-leader:not(:first-of-type) {
 	display: none !important;
@@ -374,29 +349,21 @@ body#blur major.tiny > sub-major post > sub-post > post-leader {
 	border-top-left-radius: 6px;
 	border-top-right-radius: 6px;
 }
-post > sub-post > post-leader > post-leader-section {
+post > sub-post > post-leader > post-leader-section /* -> */ {
 	display: inline-flex;
-	width: auto;
-	vertical-align: top;
 	flex-grow: 1;
 }
 post > sub-post > post-leader > post-leader-section:not(:first-of-type) {
 	display: none !important;
 }
-post > sub-post > post-leader > post-leader-section > post-leader-order {
+post > sub-post > post-leader > post-leader-section > post-leader-order /* -> */ {
 	display: inline-block;
-	max-width: 80px;
-	width: auto;
-	vertical-align: top;
 	padding: 20px 20px 27px 20px;
-	margin: 0px;
 	line-height: 21px;
 	min-height: 21px;
+	max-width: 80px;
 	font-size: 16px;
 	color: white;
-	text-decoration: none;
-	overflow-wrap: break-word;
-	word-break: normal;
 }
 major.tiny > sub-major post > sub-post > post-leader > post-leader-section > post-leader-order {
 	padding: 15px 15px 24px 15px;
@@ -407,19 +374,13 @@ post > sub-post > post-leader > post-leader-section > post-leader-order:not(:fir
 body#blur post > sub-post > post-leader > post-leader-section > post-leader-order {
 	color: rgba(0,0,0,0.5);
 }
-post > sub-post > post-leader > post-leader-section > post-leader-title {
+post > sub-post > post-leader > post-leader-section > post-leader-title /* -> */ {
 	display: inline-flex;
-	width: auto;
-	vertical-align: top;
 	padding: 20px 20px 27px 20px;
-	margin: 0px;
 	line-height: 21px;
 	min-height: 21px;
 	font-size: 16px;
 	color: white;
-	text-decoration: none;
-	overflow-wrap: anywhere;
-	word-break: normal;
 	flex-grow: 1;
 }
 major.tiny > sub-major post > sub-post > post-leader > post-leader-section > post-leader-title {
@@ -431,19 +392,16 @@ post > sub-post > post-leader > post-leader-section > post-leader-title:not(:fir
 body#blur post > sub-post > post-leader > post-leader-section > post-leader-title {
 	color: rgba(0,0,0,0.5);
 }
-post > sub-post > post-leader > post-leader-advance {
-	display: inline-block;
-	max-width: calc(40% - 30px);
-	width: auto;
-	vertical-align: top;
-	padding: 13px 13px 13px 17px;
+post > sub-post > post-leader > post-leader-advance /* -> */ {
 	text-align: right;
-	margin: 0px;
+	display: inline-block;
+	padding: 13px 13px 13px 17px;
 	min-height: 42px;
+	max-width: calc(40% - 30px);
 }
 major.tiny > sub-major post > sub-post > post-leader > post-leader-advance {
-	max-width: calc(40% - 21px);
 	padding: 9px 9px 9px 12px;
+	max-width: calc(40% - 21px);
 }
 post > sub-post > post-leader > post-leader-advance.no-content {
 	padding: 13px 20px 13px 0px;
@@ -472,12 +430,7 @@ post > sub-post > post-leader > post-leader-advance > dropdown > :not(button.adv
 post > sub-post > post-leader > post-leader-advance:not(:first-of-type) {
 	display: none !important;
 }
-post > sub-post > post-content {
-	display: block;
-	width: auto;
-	vertical-align: top;
-	margin: 0px;
-	border: 0px;
+post > sub-post > post-content /* -> */ {
 	padding: 0px 40px 20px 40px;
 }
 major.tiny > sub-major post > sub-post > post-content {
@@ -505,16 +458,10 @@ body#blur major.tiny > sub-major post > sub-post > post-content {
 	border-bottom-right-radius: 6px;
 }
 post > sub-post > post-content > advance {
-	display: none;
+	display: none !important;
 }
-post > sub-post > scroll-into {
+post > sub-post > scroll-into /* -> */ {
 	position: relative;
-	display: block;
-	width: auto;
-	vertical-align: top;
-	margin: 0px;
-	border: 0px;
-	padding: 0px;
 	left: -8px;
 	top: -70px;
 }
@@ -525,14 +472,12 @@ body#blur post > sub-post > scroll-into {
 	top: -69px;
 }
 /* dropdown */
-dropdown {
+dropdown /* -> */ {
 	position: relative;
 	display: inline-block;
-	width: auto;
-	vertical-align: top;
 	z-index: 0;
 }
-dropdown:hover {
+dropdown:not(.has-disabled):hover {
 	z-index: 2;
 }
 dropdown.has-disabled {
@@ -542,7 +487,7 @@ dropdown > :not(dropdown-content, inner-padding, outer-margin) {
 	position: relative;
 	z-index: 1;
 }
-dropdown > inner-padding {
+dropdown > inner-padding /* -> */ {
 	display: none;
 }
 dropdown:hover > inner-padding {
@@ -552,7 +497,7 @@ dropdown:hover > inner-padding {
 dropdown:hover > inner-padding:not(:first-of-type) {
 	display: none !important;
 }
-dropdown > outer-margin {
+dropdown > outer-margin /* -> */ {
 	display: none;
 }
 dropdown:hover > outer-margin {
@@ -562,21 +507,28 @@ dropdown:hover > outer-margin {
 dropdown:hover > outer-margin:not(:first-of-type) {
 	display: none !important;
 }
-dropdown > dropdown-content {
+dropdown > dropdown-content /* -> */ {
+	overflow: auto;
 	position: fixed;
 	display: none;
-	vertical-align: top;
-	overflow: auto;
-	background-color: rgb(40, 40, 40);
-	min-width: 175px;
-	min-height: 36px;
-	width: auto;
-	box-shadow: 0 0 32px rgba(0, 0, 0, 0.5);
-	margin: 0px;
-	text-align: left;
-	border: 0px;
 	padding: 8px 0px;
+	transition-duration: 0.5s;
+	background-color: rgb(40, 40, 40);
+	min-height: 36px;
+	min-width: 175px;
+	box-shadow: 0 0 32px rgba(0, 0, 0, 0.5);
 	z-index: 0;
+}
+dropdown:not(.has-disabled):not(:hover) > dropdown-content:not(.hidden):first-of-type {
+	pointer-events: none;
+	display: block;
+	transform: translateY(-6px);
+	opacity: 0;
+}
+dropdown:not(.has-disabled):hover > dropdown-content:not(.hidden):first-of-type {
+	display: block;
+	transform: translateY(0px);
+	opacity: 1;
 }
 dropdown.has-single-button {
 	margin: 3px;
@@ -605,22 +557,20 @@ body#blur dropdown > dropdown-content {
 	border-radius: 5px;
 	background-color: white;
 }
-dropdown > dropdown-content > a {
-	display: block;
-	font-size: 14px;
-	line-height: 20px;
-	color: white;
-	padding: 8px 55px;
+dropdown > dropdown-content > a /* -> */ {
 	text-decoration: none;
-	word-break: break-word;
-	overflow-wrap: normal;
-	width: 150px;
+	display: block;
+	padding: 8px 55px;
+	line-height: 20px;
 	min-height: 20px;
+	font-size: 14px;
+	width: 150px;
+	color: white;
 	background-size: 24px;
 	background-position: 16px center;
 	background-repeat: no-repeat;
-	user-select: none;
 	cursor: default;
+	user-select: none;
 	-webkit-user-drag: none;
 }
 body#blur dropdown > dropdown-content > a {
@@ -641,36 +591,19 @@ dropdown > dropdown-content > a:hover:active {
 body#blur dropdown > dropdown-content > a:hover:active {
 	background-color: rgb(211, 211, 211);
 }
-@keyframes show-dropdown-content {
-	from {
-		transform: translateY(-6px);
-	}
-	to {
-		transform: translateY(0px);
-	}
-}
-dropdown:not(.has-disabled):hover > dropdown-content:not(.hidden):first-of-type {
-	display: block;
-	animation-name: show-dropdown-content;
-	animation-duration: 0.5s;
-}
 /* button */
-button {
-	display: inline-block;
-	padding: 16px 32px;
-	font-size: 16px;
-	margin: 3px;
-	line-height: 21px;
-	font-family: 'Noto Sans', 'Microsoft JhengHei';
-	border: none;
+button /* -> */ {
 	text-align: center;
-	text-decoration: none;
+	display: inline-block;
+	margin: 3px;
+	padding: 16px 32px;
+	line-height: 21px;	
+	font-size: 16px;
 	transition-duration: 0.4s;
-	cursor: pointer;
 	color: white;
 	background-color: #4CAF50;
-	user-select: none;
 	cursor: default;
+	user-select: none;
 	-webkit-user-drag: none;
 }
 body#blur button {
@@ -742,7 +675,6 @@ button.advance.icon.no-content {
 /* background-image with 'basis-layer, backdrop-container > blurred-filter' */
 body > basis-layer {
 	position: fixed;
-	display: block;
 	width: 100%;
 	height: 100%;
 	top: 0px;
@@ -752,24 +684,22 @@ body > basis-layer {
 body > basis-layer:not(:first-of-type) {
 	display: none !important;
 }
-major > sub-major > post > sub-post > backdrop-container {
+body#blur major > sub-major > post > sub-post > backdrop-container {
 	position: absolute;
-	display: block;
 	width: 100%;
 	height: 100%;
 	clip-path: inset(0px round 8px);
 	background-color: black;
 	z-index: -1;
 }
-major > sub-major > post > sub-post > backdrop-container:not(:first-of-type) {
+body#blur major > sub-major > post > sub-post > backdrop-container:not(:first-of-type) {
 	display: none !important;
 }
-major > sub-major > post > sub-post > backdrop-container.suspended {
+body#blur major > sub-major > post > sub-post > backdrop-container.suspended {
 	display: none !important;
 }
-major > sub-major > post > sub-post > backdrop-container > blurred-filter {
+body#blur major > sub-major > post > sub-post > backdrop-container > blurred-filter {
 	position: fixed;
-	display: block;
 	width: calc(100% + 100px);
 	height: calc(100% + 100px);
 	top: -50px;
@@ -777,10 +707,10 @@ major > sub-major > post > sub-post > backdrop-container > blurred-filter {
 	filter: blur(20px);
 	z-index: 0;
 }
-major > sub-major > post > sub-post > backdrop-container > blurred-filter:not(:first-of-type) {
+body#blur major > sub-major > post > sub-post > backdrop-container > blurred-filter:not(:first-of-type) {
 	display: none !important;
 }
-body > basis-layer, major > sub-major > post > sub-post > backdrop-container > blurred-filter {
+body > basis-layer, body#blur major > sub-major > post > sub-post > backdrop-container > blurred-filter {
 	background-repeat: no-repeat;
 	background-position: center;
 	background-size: cover;
