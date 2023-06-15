@@ -364,6 +364,7 @@ post > sub-post > post-leader > post-leader-section > post-leader-order /* -> */
 	max-width: 80px;
 	font-size: 16px;
 	color: white;
+	overflow-wrap: break-word;
 }
 major.tiny > sub-major post > sub-post > post-leader > post-leader-section > post-leader-order {
 	padding: 15px 15px 24px 15px;
