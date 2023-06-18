@@ -723,27 +723,27 @@ body > basis-layer, body#blur major > sub-major > post > sub-post > backdrop-con
 		height: 14px;
 	}
 	::-webkit-scrollbar-track, ::-webkit-scrollbar-corner {
-		background: transparent;
+		background-color: transparent;
 	}
 	body::-webkit-scrollbar-track, body::-webkit-scrollbar-corner {
-		background: #f1f1f1;
+		background-color: #f1f1f1;
 	}
 	body#blur top::-webkit-scrollbar-track:vertical, body#blur dropdown > dropdown-content::-webkit-scrollbar-track:vertical {
 		border-top-right-radius: 5px;
 		border-bottom-right-radius: 5px;
 	}
 	::-webkit-scrollbar-thumb {
-		background: #888;
+		background-color: #888;
 		border: 4px solid transparent;
 		background-clip: padding-box;
 	}
 	::-webkit-scrollbar-thumb:hover {
-		background: #AAA;
+		background-color: #AAA;
 		border: 4px solid transparent;
 		background-clip: padding-box;
 	}
 	::-webkit-scrollbar-thumb:active {
-		background: #555;
+		background-color: #555;
 		border: 4px solid transparent;
 		background-clip: padding-box;
 	}
