@@ -218,10 +218,10 @@
 	}
 }
 @layer features-before-with-constrained-container {
-	post > sub-post > post-content * {
+	post > sub-post > post-content :is(h1, h2, h3, h4, h5, h6, p, pre) {
 		color: white;
 	}
-	body#blur post > sub-post > post-content * {
+	body#blur post > sub-post > post-content :is(h1, h2, h3, h4, h5, h6, p, pre) {
 		color: rgba(0, 0, 0, 0.5);
 	}
 }
@@ -691,13 +691,9 @@
 }
 @layer features-with-constrained-container {
 	/* post */
-	post > sub-post > post-leader > post-leader-advance > * {
+	post > sub-post > post-leader > post-leader-advance > :is(button.advance, dropdown.has-single-button) {
 		display: inline-block;
 		max-width: calc(100% - 6px);
-	}
-	post > sub-post > post-leader > post-leader-advance > dropdown > :not(dropdown-content:first-of-type, inner-padding:first-of-type, outer-margin:first-of-type) {
-		display: inline-block;
-		max-width: 100%;
 	}
 	post > sub-post > post-content > advance {
 		display: none;
@@ -745,10 +741,7 @@
 	}
 }
 @layer features-after-with-constrained-container {
-	post > sub-post > post-leader > post-leader-advance > :not(button.advance, dropdown) {
-		display: none !important;
-	}
-	post > sub-post > post-leader > post-leader-advance > dropdown > :not(dropdown-content:first-of-type, inner-padding:first-of-type, outer-margin:first-of-type):not(button.advance:first-of-type:last-of-type) {
+	post > sub-post > post-leader > post-leader-advance > :not(button.advance, dropdown.has-single-button) {
 		display: none !important;
 	}
 }
