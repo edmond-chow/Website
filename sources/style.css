@@ -63,7 +63,7 @@
 		font-style: inherit;
 		color: inherit;
 	}
-	p b, p strong, p em, p var, p s, p sub, p sup, p span {
+	b, strong, em, var, s, sub, sup, span {
 		display: inline;
 	}
 	h1 { line-height: 38px; font-size: 32px   ; font-weight: 500; }
