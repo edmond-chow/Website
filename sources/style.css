@@ -160,6 +160,7 @@
 	}
 }
 @layer features-before {
+	/* top */
 	@keyframes show-top {
 		from {
 			overflow: hidden;
@@ -170,6 +171,7 @@
 	}
 }
 @layer features-before-with-constrained-container {
+	/* post */
 	post > sub-post > post-content :is(h1, h2, h3, h4, h5, h6, p, pre) {
 		color: white;
 	}
@@ -693,6 +695,7 @@
 	}
 }
 @layer features-after-with-constrained-container {
+	/* post */
 	post > sub-post > post-leader > post-leader-advance > :not(button.advance, dropdown.has-single-button) {
 		display: none !important;
 	}
@@ -735,6 +738,7 @@
 	}
 }
 @layer backdrop-after {
+	/* background-image with 'basis-layer, backdrop-container > blurred-filter' */
 	body basis-layer:not(:first-of-type) {
 		display: none !important;
 	}
