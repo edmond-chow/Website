@@ -718,6 +718,9 @@
 		background-color: black;
 		z-index: -1;
 	}
+	body#blur major.tiny > sub-major > post > sub-post > backdrop-container {
+		clip-path: inset(0px round 5px);
+	}
 	body#blur major > sub-major > post > sub-post > backdrop-container.suspended {
 		display: none !important;
 	}
