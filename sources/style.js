@@ -22,7 +22,7 @@ Element.prototype.getAll = function(selector)
 function arrayForChild(childNode, child) {
 	let array = [];
 	for (let i = 0; i < childNode.length; i++) {
-		if (childNode[i].tagName == child.toUpperCase()) {
+		if (childNode[i].tagName.toUpperCase() == child.toUpperCase()) {
 			array.push(childNode[i]);
 		}
 	}
@@ -49,7 +49,7 @@ function switchFirst(parent, child) {
 function addFirst(parent, child) {
 	let parentNode = forAll(parent);
 	for (let i = 0; i < parentNode.length; i++) {
-		if (parentNode[i].children.length > 0 && parentNode[i].children[0].tagName == child.toUpperCase()) {
+		if (parentNode[i].children.length > 0 && parentNode[i].children[0].tagName.toUpperCase() == child.toUpperCase()) {
 			continue;
 		}
 		let substance = document.createElement(child);
@@ -146,7 +146,7 @@ function inClient(node) {
 }
 function setLocked(node) {
 	let parentNode = node.parentElement;
-	if (node.tagName == 'a'.toUpperCase() && parentNode?.tagName == 'top'.toUpperCase()) {
+	if (node.tagName.toUpperCase() == 'a'.toUpperCase() && parentNode?.tagName.toUpperCase() == 'top'.toUpperCase()) {
 		let childNode = parentNode.getAll(':scope > a');
 		for (let i = 0; i < childNode.length; i++) {
 			if (childNode[i] == node) {
@@ -397,14 +397,14 @@ requestAnimationFrame(function delegate() {
 		/* style#background-image */ {
 			if (document.body.hasAttribute('background-image')) {
 				let styleText = `
-body > basis-layer, body#blur major > sub-major > post > sub-post > backdrop-container > blurred-filter {
+body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-container > blurred-filter {
 	background-image: ` + document.body.getAttribute('background-image') + `;
 }
 `;
 				makeCascading(document.head, 'background-image', styleText);
 			} else {
 				let styleText = `
-body > basis-layer, body#blur major > sub-major > post > sub-post > backdrop-container > blurred-filter {
+body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-container > blurred-filter {
 }
 `;
 				makeCascading(document.head, 'background-image', styleText);

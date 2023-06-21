@@ -159,54 +159,6 @@
 		}
 	}
 }
-@layer backdrop {
-	/* background-image with 'basis-layer, backdrop-container > blurred-filter' */
-	body > basis-layer {
-		position: fixed;
-		width: 100%;
-		height: 100%;
-		top: 0px;
-		left: 0px;
-		z-index: -1;
-	}
-	body#blur major > sub-major > post > sub-post > backdrop-container {
-		position: absolute;
-		width: 100%;
-		height: 100%;
-		clip-path: inset(0px round 8px);
-		background-color: black;
-		z-index: -1;
-	}
-	body#blur major > sub-major > post > sub-post > backdrop-container.suspended {
-		display: none !important;
-	}
-	body#blur major > sub-major > post > sub-post > backdrop-container > blurred-filter {
-		position: fixed;
-		width: calc(100% + 100px);
-		height: calc(100% + 100px);
-		top: -50px;
-		left: -50px;
-		filter: blur(20px);
-		z-index: 0;
-	}
-	body > basis-layer, body#blur major > sub-major > post > sub-post > backdrop-container > blurred-filter {
-		background-repeat: no-repeat;
-		background-position: center;
-		background-size: cover;
-		background-image: url('lake.jpg');
-	}
-}
-@layer backdrop-after {
-	body > basis-layer:not(:first-of-type) {
-		display: none !important;
-	}
-	body#blur major > sub-major > post > sub-post > backdrop-container:not(:first-of-type) {
-		display: none !important;
-	}
-	body#blur major > sub-major > post > sub-post > backdrop-container > blurred-filter:not(:first-of-type) {
-		display: none !important;
-	}
-}
 @layer features-before {
 	@keyframes show-top {
 		from {
@@ -742,6 +694,54 @@
 }
 @layer features-after-with-constrained-container {
 	post > sub-post > post-leader > post-leader-advance > :not(button.advance, dropdown.has-single-button) {
+		display: none !important;
+	}
+}
+@layer backdrop {
+	/* background-image with 'basis-layer, backdrop-container > blurred-filter' */
+	body basis-layer {
+		position: fixed;
+		width: 100%;
+		height: 100%;
+		top: 0px;
+		left: 0px;
+		z-index: -1;
+	}
+	body#blur major > sub-major > post > sub-post > backdrop-container {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		clip-path: inset(0px round 8px);
+		background-color: black;
+		z-index: -1;
+	}
+	body#blur major > sub-major > post > sub-post > backdrop-container.suspended {
+		display: none !important;
+	}
+	body#blur major > sub-major > post > sub-post > backdrop-container > blurred-filter {
+		position: fixed;
+		width: calc(100% + 100px);
+		height: calc(100% + 100px);
+		top: -50px;
+		left: -50px;
+		filter: blur(20px);
+		z-index: 0;
+	}
+	body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-container > blurred-filter {
+		background-repeat: no-repeat;
+		background-position: center;
+		background-size: cover;
+		background-image: url('lake.jpg');
+	}
+}
+@layer backdrop-after {
+	body basis-layer:not(:first-of-type) {
+		display: none !important;
+	}
+	body#blur major > sub-major > post > sub-post > backdrop-container:not(:first-of-type) {
+		display: none !important;
+	}
+	body#blur major > sub-major > post > sub-post > backdrop-container > blurred-filter:not(:first-of-type) {
 		display: none !important;
 	}
 }
