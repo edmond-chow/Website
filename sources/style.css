@@ -312,14 +312,14 @@
 	post /* -> */ {
 		padding: 4px 0px;
 	}
+	major.tiny > sub-major post {
+		padding: 3px 0px;
+	}
 	body#blur post {
 		border-radius: 8px;
 	}
-	post:first-of-type {
-		padding-top: 0px !important;
-	}
-	post:last-of-type {
-		padding-bottom: 0px !important;
+	body#blur major.tiny > sub-major post {
+		border-radius: 6px;
 	}
 	post > img.icon /* -> */ {
 		position: relative;
@@ -353,13 +353,10 @@
 		min-height: 60px;
 	}
 	body#blur post > sub-post {
-		border-radius: 8px;
+		border-radius: inherit;
 		border: 0px;
 		background-color: rgba(255, 255, 255, 0.3);
 		box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.5);
-	}
-	body#blur major.tiny > sub-major post > sub-post {
-		border-radius: 6px;
 	}
 	body#blur post.non-blur > sub-post {
 		background-color: rgba(239, 239, 239, 0.9);
@@ -376,12 +373,8 @@
 		width: calc(100% - 15px);
 	}
 	body#blur post > sub-post > post-leader {
-		border-top-left-radius: 8px;
-		border-top-right-radius: 8px;
-	}
-	body#blur major.tiny > sub-major post > sub-post > post-leader {
-		border-top-left-radius: 6px;
-		border-top-right-radius: 6px;
+		border-top-left-radius: inherit;
+		border-top-right-radius: inherit;
 	}
 	post > sub-post > post-leader > post-leader-section /* -> */ {
 		display: inline-flex;
@@ -447,23 +440,9 @@
 	major.tiny > sub-major post > sub-post > post-content {
 		padding: 0px 30px 15px 30px;
 	}
-	post > sub-post > post-content.no-content {
-		padding: 0px !important;
-		height: 0px !important;
-	}
-	post > sub-post > post-content:not(.has-only-post) > post:first-of-type {
-		padding-top: 20px !important;
-	}
-	major.tiny > sub-major post > sub-post > post-content:not(.has-only-post) > post:first-of-type {
-		padding-top: 16px !important;
-	}
 	body#blur post > sub-post > post-content {
-		border-bottom-left-radius: 8px;
-		border-bottom-right-radius: 8px;
-	}
-	body#blur major.tiny > sub-major post > sub-post > post-content {
-		border-bottom-left-radius: 6px;
-		border-bottom-right-radius: 6px;
+		border-bottom-left-radius: inherit;
+		border-bottom-right-radius: inherit;
 	}
 	post > sub-post > scroll-into /* -> */ {
 		position: relative;
@@ -656,48 +635,64 @@
 @layer features-after {
 	/* major */
 	major > sub-major:not(:first-of-type) {
-		display: none !important;
+		display: none;
 	}
 	/* post */
+	post:first-of-type {
+		padding-top: 0px;
+	}
+	post:last-of-type {
+		padding-bottom: 0px;
+	}
 	post > img.icon:not(:first-of-type) {
-		display: none !important;
+		display: none;
 	}
 	post > sub-post:not(:first-of-type) {
-		display: none !important;
+		display: none;
 	}
 	post > sub-post > post-leader:not(:first-of-type) {
-		display: none !important;
+		display: none;
 	}
 	post > sub-post > post-leader > post-leader-section:not(:first-of-type) {
-		display: none !important;
+		display: none;
 	}
 	post > sub-post > post-leader > post-leader-section > post-leader-order:not(:first-of-type) {
-		display: none !important;
+		display: none;
 	}
 	post > sub-post > post-leader > post-leader-section > post-leader-title:not(:first-of-type) {
-		display: none !important;
+		display: none;
 	}
 	post > sub-post > post-leader > post-leader-advance:not(:first-of-type) {
-		display: none !important;
+		display: none;
 	}
 	post > sub-post > post-content:not(:first-of-type) {
-		display: none !important;
+		display: none;
+	}
+	post > sub-post > post-content.no-content {
+		padding: 0px;
+		height: 0px;
+	}
+	post > sub-post > post-content:not(.has-only-post) > post:first-of-type {
+		padding-top: 20px;
+	}
+	major.tiny > sub-major post > sub-post > post-content:not(.has-only-post) > post:first-of-type {
+		padding-top: 15px;
 	}
 	post > sub-post > scroll-into:not(:first-of-type) {
-		display: none !important;
+		display: none;
 	}
 	/* dropdown */
 	dropdown:hover > inner-padding:not(:first-of-type) {
-		display: none !important;
+		display: none;
 	}
 	dropdown:hover > outer-margin:not(:first-of-type) {
-		display: none !important;
+		display: none;
 	}
 }
 @layer features-after-with-constrained-container {
 	/* post */
 	post > sub-post > post-leader > post-leader-advance > :not(button.advance, dropdown.has-single-button) {
-		display: none !important;
+		display: none;
 	}
 }
 @layer backdrop {
@@ -722,7 +717,7 @@
 		clip-path: inset(0px round 5px);
 	}
 	body#blur major > sub-major > post > sub-post > backdrop-container.suspended {
-		display: none !important;
+		display: none;
 	}
 	body#blur major > sub-major > post > sub-post > backdrop-container > blurred-filter {
 		position: fixed;
@@ -743,13 +738,13 @@
 @layer backdrop-after {
 	/* background-image with 'basis-layer, backdrop-container > blurred-filter' */
 	body basis-layer:not(:first-of-type) {
-		display: none !important;
+		display: none;
 	}
 	body#blur major > sub-major > post > sub-post > backdrop-container:not(:first-of-type) {
-		display: none !important;
+		display: none;
 	}
 	body#blur major > sub-major > post > sub-post > backdrop-container > blurred-filter:not(:first-of-type) {
-		display: none !important;
+		display: none;
 	}
 }
 @layer extensions {
