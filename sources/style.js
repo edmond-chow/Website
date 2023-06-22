@@ -146,7 +146,7 @@ function inClient(node) {
 }
 function setLocked(node) {
 	let parentNode = node.parentElement;
-	if (node.tagName.toUpperCase() == 'a'.toUpperCase() && parentNode?.tagName.toUpperCase() == 'top'.toUpperCase()) {
+	if (node.nodeName == 'a'.toUpperCase() && parentNode?.nodeName == 'top'.toUpperCase()) {
 		let childNode = parentNode.getAll(':scope > a');
 		for (let i = 0; i < childNode.length; i++) {
 			if (childNode[i] == node) {
