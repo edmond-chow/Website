@@ -193,7 +193,7 @@
 		top: 8px;
 		left: 8%;
 		right: 8%;
-		z-index: 3;
+		z-index: 3; /* -> layer[top] */
 	}
 	body#blur top {
 		border-radius: 5px;
@@ -330,7 +330,7 @@
 		left: -32px;
 		user-select: none;
 		-webkit-user-drag: none;
-		z-index: 1;
+		z-index: 1; /* -> layer[icon] */
 	}
 	major.tiny > sub-major post > img.icon {
 		width: 48px;
@@ -344,7 +344,14 @@
 	post > sub-post /* -> */ {
 		position: relative;
 		border: 1px solid rgba(247, 247, 247, .7);
+	}
+	post > sub-post:before {
+		content: '';
+		position: absolute;
+		width: 100%;
+		height: 100%;
 		background-color: rgba(0, 0, 0, .5);
+		z-index: -1; /* -> layer[post-backdrop] */
 	}
 	post > img.icon[src]:not([src='']) + sub-post {
 		min-height: 80px;
@@ -355,10 +362,13 @@
 	body#blur post > sub-post {
 		border-radius: inherit;
 		border: 0px;
+	}
+	body#blur post > sub-post:before {
+		border-radius: inherit;
 		background-color: rgba(255, 255, 255, 0.3);
 		box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.5);
 	}
-	body#blur post.non-blur > sub-post {
+	body#blur post.non-blur > sub-post:before {
 		background-color: rgba(239, 239, 239, 0.9);
 	}
 	post > sub-post > post-leader /* -> */ {
@@ -456,29 +466,28 @@
 	dropdown /* -> */ {
 		position: relative;
 		display: inline-block;
-		z-index: 0;
-	}
-	dropdown:not(.has-disabled):hover {
-		z-index: 2;
 	}
 	dropdown.has-disabled {
 		pointer-events: none;
 	}
-	dropdown > :not(dropdown-content, inner-padding, outer-margin) {
+	dropdown:not(.has-disabled):hover {
+		z-index: 2; /* -> layer[dropdown] */
+	}
+	dropdown:not(.has-disabled):hover > :not(dropdown-content, inner-padding, outer-margin) {
 		position: relative;
-		z-index: 1;
+		z-index: 1; /* -> layer[dropdown] -> layer[dropdown-element] */
 	}
 	dropdown > inner-padding /* -> */ {
 		display: none;
 	}
-	dropdown:hover > inner-padding {
+	dropdown:not(.has-disabled):hover > inner-padding {
 		display: block;
 		padding: 3px 0px;
 	}
 	dropdown > outer-margin /* -> */ {
 		display: none;
 	}
-	dropdown:hover > outer-margin {
+	dropdown:not(.has-disabled):hover > outer-margin {
 		display: block;
 		margin: -6px 0px;
 	}
@@ -492,7 +501,6 @@
 		min-height: 36px;
 		min-width: 175px;
 		box-shadow: 0 0 32px rgba(0, 0, 0, 0.5);
-		z-index: 0;
 	}
 	dropdown:not(.has-disabled):not(:hover) > dropdown-content:not(.hidden):first-of-type {
 		pointer-events: none;
@@ -511,7 +519,7 @@
 	body#blur dropdown.has-single-button {
 		border-radius: 8px;
 	}
-	body#blur dropdown:hover.has-single-button {
+	body#blur dropdown:not(.has-disabled):hover.has-single-button {
 		border-bottom-left-radius: 0px;
 		border-bottom-right-radius: 0px;
 	}
@@ -703,7 +711,7 @@
 		height: 100%;
 		top: 0px;
 		left: 0px;
-		z-index: -1;
+		z-index: -2; /* -> layer[page-backdrop] */
 	}
 	body#blur major > sub-major > post > sub-post > backdrop-container {
 		position: absolute;
@@ -711,7 +719,7 @@
 		height: 100%;
 		clip-path: inset(0px round 8px);
 		background-color: black;
-		z-index: -1;
+		z-index: -2; /* -> layer[page-backdrop] */
 	}
 	body#blur major.tiny > sub-major > post > sub-post > backdrop-container {
 		clip-path: inset(0px round 5px);
@@ -726,7 +734,6 @@
 		top: -50px;
 		left: -50px;
 		filter: blur(20px);
-		z-index: 0;
 	}
 	body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-container > blurred-filter {
 		background-repeat: no-repeat;
