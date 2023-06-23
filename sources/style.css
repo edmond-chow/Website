@@ -2,14 +2,14 @@
 @import url('font/font.css');
 @layer initializer {
 	/* default */
-	::selection {
+	:not(.disabled-default-initializer)::selection {
 		color: white;
 		background-color: #5F2BDE;
 	}
-	@supports (text-size-adjust: 100%) html, body {
+	@supports (text-size-adjust: 100%) :is(html, body):not(.disabled-default-initializer) {
 		text-size-adjust: 100%; /* Prevent font scaling in landscape while allowing user zoom */
 	}
-	html, body {
+	:is(html, body):not(.disabled-default-initializer) {
 		vertical-align: top;
 		text-align: left;
 		overflow-wrap: anywhere;
@@ -46,7 +46,7 @@
 		width: auto;
 		height: auto;
 	}
-	h1, h2, h3, h4, h5, h6, p, pre, code, samp, kbd, a, b, strong, em, var, s, sub, sup, span {
+	:is(h1, h2, h3, h4, h5, h6, p, pre, code, samp, kbd, a, b, strong, em, var, s, sub, sup, span):not(.disabled-default-initializer) {
 		vertical-align: baseline;
 		text-align: inherit;
 		overflow-wrap: inherit;
@@ -63,61 +63,52 @@
 		font-style: inherit;
 		color: inherit;
 	}
-	b, strong, em, var, s, sub, sup, span {
+	:is(b, strong, em, var, s, sub, sup, span):not(.disabled-default-initializer) {
 		display: inline;
 	}
-	h1 { line-height: 38px; font-size: 32px   ; font-weight: 500; }
-	h2 { line-height: 29px; font-size: 24px   ; font-weight: 500; }
-	h3 { line-height: 23px; font-size: 18.72px; font-weight: 500; }
-	h4 { line-height: 19px; font-size: 16px   ; font-weight: 500; }
-	h5 { line-height: 17px; font-size: 13.28px; font-weight: 500; }
-	h6 { line-height: 13px; font-size: 10.72px; font-weight: 500; }
-	p  { line-height: 18px; font-size: 16px; font-weight: normal; font-family: 'Noto Sans', 'Microsoft JhengHei'; }
-	pre  { line-height: 15px; font-size: 13px; font-weight: normal; font-family: 'Menlo', 'consolas', 'monospace'; }
-	code { line-height: 15px; font-size: 13px; font-weight: normal; font-family: 'Menlo', 'consolas', 'monospace'; }
-	samp { line-height: 15px; font-size: 13px; font-weight: normal; font-family: 'Menlo', 'consolas', 'monospace'; }
-	kbd  { line-height: 15px; font-size: 13px; font-weight: normal; font-family: 'Menlo', 'consolas', 'monospace'; }
-	a { text-decoration: underline; display: inline; }
-	b, strong { font-weight: bold; }
-	em, var { font-style: italic; }
-	s { text-decoration: line-through; }
-	sub { vertical-align: sub  ; font-size: smaller; }
-	sup { vertical-align: super; font-size: smaller; }
-	span { cursor: text; }
-	button {
+	h1:not(.disabled-default-initializer) { line-height: 38px; font-size: 32px   ; font-weight: 500; }
+	h2:not(.disabled-default-initializer) { line-height: 29px; font-size: 24px   ; font-weight: 500; }
+	h3:not(.disabled-default-initializer) { line-height: 23px; font-size: 18.72px; font-weight: 500; }
+	h4:not(.disabled-default-initializer) { line-height: 19px; font-size: 16px   ; font-weight: 500; }
+	h5:not(.disabled-default-initializer) { line-height: 17px; font-size: 13.28px; font-weight: 500; }
+	h6:not(.disabled-default-initializer) { line-height: 13px; font-size: 10.72px; font-weight: 500; }
+	p:not(.disabled-default-initializer)  { line-height: 18px; font-size: 16px; font-weight: normal; font-family: 'Noto Sans', 'Microsoft JhengHei'; }
+	pre:not(.disabled-default-initializer)  { line-height: 15px; font-size: 13px; font-weight: normal; font-family: 'Menlo', 'consolas', 'monospace'; }
+	code:not(.disabled-default-initializer) { line-height: 15px; font-size: 13px; font-weight: normal; font-family: 'Menlo', 'consolas', 'monospace'; }
+	samp:not(.disabled-default-initializer) { line-height: 15px; font-size: 13px; font-weight: normal; font-family: 'Menlo', 'consolas', 'monospace'; }
+	kbd:not(.disabled-default-initializer)  { line-height: 15px; font-size: 13px; font-weight: normal; font-family: 'Menlo', 'consolas', 'monospace'; }
+	a:not(.disabled-default-initializer) { text-decoration: underline; display: inline; }
+	:is(b, strong):not(.disabled-default-initializer) { font-weight: bold; }
+	:is(em, var):not(.disabled-default-initializer) { font-style: italic; }
+	s:not(.disabled-default-initializer) { text-decoration: line-through; }
+	sub:not(.disabled-default-initializer) { vertical-align: sub  ; font-size: smaller; }
+	sup:not(.disabled-default-initializer) { vertical-align: super; font-size: smaller; }
+	span:not(.disabled-default-initializer) { cursor: text; }
+	button:not(.disabled-default-initializer) {
 		font-family: 'Noto Sans', 'Microsoft JhengHei';
 	}
-	table {
+	table:not(.disabled-default-initializer) {
 		border-collapse: collapse;
 	}
-	img {
-		aspect-ratio: auto;
-		height: auto;
+	:is(img, video, iframe):not(.disabled-default-initializer) {
+		aspect-ratio: auto 16 / 9;
 	}
-	video {
-		height: auto;
-	}
-	iframe {
-		border: 0px solid #000000;
-		aspect-ratio: 16 / 9;
-		height: auto;
-	}
-	h1, h2, h3, h4, h5, h6, p, pre {
+	:is(h1, h2, h3, h4, h5, h6, p, pre):not(.disabled-default-initializer) {
 		color: black;
 	}
-	a {
+	a:not(.disabled-default-initializer) {
 		font-size: 16px;
 		line-height: 22px;
 	}
-	h4 {
+	h4:not(.disabled-default-initializer) {
 		font-size: 16px;
 		line-height: 21px;
 	}
-	p {
+	p:not(.disabled-default-initializer) {
 		font-size: 16px;
 		line-height: 21px;
 	}
-	pre {
+	pre:not(.disabled-default-initializer) {
 		font-size: 13.5px;
 		line-height: 18px;
 	}
