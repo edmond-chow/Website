@@ -2,9 +2,24 @@
 @import url('font/font.css');
 @layer initializer {
 	/* default */
-	:not(.disabled-default-initializer)::selection {
+	::selection {
 		color: white;
 		background-color: #5F2BDE;
+	}
+	:before, :after {
+		vertical-align: middle;
+		text-align: center;
+		overflow-wrap: anywhere;
+		word-break: normal;
+		text-decoration: none;
+		overflow: visible;
+		position: absolute;
+		display: inline-block;
+		margin: 0px;
+		border: 0px;
+		padding: 0px;
+		width: 100%;
+		height: 100%;
 	}
 	@supports (text-size-adjust: 100%) :is(html, body):not(.disabled-default-initializer) {
 		text-size-adjust: 100%; /* Prevent font scaling in landscape while allowing user zoom */
@@ -335,15 +350,12 @@
 	post > sub-post /* -> */ {
 		position: relative;
 		display: flex;
-		border: 1px solid rgba(247, 247, 247, .7);
+		border: 1px solid rgba(247, 247, 247, 0.7);
 		flex-flow: column;
 	}
 	post > sub-post:before {
 		content: '';
-		position: absolute;
-		width: 100%;
-		height: 100%;
-		background-color: rgba(0, 0, 0, .5);
+		background-color: rgba(0, 0, 0, 0.5);
 		z-index: -1; /* -> layer[post-backdrop] */
 	}
 	post > img.icon[src]:not([src='']) + sub-post {
@@ -397,7 +409,7 @@
 		padding: 15px 15px 24px 15px;
 	}
 	body#blur post > sub-post > post-leader > post-leader-section > post-leader-order {
-		color: rgba(0,0,0,0.5);
+		color: rgba(0, 0, 0, 0.5);
 	}
 	post > sub-post > post-leader > post-leader-section > post-leader-title /* -> */ {
 		display: inline-flex;
@@ -412,7 +424,7 @@
 		padding: 15px 15px 24px 15px;
 	}
 	body#blur post > sub-post > post-leader > post-leader-section > post-leader-title {
-		color: rgba(0,0,0,0.5);
+		color: rgba(0, 0, 0, 0.5);
 	}
 	post > sub-post > post-leader > post-leader-advance /* -> */ {
 		text-align: right;
@@ -501,6 +513,10 @@
 		min-width: 175px;
 		box-shadow: 0 0 32px rgba(0, 0, 0, 0.5);
 	}
+	body#blur dropdown > dropdown-content {
+		border-radius: 5px;
+		background-color: white;
+	}
 	dropdown:not(.has-disabled):not(:hover) > dropdown-content:not(.hidden):first-of-type {
 		pointer-events: none;
 		display: block;
@@ -526,18 +542,15 @@
 		margin: 0px;
 	}
 	dropdown > dropdown-content.no-content:after {
-		position: absolute;
 		content: '(Nothing)';
-		padding: 16px 55px;
-		top: 0px;
-		left: 0px;
+		position: relative;
+		padding: 8px 0px;
 		font-size: 14px;
 		line-height: 20px;
-		color: rgb(0, 0, 0, 0.5);
+		color: rgba(255, 255, 255, 0.5);
 	}
-	body#blur dropdown > dropdown-content {
-		border-radius: 5px;
-		background-color: white;
+	body#blur dropdown > dropdown-content.no-content:after {
+		color: rgba(10, 10, 10, 0.5);
 	}
 	dropdown > dropdown-content > a /* -> */ {
 		text-decoration: none;
