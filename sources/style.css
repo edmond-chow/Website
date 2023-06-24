@@ -350,13 +350,19 @@
 	post > sub-post /* -> */ {
 		position: relative;
 		display: flex;
-		border: 1px solid rgba(247, 247, 247, 0.7);
+		border: 1px solid transparent;
 		flex-flow: column;
 	}
 	post > sub-post:before {
 		content: '';
 		background-color: rgba(0, 0, 0, 0.5);
 		z-index: -1; /* -> layer[post-backdrop] */
+	}
+	post > sub-post:after {
+		content: '';
+		border: 1px solid rgba(247, 247, 247, 0.7);
+		box-sizing: border-box;
+		pointer-events: none;
 	}
 	post > img.icon[src]:not([src='']) + sub-post {
 		min-height: 80px;
@@ -372,6 +378,10 @@
 		border-radius: inherit;
 		background-color: rgba(255, 255, 255, 0.3);
 		box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.5);
+	}
+	body#blur post > sub-post:after {
+		border-radius: inherit;
+		border: 0px;
 	}
 	body#blur post.non-blur > sub-post:before {
 		background-color: rgba(239, 239, 239, 0.9);
