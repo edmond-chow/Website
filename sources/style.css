@@ -361,7 +361,8 @@
 	post > sub-post:after {
 		content: '';
 		border: 1px solid rgba(247, 247, 247, 0.7);
-		box-sizing: border-box;
+		left: -1px;
+		top: -1px;
 		pointer-events: none;
 	}
 	post > img.icon[src]:not([src='']) + sub-post {
