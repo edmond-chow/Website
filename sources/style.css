@@ -603,7 +603,8 @@
 		display: inline-block;
 		margin: 3px;
 		padding: 16px 32px;
-		line-height: 21px;	
+		line-height: 21px;
+		min-height: 53px;
 		font-size: 16px;
 		transition-duration: 0.4s;
 		color: white;
@@ -612,8 +613,23 @@
 		user-select: none;
 		-webkit-user-drag: none;
 	}
+	button.no-content {
+		width: 85px;
+	}
 	body#blur button {
 		border-radius: 8px;
+	}
+	button.icon {
+		background-repeat: no-repeat;
+		background-position: 11px center;
+		padding-left: 48px;
+		padding-right: 24px;
+		background-size: 31px;
+	}
+	button.icon.no-content {
+		padding: 16px;
+		width: 53px;
+		height: 53px;
 	}
 	button:hover {
 		color: black;
@@ -635,6 +651,10 @@
 		padding: 10px 20px;
 		font-size: 12px;
 		line-height: 16px;
+		min-height: 36px;
+	}
+	button.advance.no-content {
+		width: 56px;
 	}
 	body#blur button.advance {
 		border-radius: 5px;
@@ -645,10 +665,9 @@
 		padding-left: 31px;
 		padding-right: 15px;
 		background-size: 16px;
-		min-height: 36px;
 	}
 	button.advance.icon.no-content {
-		padding: 13px;
+		padding: 10px;
 		width: 36px;
 		height: 36px;
 	}

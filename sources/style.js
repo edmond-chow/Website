@@ -673,18 +673,18 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 			}
 		}
 		/* button */ {
-			/* '.icon' and '.no-content' for the 'button.advance's */ {
-				let buttonAdvanceNode = forAll('button.advance');
-				for (let i = 0; i < buttonAdvanceNode.length; i++) {
-					if (window.getComputedStyle(buttonAdvanceNode[i]).backgroundImage == 'none') {
-						buttonAdvanceNode[i].classList.remove('icon');
+			let buttonNode = forAllTag('button');
+			/* '.icon' and '.no-content' for the 'button's */ {
+				for (let i = 0; i < buttonNode.length; i++) {
+					if (window.getComputedStyle(buttonNode[i]).backgroundImage == 'none') {
+						buttonNode[i].classList.remove('icon');
 					} else {
-						buttonAdvanceNode[i].classList.add('icon');
+						buttonNode[i].classList.add('icon');
 					}
-					if (hasSubstance(buttonAdvanceNode[i])) {
-						buttonAdvanceNode[i].classList.remove('no-content');
+					if (hasSubstance(buttonNode[i])) {
+						buttonNode[i].classList.remove('no-content');
 					} else {
-						buttonAdvanceNode[i].classList.add('no-content');
+						buttonNode[i].classList.add('no-content');
 					}
 				}
 			}
