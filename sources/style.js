@@ -1,25 +1,22 @@
-function forAll(selector) {
+const forAll = function forAll(selector) {
 	return document.querySelectorAll(selector);
 }
-function forAllTag(name) {
+const forAllTag = function forAllTag(name) {
 	return document.getElementsByTagName(name);
 }
-function forAllClass(name) {
+const forAllClass = function forAllClass(name) {
 	return document.getElementsByClassName(name);
 }
-Element.prototype.has = function(selector)
-{
+Element.prototype.has = function has(selector) {
 	return this.querySelector(selector) != null;
 }
-Element.prototype.get = function(selector)
-{
+Element.prototype.get = function get(selector) {
 	return this.querySelector(selector);
 }
-Element.prototype.getAll = function(selector)
-{
+Element.prototype.getAll = function getAll(selector) {
 	return this.querySelectorAll(selector);
 }
-function arrayForChild(childNode, child) {
+const arrayForChild = function arrayForChild(childNode, child) {
 	let array = [];
 	for (let i = 0; i < childNode.length; i++) {
 		if (childNode[i].tagName.toUpperCase() == child.toUpperCase()) {
@@ -28,7 +25,7 @@ function arrayForChild(childNode, child) {
 	}
 	return array;
 }
-function insertSurround(parent, child) {
+const insertSurround = function insertSurround(parent, child) {
 	let parentNode = forAll(parent);
 	for (let i = 0; i < parentNode.length; i++) {
 		let childNode = parentNode[i].children;
@@ -39,14 +36,14 @@ function insertSurround(parent, child) {
 		}
 	}
 }
-function switchFirst(parent, child) {
+const switchFirst = function switchFirst(parent, child) {
 	let parentNode = forAll(parent);
 	for (let i = 0; i < parentNode.length; i++) {
 		let childNode = parentNode[i].children;
 		parentNode[i].prepend(...arrayForChild(childNode, child));
 	}
 }
-function addFirst(parent, child) {
+const addFirst = function addFirst(parent, child) {
 	let parentNode = forAll(parent);
 	for (let i = 0; i < parentNode.length; i++) {
 		if (parentNode[i].children.length > 0 && parentNode[i].children[0].tagName.toUpperCase() == child.toUpperCase()) {
@@ -56,20 +53,20 @@ function addFirst(parent, child) {
 		parentNode[i].prepend(substance);
 	}
 }
-function moveOutside(parent, child) {
+const moveOutside = function moveOutside(parent, child) {
 	let parentNode = forAll(parent);
 	for (let i = 0; i < parentNode.length; i++) {
 		let childNode = parentNode[i].children;
 		parentNode[i].parentElement?.prepend(...arrayForChild(childNode, child));
 	}
 }
-function surroundedBy(parent, childNode) {
+const surroundedBy = function surroundedBy(parent, childNode) {
 	let parentNode = childNode.parentElement;
 	let surroundingNode = document.createElement(parent);
 	surroundingNode.append(childNode);
 	parentNode.append(surroundingNode);
 }
-function removeSpace(text) {
+const removeSpace = function removeSpace(text) {
 	return text.replace(/\t/g, '').replace(/\r/g, '').replace(/\n/g, '').replace(/\f/g, '')
 		.replace(/\u0020/g, '')
 		.replace(/\u00A0/g, '')
@@ -92,7 +89,7 @@ function removeSpace(text) {
 		.replace(/\u3000/g, '')
 		.replace(/\uFEFF/g, '');
 }
-function hasSubstance(parentNode) {
+const hasSubstance = function hasSubstance(parentNode) {
 	let childNode = parentNode.childNodes;
 	for (let i = 0; i < childNode.length; i++) {
 		if (childNode[i].nodeName == '#comment') {
@@ -108,7 +105,7 @@ function hasSubstance(parentNode) {
 	}
 	return false;
 }
-function hasTextOnly(parentNode) {
+const hasTextOnly = function hasTextOnly(parentNode) {
 	let childNode = parentNode.childNodes;
 	for (let i = 0; i < childNode.length; i++) {
 		if (childNode[i].nodeName == '#comment') {
@@ -122,7 +119,7 @@ function hasTextOnly(parentNode) {
 	}
 	return true;
 }
-function hasNoTextWithNode(parentNode) {
+const hasNoTextWithNode = function hasNoTextWithNode(parentNode) {
 	let childNode = parentNode.childNodes;
 	for (let i = 0; i < childNode.length; i++) {
 		if (childNode[i].nodeName == '#comment') {
@@ -136,7 +133,7 @@ function hasNoTextWithNode(parentNode) {
 	}
 	return true;
 }
-function inClient(node) {
+const inClient = function inClient(node) {
 	let rect = node.getBoundingClientRect();
 	let left = rect.x < document.body.clientWidth;
 	let top = rect.y < document.body.clientHeight;
@@ -144,7 +141,7 @@ function inClient(node) {
 	let bottom = rect.y + rect.height > 0;
 	return (left && right) && (top && bottom);
 }
-function setLocked(node) {
+const setLocked = function setLocked(node) {
 	let parentNode = node.parentElement;
 	if (node.nodeName == 'a'.toUpperCase() && parentNode?.nodeName == 'top'.toUpperCase()) {
 		let childNode = parentNode.getAll(':scope > a');
@@ -157,9 +154,9 @@ function setLocked(node) {
 		}
 	}
 }
-function makeCascading(headNode, nodeId, styleText) {
-	let styleNode = function() {
-		let pseudoNode = function() {
+const makeCascading = function makeCascading(headNode, nodeId, styleText) {
+	let styleNode = function getStyleNode() {
+		let pseudoNode = function getPseudoNode() {
 			let cascadingNode = headNode.getAll(':scope > style');
 			let filteredNode = [];
 			for (let i = 0; i < cascadingNode.length; i++) {
@@ -171,7 +168,6 @@ function makeCascading(headNode, nodeId, styleText) {
 		}();
 		if (pseudoNode.length == 0) {
 			let styleNode = document.createElement('style');
-			styleNode.type = 'text/css';
 			styleNode.id = nodeId;
 			headNode.append(styleNode);
 			return styleNode;
@@ -193,6 +189,8 @@ function makeCascading(headNode, nodeId, styleText) {
 }
 let isLoaded = false;
 let hasScrolledInto = false;
+const eventStructedTag = new CustomEvent('structedTag');
+const eventFormedStyle = new CustomEvent('formedStyle');
 requestAnimationFrame(function delegate() {
 	function marker() {
 		function getMarker(majorNode, stackCount, postNode, index) {
@@ -217,8 +215,6 @@ requestAnimationFrame(function delegate() {
 			return markerStartedWith;
 		}
 		let markedNode = [];
-		let orderSelector = ':scope > sub-post > post-leader > post-leader-order';
-		let scrollSelector = ':scope > sub-post > scroll-into';
 		function subPostConducting(majorNode, stackCount, orderString, postNode) {
 			let subPostNode = postNode.getAll(':scope > sub-post > post-content > post');
 			for (let i = 0; i < subPostNode.length; i++) {
@@ -267,7 +263,7 @@ requestAnimationFrame(function delegate() {
 		let hash = document.location.hash;
 		if (hash.substring(0, 1) == '#')
 		{
-			setTimeout(function() {
+			setTimeout(function deffer() {
 				document.location.hash = '#';
 				document.location.hash = hash;
 			}, 500);
@@ -391,8 +387,9 @@ requestAnimationFrame(function delegate() {
 			switchFirst('major > sub-major > post > sub-post > backdrop-container', 'blurred-filter');
 			addFirst('major > sub-major > post > sub-post > backdrop-container', 'blurred-filter');
 		}
+		document.dispatchEvent(eventStructedTag);
 	}
-	/* [ pseudo-style ] */
+	/* [ formed-style ] */
 	{
 		/* style#background-image */ {
 			if (document.body.hasAttribute('background-image')) {
@@ -728,5 +725,6 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 				}
 			}
 		}
+		document.dispatchEvent(eventFormedStyle);
 	}
 });
