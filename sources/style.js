@@ -222,7 +222,7 @@ Object.defineProperty(window, 'makeCascading', { configurable: false, writable: 
 			if (accumulated <= 25) {
 				resolve();
 			} else {
-				setTimeout(function asyncRelease() {
+				setTimeout(function deffer() {
 					capture();
 					resolve();
 				}, accumulated);
@@ -237,15 +237,10 @@ Object.defineProperty(window, 'makeCascading', { configurable: false, writable: 
 	const eventStructuredTag = new CustomEvent('structuredTag');
 	const eventFormedStyle = new CustomEvent('formedStyle');
 	const scrollIntoView = function scrollIntoView() {
-		if (hasScrolledInto == false) {
-			hasScrolledInto = true;
-			let hash = document.location.hash;
-			if (hash.substring(0, 1) == '#') {
-				setTimeout(function deffer() {
-					document.location.hash = '#';
-					document.location.hash = hash;
-				}, 500);
-			}
+		let hash = document.location.hash;
+		if (hash.substring(0, 1) == '#') {
+			document.location.hash = '#';
+			document.location.hash = hash;
 		}
 	};
 	const marker = function marker() {
@@ -783,15 +778,17 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 		document.dispatchEvent(eventFormedStyle);
 	};
 	const delegate = async function delegate() {
-		if (document.readyState != 'complete') {
-			return;
+		if (document.readyState == 'complete') {
+			if (isLoaded == false) {
+				await structuredTag();
+				isLoaded = true;
+			}
+			await formedStyle();
+			if (hasScrolledInto == false) {
+				scrollIntoView();
+				hasScrolledInto = true;
+			}
 		}
-		scrollIntoView();
-		if (isLoaded == false) {
-			await structuredTag();
-			isLoaded = true;
-		}
-		await formedStyle();
 	};
 	requestAnimationFrame(async function deffer() {
 		await delegate();
