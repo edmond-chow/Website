@@ -189,7 +189,7 @@ const makeCascading = function makeCascading(headNode, nodeId, styleText) {
 }
 let isLoaded = false;
 let hasScrolledInto = false;
-const eventStructedTag = new CustomEvent('structedTag');
+const eventStructuredTag = new CustomEvent('StructuredTag');
 const eventFormedStyle = new CustomEvent('formedStyle');
 requestAnimationFrame(function delegate() {
 	function marker() {
@@ -387,7 +387,7 @@ requestAnimationFrame(function delegate() {
 			switchFirst('major > sub-major > post > sub-post > backdrop-container', 'blurred-filter');
 			addFirst('major > sub-major > post > sub-post > backdrop-container', 'blurred-filter');
 		}
-		document.dispatchEvent(eventStructedTag);
+		document.dispatchEvent(eventStructuredTag);
 	}
 	/* [ formed-style ] */
 	{
