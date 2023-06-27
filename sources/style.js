@@ -10,12 +10,15 @@ const forAllClass = function forAllClass(name) {
 Element.prototype.has = function has(selector) {
 	return this.querySelector(selector) != null;
 }
+Object.defineProperty(Element.prototype, 'has', { configurable: false, writable: false });
 Element.prototype.get = function get(selector) {
 	return this.querySelector(selector);
 }
+Object.defineProperty(Element.prototype, 'get', { configurable: false, writable: false });
 Element.prototype.getAll = function getAll(selector) {
 	return this.querySelectorAll(selector);
 }
+Object.defineProperty(Element.prototype, 'getAll', { configurable: false, writable: false });
 const arrayForChild = function arrayForChild(childNode, child) {
 	let array = [];
 	for (let i = 0; i < childNode.length; i++) {
@@ -187,11 +190,23 @@ const makeCascading = function makeCascading(headNode, nodeId, styleText) {
 		styleNode.firstChild.textContent = styleText;
 	}
 }
-let isLoaded = false;
-let hasScrolledInto = false;
-const eventStructuredTag = new CustomEvent('structuredTag');
-const eventFormedStyle = new CustomEvent('formedStyle');
-requestAnimationFrame(function delegate() {
+/* { hidden } */ {
+	let isLoaded = false;
+	let hasScrolledInto = false;
+	const eventStructuredTag = new CustomEvent('structuredTag');
+	const eventFormedStyle = new CustomEvent('formedStyle');
+	function scrollIntoView() {
+		if (hasScrolledInto == false) {
+			hasScrolledInto = true;
+			let hash = document.location.hash;
+			if (hash.substring(0, 1) == '#') {
+				setTimeout(function deffer() {
+					document.location.hash = '#';
+					document.location.hash = hash;
+				}, 500);
+			}
+		}
+	}
 	function marker() {
 		function getMarker(majorNode, stackCount, postNode, index) {
 			let markerReversed = false;
@@ -253,25 +268,7 @@ requestAnimationFrame(function delegate() {
 			}
 		}
 	}
-	requestAnimationFrame(delegate);
-	if (document.readyState != 'complete') {
-		return;
-	}
-	/* scroll-into */
-	if (hasScrolledInto == false) {
-		hasScrolledInto = true;
-		let hash = document.location.hash;
-		if (hash.substring(0, 1) == '#')
-		{
-			setTimeout(function deffer() {
-				document.location.hash = '#';
-				document.location.hash = hash;
-			}, 500);
-		}
-	}
-	/* [ structured-tag ] */
-	if (isLoaded == false) {
-		isLoaded = true;
+	function structuredTag() {
 		/* major */ {
 			/* structuring for the 'major' */ {
 				insertSurround('major', 'sub-major');
@@ -389,8 +386,7 @@ requestAnimationFrame(function delegate() {
 		}
 		document.dispatchEvent(eventStructuredTag);
 	}
-	/* [ formed-style ] */
-	{
+	function formedStyle() {
 		/* style#background-image */ {
 			if (document.body.hasAttribute('background-image')) {
 				let styleText = `
@@ -727,4 +723,16 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 		}
 		document.dispatchEvent(eventFormedStyle);
 	}
-});
+	requestAnimationFrame(function delegate() {
+		requestAnimationFrame(delegate);
+		if (document.readyState != 'complete') {
+			return;
+		}
+		scrollIntoView();
+		if (isLoaded == false) {
+			isLoaded = true;
+			structuredTag();
+		}
+		formedStyle();
+	});
+}
