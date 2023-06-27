@@ -1,25 +1,28 @@
-const forAll = function forAll(selector) {
+window.forAll = function forAll(selector) {
 	return document.querySelectorAll(selector);
-}
-const forAllTag = function forAllTag(name) {
+};
+Object.defineProperty(window, 'forAll', { configurable: false, writable: false });
+window.forAllTag = function forAllTag(name) {
 	return document.getElementsByTagName(name);
-}
-const forAllClass = function forAllClass(name) {
+};
+Object.defineProperty(window, 'forAllTag', { configurable: false, writable: false });
+window.forAllClass = function forAllClass(name) {
 	return document.getElementsByClassName(name);
-}
+};
+Object.defineProperty(window, 'forAllClass', { configurable: false, writable: false });
 Element.prototype.has = function has(selector) {
 	return this.querySelector(selector) != null;
-}
+};
 Object.defineProperty(Element.prototype, 'has', { configurable: false, writable: false });
 Element.prototype.get = function get(selector) {
 	return this.querySelector(selector);
-}
+};
 Object.defineProperty(Element.prototype, 'get', { configurable: false, writable: false });
 Element.prototype.getAll = function getAll(selector) {
 	return this.querySelectorAll(selector);
-}
+};
 Object.defineProperty(Element.prototype, 'getAll', { configurable: false, writable: false });
-const arrayForChild = function arrayForChild(childNode, child) {
+window.arrayForChild = function arrayForChild(childNode, child) {
 	let array = [];
 	for (let i = 0; i < childNode.length; i++) {
 		if (childNode[i].tagName.toUpperCase() == child.toUpperCase()) {
@@ -27,8 +30,9 @@ const arrayForChild = function arrayForChild(childNode, child) {
 		}
 	}
 	return array;
-}
-const insertSurround = function insertSurround(parent, child) {
+};
+Object.defineProperty(window, 'arrayForChild', { configurable: false, writable: false });
+window.insertSurround = function insertSurround(parent, child) {
 	let parentNode = forAll(parent);
 	for (let i = 0; i < parentNode.length; i++) {
 		let childNode = parentNode[i].children;
@@ -38,15 +42,17 @@ const insertSurround = function insertSurround(parent, child) {
 			parentNode[i].prepend(substance);
 		}
 	}
-}
-const switchFirst = function switchFirst(parent, child) {
+};
+Object.defineProperty(window, 'insertSurround', { configurable: false, writable: false });
+window.switchFirst = function switchFirst(parent, child) {
 	let parentNode = forAll(parent);
 	for (let i = 0; i < parentNode.length; i++) {
 		let childNode = parentNode[i].children;
 		parentNode[i].prepend(...arrayForChild(childNode, child));
 	}
-}
-const addFirst = function addFirst(parent, child) {
+};
+Object.defineProperty(window, 'switchFirst', { configurable: false, writable: false });
+window.addFirst = function addFirst(parent, child) {
 	let parentNode = forAll(parent);
 	for (let i = 0; i < parentNode.length; i++) {
 		if (parentNode[i].children.length > 0 && parentNode[i].children[0].tagName.toUpperCase() == child.toUpperCase()) {
@@ -55,21 +61,24 @@ const addFirst = function addFirst(parent, child) {
 		let substance = document.createElement(child);
 		parentNode[i].prepend(substance);
 	}
-}
-const moveOutside = function moveOutside(parent, child) {
+};
+Object.defineProperty(window, 'addFirst', { configurable: false, writable: false });
+window.moveOutside = function moveOutside(parent, child) {
 	let parentNode = forAll(parent);
 	for (let i = 0; i < parentNode.length; i++) {
 		let childNode = parentNode[i].children;
 		parentNode[i].parentElement?.prepend(...arrayForChild(childNode, child));
 	}
-}
-const surroundedBy = function surroundedBy(parent, childNode) {
+};
+Object.defineProperty(window, 'moveOutside', { configurable: false, writable: false });
+window.surroundedBy = function surroundedBy(parent, childNode) {
 	let parentNode = childNode.parentElement;
 	let surroundingNode = document.createElement(parent);
 	surroundingNode.append(childNode);
 	parentNode.append(surroundingNode);
-}
-const removeSpace = function removeSpace(text) {
+};
+Object.defineProperty(window, 'surroundedBy', { configurable: false, writable: false });
+window.removeSpace = function removeSpace(text) {
 	return text.replace(/\t/g, '').replace(/\r/g, '').replace(/\n/g, '').replace(/\f/g, '')
 		.replace(/\u0020/g, '')
 		.replace(/\u00A0/g, '')
@@ -91,8 +100,9 @@ const removeSpace = function removeSpace(text) {
 		.replace(/\u205F/g, '')
 		.replace(/\u3000/g, '')
 		.replace(/\uFEFF/g, '');
-}
-const hasSubstance = function hasSubstance(parentNode) {
+};
+Object.defineProperty(window, 'removeSpace', { configurable: false, writable: false });
+window.hasSubstance = function hasSubstance(parentNode) {
 	let childNode = parentNode.childNodes;
 	for (let i = 0; i < childNode.length; i++) {
 		if (childNode[i].nodeName == '#comment') {
@@ -107,8 +117,9 @@ const hasSubstance = function hasSubstance(parentNode) {
 		return true;
 	}
 	return false;
-}
-const hasTextOnly = function hasTextOnly(parentNode) {
+};
+Object.defineProperty(window, 'hasSubstance', { configurable: false, writable: false });
+window.hasTextOnly = function hasTextOnly(parentNode) {
 	let childNode = parentNode.childNodes;
 	for (let i = 0; i < childNode.length; i++) {
 		if (childNode[i].nodeName == '#comment') {
@@ -121,8 +132,9 @@ const hasTextOnly = function hasTextOnly(parentNode) {
 		return false;
 	}
 	return true;
-}
-const hasNoTextWithNode = function hasNoTextWithNode(parentNode) {
+};
+Object.defineProperty(window, 'hasTextOnly', { configurable: false, writable: false });
+window.hasNoTextWithNode = function hasNoTextWithNode(parentNode) {
 	let childNode = parentNode.childNodes;
 	for (let i = 0; i < childNode.length; i++) {
 		if (childNode[i].nodeName == '#comment') {
@@ -135,16 +147,18 @@ const hasNoTextWithNode = function hasNoTextWithNode(parentNode) {
 		return false;
 	}
 	return true;
-}
-const inClient = function inClient(node) {
+};
+Object.defineProperty(window, 'hasNoTextWithNode', { configurable: false, writable: false });
+window.inClient = function inClient(node) {
 	let rect = node.getBoundingClientRect();
 	let left = rect.x < document.body.clientWidth;
 	let top = rect.y < document.body.clientHeight;
 	let right = rect.x + rect.width > 0;
 	let bottom = rect.y + rect.height > 0;
 	return (left && right) && (top && bottom);
-}
-const setLocked = function setLocked(node) {
+};
+Object.defineProperty(window, 'inClient', { configurable: false, writable: false });
+window.setLocked = function setLocked(node) {
 	let parentNode = node.parentElement;
 	if (node.nodeName == 'a'.toUpperCase() && parentNode?.nodeName == 'top'.toUpperCase()) {
 		let childNode = parentNode.getAll(':scope > a');
@@ -156,8 +170,9 @@ const setLocked = function setLocked(node) {
 			}
 		}
 	}
-}
-const makeCascading = function makeCascading(headNode, nodeId, styleText) {
+};
+Object.defineProperty(window, 'setLocked', { configurable: false, writable: false });
+window.makeCascading = function makeCascading(headNode, nodeId, styleText) {
 	let styleNode = function getStyleNode() {
 		let pseudoNode = function getPseudoNode() {
 			let cascadingNode = headNode.getAll(':scope > style');
@@ -189,13 +204,14 @@ const makeCascading = function makeCascading(headNode, nodeId, styleText) {
 	} else if (styleNode.firstChild.wholeText != styleText) {
 		styleNode.firstChild.textContent = styleText;
 	}
-}
+};
+Object.defineProperty(window, 'makeCascading', { configurable: false, writable: false });
 /* { hidden } */ {
 	let isLoaded = false;
 	let hasScrolledInto = false;
 	const eventStructuredTag = new CustomEvent('structuredTag');
 	const eventFormedStyle = new CustomEvent('formedStyle');
-	function scrollIntoView() {
+	const scrollIntoView = function scrollIntoView() {
 		if (hasScrolledInto == false) {
 			hasScrolledInto = true;
 			let hash = document.location.hash;
@@ -206,8 +222,8 @@ const makeCascading = function makeCascading(headNode, nodeId, styleText) {
 				}, 500);
 			}
 		}
-	}
-	function marker() {
+	};
+	const marker = function marker() {
 		function getMarker(majorNode, stackCount, postNode, index) {
 			let markerReversed = false;
 			if (majorNode.hasAttribute('marker-reversed')) {
@@ -267,8 +283,8 @@ const makeCascading = function makeCascading(headNode, nodeId, styleText) {
 				}
 			}
 		}
-	}
-	function structuredTag() {
+	};
+	const structuredTag = function structuredTag() {
 		/* major */ {
 			/* structuring for the 'major' */ {
 				insertSurround('major', 'sub-major');
@@ -385,8 +401,8 @@ const makeCascading = function makeCascading(headNode, nodeId, styleText) {
 			addFirst('major > sub-major > post > sub-post > backdrop-container', 'blurred-filter');
 		}
 		document.dispatchEvent(eventStructuredTag);
-	}
-	function formedStyle() {
+	};
+	const formedStyle = function formedStyle() {
 		/* style#background-image */ {
 			if (document.body.hasAttribute('background-image')) {
 				let styleText = `
@@ -722,9 +738,8 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 			}
 		}
 		document.dispatchEvent(eventFormedStyle);
-	}
-	requestAnimationFrame(function delegate() {
-		requestAnimationFrame(delegate);
+	};
+	const delegate = function delegate() {
 		if (document.readyState != 'complete') {
 			return;
 		}
@@ -734,5 +749,35 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 			structuredTag();
 		}
 		formedStyle();
+	};
+	requestAnimationFrame(function deffer() {
+		requestAnimationFrame(deffer);
+		delegate();
 	});
+	window.ready = function ready() {
+		return isLoaded;
+	};
+	Object.defineProperty(window, 'ready', { configurable: false, writable: false });
+	window.reload = function reload() {
+		isLoaded = false;
+		delegate();
+	};
+	Object.defineProperty(window, 'reload', { configurable: false, writable: false });
+	window.reloadAsync = function reloadAsync() {
+		isLoaded = false;
+	};
+	Object.defineProperty(window, 'reloadAsync', { configurable: false, writable: false });
+	window.scrolledInto = function scrolledInto() {
+		return hasScrolledInto;
+	};
+	Object.defineProperty(window, 'scrolledInto', { configurable: false, writable: false });
+	window.rescroll = function rescroll() {
+		hasScrolledInto = false;
+		delegate();
+	};
+	Object.defineProperty(window, 'rescroll', { configurable: false, writable: false });
+	window.rescrollAsync = function rescrollAsync() {
+		hasScrolledInto = false;
+	};
+	Object.defineProperty(window, 'rescrollAsync', { configurable: false, writable: false });
 }
