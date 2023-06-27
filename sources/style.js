@@ -206,8 +206,6 @@ window.makeCascading = function makeCascading(headNode, nodeId, styleText) {
 	}
 };
 Object.defineProperty(window, 'makeCascading', { configurable: false, writable: false });
-	let a = 0;
-	let b = 0;
 /* { async } */ {
 	let accumulated = 0;
 	let captured = 0;
