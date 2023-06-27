@@ -221,10 +221,8 @@ Object.defineProperty(window, 'makeCascading', { configurable: false, writable: 
 		return new Promise(function (resolve) {
 			if (accumulated <= 25) {
 				resolve();
-				a += 1;
 			} else {
 				setTimeout(function asyncRelease() {
-					b += 1;
 					capture();
 					resolve();
 				}, accumulated);
