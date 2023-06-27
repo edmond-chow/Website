@@ -206,6 +206,35 @@ window.makeCascading = function makeCascading(headNode, nodeId, styleText) {
 	}
 };
 Object.defineProperty(window, 'makeCascading', { configurable: false, writable: false });
+	let a = 0;
+	let b = 0;
+/* { async } */ {
+	let accumulated = 0;
+	let captured = 0;
+	window.capture = function capture() {
+		accumulated = 0;
+		captured = performance.now();
+	};
+	Object.defineProperty(window, 'capture', { configurable: false, writable: false });
+	window.suspend = function suspend() {
+		let now = performance.now();
+		accumulated += now - captured;
+		captured = now;
+		return new Promise(function (resolve) {
+			if (accumulated <= 25) {
+				resolve();
+				a += 1;
+			} else {
+				setTimeout(function asyncRelease() {
+					b += 1;
+					capture();
+					resolve();
+				}, accumulated);
+			}
+		});
+	};
+	Object.defineProperty(window, 'suspend', { configurable: false, writable: false });
+}
 /* { hidden } */ {
 	let isLoaded = false;
 	let hasScrolledInto = false;
@@ -284,12 +313,14 @@ Object.defineProperty(window, 'makeCascading', { configurable: false, writable: 
 			}
 		}
 	};
-	const structuredTag = function structuredTag() {
+	const structuredTag = async function structuredTag() {
+		capture();
 		/* major */ {
 			/* structuring for the 'major' */ {
 				insertSurround('major', 'sub-major');
 			}
 		}
+		await suspend();
 		/* post */ {
 			let postNode = forAllTag('post');
 			/* structuring for the 'post's */ {
@@ -375,6 +406,7 @@ Object.defineProperty(window, 'makeCascading', { configurable: false, writable: 
 				}
 			}
 		}
+		await suspend();
 		/* dropdown */ {
 			let dropdownNode = forAllTag('dropdown');
 				/* structuring for the 'dropdown's */ {
@@ -392,35 +424,39 @@ Object.defineProperty(window, 'makeCascading', { configurable: false, writable: 
 				}
 			}
 		}
+		await suspend();
 		/* background-image with 'basis-layer, backdrop-container > blurred-filter' */ {
 			switchFirst('body', 'basis-layer');
 			addFirst('body', 'basis-layer');
-			switchFirst('major > sub-major > post > sub-post', 'backdrop-container');
-			addFirst('major > sub-major > post > sub-post', 'backdrop-container');
-			switchFirst('major > sub-major > post > sub-post > backdrop-container', 'blurred-filter');
-			addFirst('major > sub-major > post > sub-post > backdrop-container', 'blurred-filter');
+			switchFirst('body major > sub-major > post > sub-post', 'backdrop-container');
+			addFirst('body major > sub-major > post > sub-post', 'backdrop-container');
+			switchFirst('body major > sub-major > post > sub-post > backdrop-container', 'blurred-filter');
+			addFirst('body major > sub-major > post > sub-post > backdrop-container', 'blurred-filter');
 		}
+		await suspend();
 		document.dispatchEvent(eventStructuredTag);
 	};
-	const formedStyle = function formedStyle() {
-		/* style#background-image */ {
-			if (document.body.hasAttribute('background-image')) {
-				let styleText = `
+	const formedStyle = async function formedStyle() {
+		capture();
+		/* style */ {
+			/* style#background-image */ {
+				if (document.body.hasAttribute('background-image')) {
+					let styleText = `
 body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-container > blurred-filter {
 	background-image: ` + document.body.getAttribute('background-image') + `;
 }
 `;
-				makeCascading(document.head, 'background-image', styleText);
-			} else {
-				let styleText = `
+					makeCascading(document.head, 'background-image', styleText);
+				} else {
+					let styleText = `
 body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-container > blurred-filter {
 }
 `;
 				makeCascading(document.head, 'background-image', styleText);
+				}
 			}
-		}
-		/* style#mobile-cascading */ {
-			let styleText = `
+			/* style#mobile-cascading */ {
+				let styleText = `
 @media (pointer:none), (pointer:coarse) {
 	body {
 		min-height: ` + window.innerHeight.toString() + `px;
@@ -437,8 +473,10 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 	}
 }
 `;
-			makeCascading(document.head, 'mobile-cascading', styleText);
+				makeCascading(document.head, 'mobile-cascading', styleText);
+			}
 		}
+		await suspend();
 		/* major */ {
 			let majorNode = forAllTag('major');
 			/* resizing for the 'major' */ {
@@ -451,6 +489,7 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 				}
 			}
 		}
+		await suspend();
 		/* top */ {
 			let topNode = forAllTag('top');
 			/* resizing for the 'top' */ {
@@ -512,6 +551,7 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 				}
 			}
 		}
+		await suspend();
 		/* post */ {
 			let postNode = forAllTag('post');
 			/* '.no-content' for the pairs of 'post > sub-post > post-leader > post-leader-advance' and 'post > sub-post > post-content' */ {
@@ -588,6 +628,7 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 				}
 			}
 		}
+		await suspend();
 		/* dropdown */ {
 			let dropdownNode = forAllTag('dropdown');
 			/* '.has-node' for the 'dropdown > dropdown-content > a's */ {
@@ -681,6 +722,7 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 				}
 			}
 		}
+		await suspend();
 		/* button */ {
 			let buttonNode = forAllTag('button');
 			/* '.icon' and '.no-content' for the 'button's */ {
@@ -698,30 +740,34 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 				}
 			}
 		}
-		/* .no-space */ {
-			let anyNoSpaceNode = forAllClass('no-space');
-			for (let i = 0; i < anyNoSpaceNode.length; i++) {
-				let childNode = anyNoSpaceNode[i].childNodes;
-				for (let j = 0; j < childNode.length; j++) {
-					if (childNode[j].nodeName == '#text' && removeSpace(childNode[j].wholeText) == '') {
-						childNode[j].textContent = '';
+		await suspend();
+		/* . */ {
+			/* .no-space */ {
+				let anyNoSpaceNode = forAllClass('no-space');
+				for (let i = 0; i < anyNoSpaceNode.length; i++) {
+					let childNode = anyNoSpaceNode[i].childNodes;
+					for (let j = 0; j < childNode.length; j++) {
+						if (childNode[j].nodeName == '#text' && removeSpace(childNode[j].wholeText) == '') {
+							childNode[j].textContent = '';
+						}
+					}
+				}
+			}
+			/* .no-text */ {
+				let anyNoSpaceNode = forAllClass('no-text');
+				for (let i = 0; i < anyNoSpaceNode.length; i++) {
+					let childNode = anyNoSpaceNode[i].childNodes;
+					for (let j = 0; j < childNode.length; j++) {
+						if (childNode[j].nodeName == '#text') {
+							childNode[j].textContent = '';
+						}
 					}
 				}
 			}
 		}
-		/* .no-text */ {
-			let anyNoSpaceNode = forAllClass('no-text');
-			for (let i = 0; i < anyNoSpaceNode.length; i++) {
-				let childNode = anyNoSpaceNode[i].childNodes;
-				for (let j = 0; j < childNode.length; j++) {
-					if (childNode[j].nodeName == '#text') {
-						childNode[j].textContent = '';
-					}
-				}
-			}
-		}
+		await suspend();
 		/* background-image with 'basis-layer, backdrop-container > blurred-filter' */ {
-			let postNode = forAll('major > sub-major > post');
+			let postNode = forAll('body major > sub-major > post');
 			for (let i = 0; i < postNode.length; i++) {
 				if (!postNode[i].has(':scope > sub-post > backdrop-container')) {
 					continue;
@@ -737,22 +783,23 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 				}
 			}
 		}
+		await suspend();
 		document.dispatchEvent(eventFormedStyle);
 	};
-	const delegate = function delegate() {
+	const delegate = async function delegate() {
 		if (document.readyState != 'complete') {
 			return;
 		}
 		scrollIntoView();
 		if (isLoaded == false) {
+			await structuredTag();
 			isLoaded = true;
-			structuredTag();
 		}
-		formedStyle();
+		await formedStyle();
 	};
-	requestAnimationFrame(function deffer() {
+	requestAnimationFrame(async function deffer() {
+		await delegate();
 		requestAnimationFrame(deffer);
-		delegate();
 	});
 	window.ready = function ready() {
 		return isLoaded;
@@ -760,24 +807,14 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 	Object.defineProperty(window, 'ready', { configurable: false, writable: false });
 	window.reload = function reload() {
 		isLoaded = false;
-		delegate();
 	};
 	Object.defineProperty(window, 'reload', { configurable: false, writable: false });
-	window.reloadAsync = function reloadAsync() {
-		isLoaded = false;
-	};
-	Object.defineProperty(window, 'reloadAsync', { configurable: false, writable: false });
 	window.scrolledInto = function scrolledInto() {
 		return hasScrolledInto;
 	};
 	Object.defineProperty(window, 'scrolledInto', { configurable: false, writable: false });
 	window.rescroll = function rescroll() {
 		hasScrolledInto = false;
-		delegate();
 	};
 	Object.defineProperty(window, 'rescroll', { configurable: false, writable: false });
-	window.rescrollAsync = function rescrollAsync() {
-		hasScrolledInto = false;
-	};
-	Object.defineProperty(window, 'rescrollAsync', { configurable: false, writable: false });
 }
