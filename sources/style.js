@@ -189,7 +189,7 @@ const makeCascading = function makeCascading(headNode, nodeId, styleText) {
 }
 let isLoaded = false;
 let hasScrolledInto = false;
-const eventStructuredTag = new CustomEvent('StructuredTag');
+const eventStructuredTag = new CustomEvent('structuredTag');
 const eventFormedStyle = new CustomEvent('formedStyle');
 requestAnimationFrame(function delegate() {
 	function marker() {
