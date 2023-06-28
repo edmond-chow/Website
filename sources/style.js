@@ -207,29 +207,32 @@ window.makeCascading = function makeCascading(headNode, nodeId, styleText) {
 };
 Object.defineProperty(window, 'makeCascading', { configurable: false, writable: false });
 /* { async } */ {
-	let accumulated = 0;
 	let captured = 0;
-	window.capture = function capture() {
-		accumulated = 0;
+	window.captureSpan = function captureSpan() {
 		captured = performance.now();
 	};
-	Object.defineProperty(window, 'capture', { configurable: false, writable: false });
+	Object.defineProperty(window, 'captureSpan', { configurable: false, writable: false });
+	const getAccumulated = function getAccumulated() {
+		return performance.now() - captured;
+	};
 	window.suspend = function suspend() {
-		let now = performance.now();
-		accumulated += now - captured;
-		captured = now;
-		return new Promise(function (resolve) {
-			if (accumulated <= 25) {
+		if (getAccumulated() <= 25) {
+			return new Promise(function executor(resolve) {
 				resolve();
-			} else {
-				setTimeout(function deffer() {
-					capture();
-					resolve();
-				}, accumulated);
-			}
-		});
+			});
+		}
+		return mustSuspend();
 	};
 	Object.defineProperty(window, 'suspend', { configurable: false, writable: false });
+	window.mustSuspend = function mustSuspend() {
+		return new Promise(function executor(resolve) {
+			setTimeout(function deffer() {
+				captureSpan();
+				resolve();
+			}, getAccumulated());
+		});
+	};
+	Object.defineProperty(window, 'mustSuspend', { configurable: false, writable: false });
 }
 /* { hidden } */ {
 	let isLoaded = false;
@@ -305,7 +308,7 @@ Object.defineProperty(window, 'makeCascading', { configurable: false, writable: 
 		}
 	};
 	const structuredTag = async function structuredTag() {
-		capture();
+		captureSpan();
 		/* major */ {
 			/* structuring for the 'major' */ {
 				insertSurround('major', 'sub-major');
@@ -428,7 +431,7 @@ Object.defineProperty(window, 'makeCascading', { configurable: false, writable: 
 		document.dispatchEvent(eventStructuredTag);
 	};
 	const formedStyle = async function formedStyle() {
-		capture();
+		captureSpan();
 		/* style */ {
 			/* style#background-image */ {
 				if (document.body.hasAttribute('background-image')) {
@@ -791,8 +794,10 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 		}
 	};
 	requestAnimationFrame(async function deffer() {
-		await delegate();
-		requestAnimationFrame(deffer);
+		while (true) {
+			await delegate();
+			await mustSuspend();
+		}
 	});
 	window.ready = function ready() {
 		return isLoaded;
