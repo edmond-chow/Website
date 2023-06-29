@@ -751,26 +751,28 @@
 		left: 0px;
 		z-index: -2; /* -> layer[page-backdrop] */
 	}
-	body#blur major > sub-major > post > sub-post > backdrop-container {
+	body major > sub-major > post > sub-post > backdrop-container {
 		position: absolute;
 		width: 100%;
 		height: 100%;
-		clip-path: inset(0px round 8px);
-		background-color: black;
 		z-index: -2; /* -> layer[page-backdrop] */
+	}
+	body#blur major > sub-major > post > sub-post > backdrop-container {
+		background-color: black;
+		border-radius: inherit;
+		clip-path: inset(0px round 8px);
 	}
 	body#blur major.tiny > sub-major > post > sub-post > backdrop-container {
 		clip-path: inset(0px round 5px);
 	}
-	body#blur major > sub-major > post > sub-post > backdrop-container.suspended {
-		display: none;
-	}
-	body#blur major > sub-major > post > sub-post > backdrop-container > blurred-filter {
+	body major > sub-major > post > sub-post > backdrop-container > blurred-filter {
 		position: fixed;
 		width: calc(100% + 100px);
 		height: calc(100% + 100px);
 		top: -50px;
 		left: -50px;
+	}
+	body#blur major > sub-major > post > sub-post > backdrop-container > blurred-filter {
 		filter: blur(20px);
 	}
 	body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-container > blurred-filter {
@@ -778,6 +780,11 @@
 		background-position: center;
 		background-size: cover;
 		background-image: url('lake.jpg');
+	}
+	@media (pointer: coarse), (pointer: none) {
+		body major > sub-major > post > sub-post > backdrop-container.suspended {
+			display: none;
+		}
 	}
 }
 @layer backdrop-after {
