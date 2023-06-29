@@ -759,7 +759,6 @@
 	}
 	body#blur major > sub-major > post > sub-post > backdrop-container {
 		background-color: black;
-		border-radius: inherit;
 		clip-path: inset(0px round 8px);
 	}
 	body#blur major.tiny > sub-major > post > sub-post > backdrop-container {

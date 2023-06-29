@@ -149,15 +149,42 @@ window.hasNoTextWithNode = function hasNoTextWithNode(parentNode) {
 	return true;
 };
 Object.defineProperty(window, 'hasNoTextWithNode', { configurable: false, writable: false });
-window.inClient = function inClient(node) {
+window.isInside = function isInside(node, parentNode) {
 	let rect = node.getBoundingClientRect();
-	let left = rect.x < document.body.clientWidth;
-	let top = rect.y < document.body.clientHeight;
-	let right = rect.x + rect.width > 0;
-	let bottom = rect.y + rect.height > 0;
+	let parentRect = parentNode != document.body ? parentNode.getBoundingClientRect() : new DOMRect(0, 0, document.body.clientWidth, document.body.clientHeight);
+	let left = rect.x < parentRect.x + parentRect.width;
+	let top = rect.y < parentRect.y + parentRect.height;
+	let right = rect.x + rect.width > parentRect.x;
+	let bottom = rect.y + rect.height > parentRect.y;
 	return (left && right) && (top && bottom);
 };
-Object.defineProperty(window, 'inClient', { configurable: false, writable: false });
+Object.defineProperty(window, 'isInside', { configurable: false, writable: false });
+window.isScrollable = function isScrollable(node) {
+	let scrollableX = node.scrollWidth > node.clientWidth;
+	let scrollableY = node.scrollHeight > node.clientHeight;
+	return scrollableX || scrollableY;
+};
+Object.defineProperty(window, 'isScrollable', { configurable: false, writable: false });
+window.getParentNode = function getParentNode(node) {
+	let parentNode = node.parentElement;
+	while (parentNode != document.body && !isScrollable(parentNode)) {
+		parentNode = parentNode.parentElement;
+	}
+	return parentNode;
+};
+Object.defineProperty(window, 'getParentNode', { configurable: false, writable: false });
+window.inScrollable = function inScrollable(node) {
+	while (node != document.body) {
+		let parentNode = getParentNode(node);
+		if (isInside(node, parentNode)) {
+			node = parentNode;
+		} else {
+			return false;
+		}
+	}
+	return true;
+};
+Object.defineProperty(window, 'inScrollable', { configurable: false, writable: false });
 window.setLocked = function setLocked(node) {
 	let parentNode = node.parentElement;
 	if (node.nodeName == 'a'.toUpperCase() && parentNode?.nodeName == 'top'.toUpperCase()) {
@@ -668,7 +695,7 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 					let targetNode = dropdownNode[i].get(':scope > dropdown-content');
 					let top = dropdownNode[i].getBoundingClientRect().bottom + 6;
 					let bottom = document.body.clientHeight - dropdownNode[i].getBoundingClientRect().bottom;
-					if (top < 69 || bottom < 64 || !inClient(dropdownNode[i])) {
+					if (top < 69 || bottom < 64 || !inScrollable(dropdownNode[i])) {
 						targetNode.classList.add('hidden');
 						targetNode.style.maxHeight = '';
 						targetNode.style.top = '';
@@ -771,7 +798,7 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 					continue;
 				}
 				let backdropContainerNode = subPostNode.get(':scope > backdrop-container');
-				if (!inClient(subPostNode)) {
+				if (!inScrollable(subPostNode)) {
 					backdropContainerNode.classList.add('suspended');
 				} else {
 					backdropContainerNode.classList.remove('suspended');
