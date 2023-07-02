@@ -1,5 +1,5 @@
 /* Array.prototype.bindTo(instance) */ {
-	Array.prototype.bindTo = function bindTo(instance) {
+	Array.prototype.bindTo = function bindTo(instance = window) {
 		for (let i = 0; i < this.length; i++) {
 			if (this[i] instanceof Function) {
 				instance[this[i].name] = this[i];
@@ -20,6 +20,9 @@
 		return document.getElementsByClassName(name);
 	},
 	function insertSurround(parent, child) {
+		if (child == '') {
+			return;
+		}
 		let parentNode = forAll(parent);
 		for (let i = 0; i < parentNode.length; i++) {
 			if (parentNode[i].arrayForChild(child).length == 0) {
@@ -30,12 +33,18 @@
 		}
 	},
 	function switchFirst(parent, child) {
+		if (child == '') {
+			return;
+		}
 		let parentNode = forAll(parent);
 		for (let i = 0; i < parentNode.length; i++) {
 			parentNode[i].prepend(...parentNode[i].arrayForChild(child));
 		}
 	},
 	function addFirst(parent, child) {
+		if (child == '') {
+			return;
+		}
 		let parentNode = forAll(parent);
 		for (let i = 0; i < parentNode.length; i++) {
 			if (parentNode[i].children.length > 0 && parentNode[i].children[0].tagName.toUpperCase() == child.toUpperCase()) {
@@ -46,6 +55,9 @@
 		}
 	},
 	function moveOutside(parent, child) {
+		if (child == '') {
+			return;
+		}
 		let parentNode = forAll(parent);
 		for (let i = 0; i < parentNode.length; i++) {
 			parentNode[i].parentElement?.prepend(...parentNode[i].arrayForChild(child));
@@ -95,8 +107,8 @@
 		}
 		return true;
 	},
-	function isInside(node, parentNode) {
-		if (node.isOfHeadTree()) {
+	function isInside(node, parentNode = document.body) {
+		if (node.isOfHeadTree() || parentNode.isOfHeadTree()) {
 			return;
 		}
 		let rect = node.getBoundingClientRect();
@@ -256,31 +268,30 @@
 ].bindTo(String.prototype);
 /* { async } */ {
 	let captured = 0;
-	window.captureSpan = function captureSpan() {
-		captured = performance.now();
-	};
-	Object.defineProperty(window, 'captureSpan', { configurable: false, writable: false });
 	const getAccumulated = function getAccumulated() {
 		return performance.now() - captured;
 	};
-	window.suspend = function suspend() {
-		if (getAccumulated() <= 25) {
+	[
+		function captureSpan() {
+			captured = performance.now();
+		},
+		function suspend() {
+			if (getAccumulated() <= 25) {
+				return new Promise(function executor(resolve) {
+					resolve();
+				});
+			}
+			return mustSuspend();
+		},
+		function mustSuspend() {
 			return new Promise(function executor(resolve) {
-				resolve();
+				setTimeout(function deffer() {
+					captureSpan();
+					resolve();
+				}, getAccumulated());
 			});
 		}
-		return mustSuspend();
-	};
-	Object.defineProperty(window, 'suspend', { configurable: false, writable: false });
-	window.mustSuspend = function mustSuspend() {
-		return new Promise(function executor(resolve) {
-			setTimeout(function deffer() {
-				captureSpan();
-				resolve();
-			}, getAccumulated());
-		});
-	};
-	Object.defineProperty(window, 'mustSuspend', { configurable: false, writable: false });
+	].bindTo(window);
 }
 /* { hidden } */ {
 	let isLoaded = false;
