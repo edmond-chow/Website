@@ -252,6 +252,7 @@
 		return array;
 	},
 	function isOfHeadTree() {
+		arguments.constrainedWithAndThrow();
 		if (this == document.documentElement) {
 			return true;
 		}
@@ -277,6 +278,7 @@
 ].bindTo(Element.prototype);
 [
 	function removeSpace() {
+		arguments.constrainedWithAndThrow();
 		return this.replace(/\t/g, '').replace(/\r/g, '').replace(/\n/g, '').replace(/\f/g, '')
 			.replace(/\u0020/g, '')
 			.replace(/\u00A0/g, '')
@@ -307,9 +309,11 @@
 	};
 	[
 		function captureSpan() {
+			arguments.constrainedWithAndThrow();
 			captured = performance.now();
 		},
 		function suspend() {
+			arguments.constrainedWithAndThrow();
 			if (getAccumulated() <= 25) {
 				return new Promise(function executor(resolve) {
 					resolve();
@@ -318,6 +322,7 @@
 			return mustSuspend();
 		},
 		function mustSuspend() {
+			arguments.constrainedWithAndThrow();
 			return new Promise(function executor(resolve) {
 				setTimeout(function deffer() {
 					captureSpan();
@@ -895,15 +900,19 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 	});
 	[
 		function ready() {
+			arguments.constrainedWithAndThrow();
 			return isLoaded;
 		},
 		function reload() {
+			arguments.constrainedWithAndThrow();
 			isLoaded = false;
 		},
 		function scrolledInto() {
+			arguments.constrainedWithAndThrow();
 			return hasScrolledInto;
 		},
 		function rescroll() {
+			arguments.constrainedWithAndThrow();
 			hasScrolledInto = false;
 		}
 	].bindTo(window);
