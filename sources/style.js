@@ -8,6 +8,25 @@
 		};
 	};
 	[Array.prototype.bindTo].bindTo(Array.prototype);
+	[
+		function constrainedWith(...types) {
+			if (this.length != types.length) {
+				return false;
+			}
+			for (let i = 0; i < this.length; i++) {
+				if (this[i] instanceof types[i] || Object.getPrototypeOf(this[i]) == types[i].prototype) {
+					continue;
+				}
+				return false;
+			}
+			return true;
+		},
+		function constrainedWithAndThrow(...types) {
+			if (!this.constrainedWith(...types)) {
+				throw 'The function arguments should match up the parameter types.';
+			}
+		}
+	].bindTo(Object.prototype);
 }
 [
 	function forAll(selector) {
@@ -20,6 +39,7 @@
 		return document.getElementsByClassName(name);
 	},
 	function insertSurround(parent, child) {
+		arguments.constrainedWithAndThrow(String, String);
 		if (child == '') {
 			return;
 		}
@@ -33,6 +53,7 @@
 		}
 	},
 	function switchFirst(parent, child) {
+		arguments.constrainedWithAndThrow(String, String);
 		if (child == '') {
 			return;
 		}
@@ -42,6 +63,7 @@
 		}
 	},
 	function addFirst(parent, child) {
+		arguments.constrainedWithAndThrow(String, String);
 		if (child == '') {
 			return;
 		}
@@ -55,6 +77,7 @@
 		}
 	},
 	function moveOutside(parent, child) {
+		arguments.constrainedWithAndThrow(String, String);
 		if (child == '') {
 			return;
 		}
@@ -64,6 +87,7 @@
 		}
 	},
 	function hasSubstance(parentNode) {
+		arguments.constrainedWithAndThrow(Element);
 		let childNode = parentNode.childNodes;
 		for (let i = 0; i < childNode.length; i++) {
 			if (childNode[i].nodeName == '#comment') {
@@ -80,6 +104,7 @@
 		return false;
 	},
 	function hasTextOnly(parentNode) {
+		arguments.constrainedWithAndThrow(Element);
 		let childNode = parentNode.childNodes;
 		for (let i = 0; i < childNode.length; i++) {
 			if (childNode[i].nodeName == '#comment') {
@@ -94,6 +119,7 @@
 		return true;
 	},
 	function hasNoTextWithNode(parentNode) {
+		arguments.constrainedWithAndThrow(Element);
 		let childNode = parentNode.childNodes;
 		for (let i = 0; i < childNode.length; i++) {
 			if (childNode[i].nodeName == '#comment') {
@@ -108,6 +134,7 @@
 		return true;
 	},
 	function isInside(node, parentNode = document.body) {
+		arguments.constrainedWithAndThrow(Element, Element);
 		if (node.isOfHeadTree() || parentNode.isOfHeadTree()) {
 			return;
 		}
@@ -120,6 +147,7 @@
 		return (left && right) && (top && bottom);
 	},
 	function isScrollable(node) {
+		arguments.constrainedWithAndThrow(Element);
 		if (node.isOfHeadTree()) {
 			return;
 		}
@@ -128,6 +156,7 @@
 		return scrollableX || scrollableY;
 	},
 	function getParentNode(node) {
+		arguments.constrainedWithAndThrow(Element);
 		if (node.isOfHeadTree()) {
 			return;
 		}
@@ -138,6 +167,7 @@
 		return parentNode;
 	},
 	function inScrollable(node) {
+		arguments.constrainedWithAndThrow(Element);
 		if (node.isOfHeadTree()) {
 			return;
 		}
@@ -152,6 +182,7 @@
 		return true;
 	},
 	function setLocked(node) {
+		arguments.constrainedWithAndThrow(Element);
 		let parentNode = node.parentElement;
 		if (node.nodeName == 'a'.toUpperCase() && parentNode?.nodeName == 'top'.toUpperCase()) {
 			let childNode = parentNode.getAll(':scope > a');
@@ -165,6 +196,7 @@
 		}
 	},
 	function makeCascading(headNode, nodeId, styleText) {
+		arguments.constrainedWithAndThrow(Element, String, String);
 		let styleNode = function getStyleNode() {
 			let pseudoNode = function getPseudoNode() {
 				let cascadingNode = headNode.getAll(':scope > style');
@@ -209,6 +241,7 @@
 		return this.querySelectorAll(selector);
 	},
 	function arrayForChild(child) {
+		arguments.constrainedWithAndThrow(String);
 		let array = [];
 		let childNode = this.children;
 		for (let i = 0; i < childNode.length; i++) {
@@ -232,6 +265,7 @@
 		return false;
 	},
 	function surroundedBy(parent) {
+		arguments.constrainedWithAndThrow(String);
 		if (this.isOfHeadTree()) {
 			return;
 		}
