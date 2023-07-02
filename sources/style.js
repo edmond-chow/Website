@@ -1,238 +1,259 @@
-window.forAll = function forAll(selector) {
-	return document.querySelectorAll(selector);
-};
-Object.defineProperty(window, 'forAll', { configurable: false, writable: false });
-window.forAllTag = function forAllTag(name) {
-	return document.getElementsByTagName(name);
-};
-Object.defineProperty(window, 'forAllTag', { configurable: false, writable: false });
-window.forAllClass = function forAllClass(name) {
-	return document.getElementsByClassName(name);
-};
-Object.defineProperty(window, 'forAllClass', { configurable: false, writable: false });
-Element.prototype.has = function has(selector) {
-	return this.querySelector(selector) != null;
-};
-Object.defineProperty(Element.prototype, 'has', { configurable: false, writable: false });
-Element.prototype.get = function get(selector) {
-	return this.querySelector(selector);
-};
-Object.defineProperty(Element.prototype, 'get', { configurable: false, writable: false });
-Element.prototype.getAll = function getAll(selector) {
-	return this.querySelectorAll(selector);
-};
-Object.defineProperty(Element.prototype, 'getAll', { configurable: false, writable: false });
-window.arrayForChild = function arrayForChild(childNode, child) {
-	let array = [];
-	for (let i = 0; i < childNode.length; i++) {
-		if (childNode[i].tagName.toUpperCase() == child.toUpperCase()) {
-			array.push(childNode[i]);
+/* Array.prototype.bindTo(instance) */ {
+	Array.prototype.bindTo = function bindTo(instance) {
+		for (let i = 0; i < this.length; i++) {
+			if (this[i] instanceof Function) {
+				instance[this[i].name] = this[i];
+				Object.defineProperty(instance, this[i].name, { configurable: false, writable: false });
+			}
+		};
+	};
+	[Array.prototype.bindTo].bindTo(Array.prototype);
+}
+[
+	function forAll(selector) {
+		return document.querySelectorAll(selector);
+	},
+	function forAllTag(name) {
+		return document.getElementsByTagName(name);
+	},
+	function forAllClass(name) {
+		return document.getElementsByClassName(name);
+	},
+	function insertSurround(parent, child) {
+		let parentNode = forAll(parent);
+		for (let i = 0; i < parentNode.length; i++) {
+			if (parentNode[i].arrayForChild(child).length == 0) {
+				let substance = document.createElement(child);
+				substance.prepend(...parentNode[i].childNodes);
+				parentNode[i].prepend(substance);
+			}
 		}
-	}
-	return array;
-};
-Object.defineProperty(window, 'arrayForChild', { configurable: false, writable: false });
-window.insertSurround = function insertSurround(parent, child) {
-	let parentNode = forAll(parent);
-	for (let i = 0; i < parentNode.length; i++) {
-		let childNode = parentNode[i].children;
-		if (arrayForChild(childNode, child).length == 0) {
+	},
+	function switchFirst(parent, child) {
+		let parentNode = forAll(parent);
+		for (let i = 0; i < parentNode.length; i++) {
+			parentNode[i].prepend(...parentNode[i].arrayForChild(child));
+		}
+	},
+	function addFirst(parent, child) {
+		let parentNode = forAll(parent);
+		for (let i = 0; i < parentNode.length; i++) {
+			if (parentNode[i].children.length > 0 && parentNode[i].children[0].tagName.toUpperCase() == child.toUpperCase()) {
+				continue;
+			}
 			let substance = document.createElement(child);
-			substance.prepend(...parentNode[i].childNodes);
 			parentNode[i].prepend(substance);
 		}
-	}
-};
-Object.defineProperty(window, 'insertSurround', { configurable: false, writable: false });
-window.switchFirst = function switchFirst(parent, child) {
-	let parentNode = forAll(parent);
-	for (let i = 0; i < parentNode.length; i++) {
-		let childNode = parentNode[i].children;
-		parentNode[i].prepend(...arrayForChild(childNode, child));
-	}
-};
-Object.defineProperty(window, 'switchFirst', { configurable: false, writable: false });
-window.addFirst = function addFirst(parent, child) {
-	let parentNode = forAll(parent);
-	for (let i = 0; i < parentNode.length; i++) {
-		if (parentNode[i].children.length > 0 && parentNode[i].children[0].tagName.toUpperCase() == child.toUpperCase()) {
-			continue;
+	},
+	function moveOutside(parent, child) {
+		let parentNode = forAll(parent);
+		for (let i = 0; i < parentNode.length; i++) {
+			parentNode[i].parentElement?.prepend(...parentNode[i].arrayForChild(child));
 		}
-		let substance = document.createElement(child);
-		parentNode[i].prepend(substance);
-	}
-};
-Object.defineProperty(window, 'addFirst', { configurable: false, writable: false });
-window.moveOutside = function moveOutside(parent, child) {
-	let parentNode = forAll(parent);
-	for (let i = 0; i < parentNode.length; i++) {
-		let childNode = parentNode[i].children;
-		parentNode[i].parentElement?.prepend(...arrayForChild(childNode, child));
-	}
-};
-Object.defineProperty(window, 'moveOutside', { configurable: false, writable: false });
-window.surroundedBy = function surroundedBy(parent, childNode) {
-	let parentNode = childNode.parentElement;
-	let surroundingNode = document.createElement(parent);
-	surroundingNode.append(childNode);
-	parentNode.append(surroundingNode);
-};
-Object.defineProperty(window, 'surroundedBy', { configurable: false, writable: false });
-window.removeSpace = function removeSpace(text) {
-	return text.replace(/\t/g, '').replace(/\r/g, '').replace(/\n/g, '').replace(/\f/g, '')
-		.replace(/\u0020/g, '')
-		.replace(/\u00A0/g, '')
-		.replace(/\u1680/g, '')
-		.replace(/\u180E/g, '')
-		.replace(/\u2000/g, '')
-		.replace(/\u2001/g, '')
-		.replace(/\u2002/g, '')
-		.replace(/\u2003/g, '')
-		.replace(/\u2004/g, '')
-		.replace(/\u2005/g, '')
-		.replace(/\u2006/g, '')
-		.replace(/\u2007/g, '')
-		.replace(/\u2008/g, '')
-		.replace(/\u2009/g, '')
-		.replace(/\u200A/g, '')
-		.replace(/\u200B/g, '')
-		.replace(/\u202F/g, '')
-		.replace(/\u205F/g, '')
-		.replace(/\u3000/g, '')
-		.replace(/\uFEFF/g, '');
-};
-Object.defineProperty(window, 'removeSpace', { configurable: false, writable: false });
-window.hasSubstance = function hasSubstance(parentNode) {
-	let childNode = parentNode.childNodes;
-	for (let i = 0; i < childNode.length; i++) {
-		if (childNode[i].nodeName == '#comment') {
-			continue;
-		} else if (childNode[i].nodeName == '#text' && removeSpace(childNode[i].wholeText) == '') {
-			continue;
-		} else if (childNode[i] instanceof Element && childNode[i].nodeName == 'br'.toUpperCase()) {
-			continue;
-		} else if (childNode[i] instanceof Element && window.getComputedStyle(childNode[i]).display == 'none') {
-			continue;
-		}
-		return true;
-	}
-	return false;
-};
-Object.defineProperty(window, 'hasSubstance', { configurable: false, writable: false });
-window.hasTextOnly = function hasTextOnly(parentNode) {
-	let childNode = parentNode.childNodes;
-	for (let i = 0; i < childNode.length; i++) {
-		if (childNode[i].nodeName == '#comment') {
-			continue;
-		} else if (childNode[i].nodeName == '#text') {
-			continue;
-		} else if (childNode[i] instanceof Element && childNode[i].nodeName == 'br'.toUpperCase()) {
-			continue;
+	},
+	function hasSubstance(parentNode) {
+		let childNode = parentNode.childNodes;
+		for (let i = 0; i < childNode.length; i++) {
+			if (childNode[i].nodeName == '#comment') {
+				continue;
+			} else if (childNode[i].nodeName == '#text' && childNode[i].wholeText.removeSpace() == '') {
+				continue;
+			} else if (childNode[i] instanceof Element && childNode[i].nodeName == 'br'.toUpperCase()) {
+				continue;
+			} else if (childNode[i] instanceof Element && window.getComputedStyle(childNode[i]).display == 'none') {
+				continue;
+			}
+			return true;
 		}
 		return false;
-	}
-	return true;
-};
-Object.defineProperty(window, 'hasTextOnly', { configurable: false, writable: false });
-window.hasNoTextWithNode = function hasNoTextWithNode(parentNode) {
-	let childNode = parentNode.childNodes;
-	for (let i = 0; i < childNode.length; i++) {
-		if (childNode[i].nodeName == '#comment') {
-			continue;
-		} else if (childNode[i].nodeName == '#text' && removeSpace(childNode[i].wholeText) == '') {
-			continue;
-		} else if (childNode[i] instanceof Element && childNode[i].nodeName != 'br'.toUpperCase()) {
-			continue;
-		}
-		return false;
-	}
-	return true;
-};
-Object.defineProperty(window, 'hasNoTextWithNode', { configurable: false, writable: false });
-window.isInside = function isInside(node, parentNode) {
-	let rect = node.getBoundingClientRect();
-	let parentRect = parentNode != document.body ? parentNode.getBoundingClientRect() : new DOMRect(0, 0, document.body.clientWidth, document.body.clientHeight);
-	let left = rect.x < parentRect.x + parentRect.width;
-	let top = rect.y < parentRect.y + parentRect.height;
-	let right = rect.x + rect.width > parentRect.x;
-	let bottom = rect.y + rect.height > parentRect.y;
-	return (left && right) && (top && bottom);
-};
-Object.defineProperty(window, 'isInside', { configurable: false, writable: false });
-window.isScrollable = function isScrollable(node) {
-	let scrollableX = node.scrollWidth > node.clientWidth;
-	let scrollableY = node.scrollHeight > node.clientHeight;
-	return scrollableX || scrollableY;
-};
-Object.defineProperty(window, 'isScrollable', { configurable: false, writable: false });
-window.getParentNode = function getParentNode(node) {
-	let parentNode = node.parentElement;
-	while (parentNode != document.body && !isScrollable(parentNode)) {
-		parentNode = parentNode.parentElement;
-	}
-	return parentNode;
-};
-Object.defineProperty(window, 'getParentNode', { configurable: false, writable: false });
-window.inScrollable = function inScrollable(node) {
-	while (node != document.body) {
-		let parentNode = getParentNode(node);
-		if (isInside(node, parentNode)) {
-			node = parentNode;
-		} else {
+	},
+	function hasTextOnly(parentNode) {
+		let childNode = parentNode.childNodes;
+		for (let i = 0; i < childNode.length; i++) {
+			if (childNode[i].nodeName == '#comment') {
+				continue;
+			} else if (childNode[i].nodeName == '#text') {
+				continue;
+			} else if (childNode[i] instanceof Element && childNode[i].nodeName == 'br'.toUpperCase()) {
+				continue;
+			}
 			return false;
 		}
-	}
-	return true;
-};
-Object.defineProperty(window, 'inScrollable', { configurable: false, writable: false });
-window.setLocked = function setLocked(node) {
-	let parentNode = node.parentElement;
-	if (node.nodeName == 'a'.toUpperCase() && parentNode?.nodeName == 'top'.toUpperCase()) {
-		let childNode = parentNode.getAll(':scope > a');
+		return true;
+	},
+	function hasNoTextWithNode(parentNode) {
+		let childNode = parentNode.childNodes;
 		for (let i = 0; i < childNode.length; i++) {
-			if (childNode[i] == node) {
-				childNode[i].classList.add('lock');
+			if (childNode[i].nodeName == '#comment') {
+				continue;
+			} else if (childNode[i].nodeName == '#text' && childNode[i].wholeText.removeSpace() == '') {
+				continue;
+			} else if (childNode[i] instanceof Element && childNode[i].nodeName != 'br'.toUpperCase()) {
+				continue;
+			}
+			return false;
+		}
+		return true;
+	},
+	function isInside(node, parentNode) {
+		if (node.isOfHeadTree()) {
+			return;
+		}
+		let rect = node.getBoundingClientRect();
+		let parentRect = parentNode != document.body ? parentNode.getBoundingClientRect() : new DOMRect(0, 0, document.body.clientWidth, document.body.clientHeight);
+		let left = rect.x < parentRect.x + parentRect.width;
+		let top = rect.y < parentRect.y + parentRect.height;
+		let right = rect.x + rect.width > parentRect.x;
+		let bottom = rect.y + rect.height > parentRect.y;
+		return (left && right) && (top && bottom);
+	},
+	function isScrollable(node) {
+		if (node.isOfHeadTree()) {
+			return;
+		}
+		let scrollableX = node.scrollWidth > node.clientWidth;
+		let scrollableY = node.scrollHeight > node.clientHeight;
+		return scrollableX || scrollableY;
+	},
+	function getParentNode(node) {
+		if (node.isOfHeadTree()) {
+			return;
+		}
+		let parentNode = node.parentElement;
+		while (parentNode != document.body && !isScrollable(parentNode)) {
+			parentNode = parentNode.parentElement;
+		}
+		return parentNode;
+	},
+	function inScrollable(node) {
+		if (node.isOfHeadTree()) {
+			return;
+		}
+		while (node != document.body) {
+			let parentNode = getParentNode(node);
+			if (isInside(node, parentNode)) {
+				node = parentNode;
 			} else {
-				childNode[i].classList.remove('lock');
+				return false;
 			}
 		}
-	}
-};
-Object.defineProperty(window, 'setLocked', { configurable: false, writable: false });
-window.makeCascading = function makeCascading(headNode, nodeId, styleText) {
-	let styleNode = function getStyleNode() {
-		let pseudoNode = function getPseudoNode() {
-			let cascadingNode = headNode.getAll(':scope > style');
-			let filteredNode = [];
-			for (let i = 0; i < cascadingNode.length; i++) {
-				if (cascadingNode[i].id == nodeId) {
-					filteredNode.push(cascadingNode[i]);
+		return true;
+	},
+	function setLocked(node) {
+		let parentNode = node.parentElement;
+		if (node.nodeName == 'a'.toUpperCase() && parentNode?.nodeName == 'top'.toUpperCase()) {
+			let childNode = parentNode.getAll(':scope > a');
+			for (let i = 0; i < childNode.length; i++) {
+				if (childNode[i] == node) {
+					childNode[i].classList.add('lock');
+				} else {
+					childNode[i].classList.remove('lock');
 				}
 			}
-			return filteredNode;
-		}();
-		if (pseudoNode.length == 0) {
-			let styleNode = document.createElement('style');
-			styleNode.id = nodeId;
-			headNode.append(styleNode);
-			return styleNode;
-		} else {
-			for (let i = 1; i < pseudoNode.length; i++) {
-				pseudoNode[i].remove();
+		}
+	},
+	function makeCascading(headNode, nodeId, styleText) {
+		let styleNode = function getStyleNode() {
+			let pseudoNode = function getPseudoNode() {
+				let cascadingNode = headNode.getAll(':scope > style');
+				let filteredNode = [];
+				for (let i = 0; i < cascadingNode.length; i++) {
+					if (cascadingNode[i].id == nodeId) {
+						filteredNode.push(cascadingNode[i]);
+					}
+				}
+				return filteredNode;
+			}();
+			if (pseudoNode.length == 0) {
+				let styleNode = document.createElement('style');
+				styleNode.id = nodeId;
+				headNode.append(styleNode);
+				return styleNode;
+			} else {
+				for (let i = 1; i < pseudoNode.length; i++) {
+					pseudoNode[i].remove();
+				}
+				return pseudoNode[0];
 			}
-			return pseudoNode[0];
+		}();
+		if (styleNode.childNodes.length != 1) {
+			while (styleNode.firstChild != null) {
+				styleNode.removeChild(styleNode.firstChild);
+			}
+			styleNode.append(document.createTextNode(styleText));
+		} else if (styleNode.firstChild.wholeText != styleText) {
+			styleNode.firstChild.textContent = styleText;
 		}
-	}();
-	if (styleNode.childNodes.length != 1) {
-		while (styleNode.firstChild != null) {
-			styleNode.removeChild(styleNode.firstChild);
-		}
-		styleNode.append(document.createTextNode(styleText));
-	} else if (styleNode.firstChild.wholeText != styleText) {
-		styleNode.firstChild.textContent = styleText;
 	}
-};
-Object.defineProperty(window, 'makeCascading', { configurable: false, writable: false });
+].bindTo(window);
+[
+	function has(selector) {
+		return this.querySelector(selector) != null;
+	},
+	function get(selector) {
+		return this.querySelector(selector);
+	},
+	function getAll(selector) {
+		return this.querySelectorAll(selector);
+	},
+	function arrayForChild(child) {
+		let array = [];
+		let childNode = this.children;
+		for (let i = 0; i < childNode.length; i++) {
+			if (childNode[i].tagName.toUpperCase() == child.toUpperCase()) {
+				array.push(childNode[i]);
+			}
+		}
+		return array;
+	},
+	function isOfHeadTree() {
+		if (this == document.documentElement) {
+			return true;
+		}
+		let self = this;
+		while (self != document.documentElement) {
+			if (self == document.head) {
+				return true;
+			}
+			self = self.parentElement;
+		}
+		return false;
+	},
+	function surroundedBy(parent) {
+		if (this.isOfHeadTree()) {
+			return;
+		}
+		let parentNode = this.parentElement;
+ 		let surroundingNode = document.createElement(parent);
+		surroundingNode.append(this);
+		parentNode?.append(surroundingNode);
+	}
+].bindTo(Element.prototype);
+[
+	function removeSpace() {
+		return this.replace(/\t/g, '').replace(/\r/g, '').replace(/\n/g, '').replace(/\f/g, '')
+			.replace(/\u0020/g, '')
+			.replace(/\u00A0/g, '')
+			.replace(/\u1680/g, '')
+			.replace(/\u180E/g, '')
+			.replace(/\u2000/g, '')
+			.replace(/\u2001/g, '')
+			.replace(/\u2002/g, '')
+			.replace(/\u2003/g, '')
+			.replace(/\u2004/g, '')
+			.replace(/\u2005/g, '')
+			.replace(/\u2006/g, '')
+			.replace(/\u2007/g, '')
+			.replace(/\u2008/g, '')
+			.replace(/\u2009/g, '')
+			.replace(/\u200A/g, '')
+			.replace(/\u200B/g, '')
+			.replace(/\u202F/g, '')
+			.replace(/\u205F/g, '')
+			.replace(/\u3000/g, '')
+			.replace(/\uFEFF/g, '');
+	}
+].bindTo(String.prototype);
 /* { async } */ {
 	let captured = 0;
 	window.captureSpan = function captureSpan() {
@@ -568,7 +589,7 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 			/* ':not(a)'s surrounded by a 'a' for the 'top > :not(a)'s */ {
 				let notANode = forAll('top > :not(a)');
 				for (let i = 0; i < notANode.length; i++) {
-					surroundedBy('a', notANode[i]);
+					notANode[i].surroundedBy('a');
 				}
 			}
 		}
@@ -610,7 +631,7 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 						for (let i = 0; i < childNode.length; i++) {
 							if (childNode[i].nodeName == '#comment') {
 								continue;
-							} else if (childNode[i].nodeName == '#text' && removeSpace(childNode[i].wholeText) == '') {
+							} else if (childNode[i].nodeName == '#text' && childNode[i].wholeText.removeSpace() == '') {
 								continue;
 							} else if (childNode[i] instanceof Element && childNode[i].nodeName == 'br'.toUpperCase()) {
 								continue;
@@ -674,7 +695,7 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 					}
 					let notANode = dropdownNode[i].get(':scope > dropdown-content').getAll(':scope > :not(a)');
 					for (let j = 0; j < notANode.length; j++) {
-						surroundedBy('a', notANode[j]);
+						notANode[j].surroundedBy('a');
 					}
 				}
 			}
@@ -768,7 +789,7 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 				for (let i = 0; i < anyNoSpaceNode.length; i++) {
 					let childNode = anyNoSpaceNode[i].childNodes;
 					for (let j = 0; j < childNode.length; j++) {
-						if (childNode[j].nodeName == '#text' && removeSpace(childNode[j].wholeText) == '') {
+						if (childNode[j].nodeName == '#text' && childNode[j].wholeText.removeSpace() == '') {
 							childNode[j].textContent = '';
 						}
 					}
@@ -827,20 +848,18 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 			await mustSuspend();
 		}
 	});
-	window.ready = function ready() {
-		return isLoaded;
-	};
-	Object.defineProperty(window, 'ready', { configurable: false, writable: false });
-	window.reload = function reload() {
-		isLoaded = false;
-	};
-	Object.defineProperty(window, 'reload', { configurable: false, writable: false });
-	window.scrolledInto = function scrolledInto() {
-		return hasScrolledInto;
-	};
-	Object.defineProperty(window, 'scrolledInto', { configurable: false, writable: false });
-	window.rescroll = function rescroll() {
-		hasScrolledInto = false;
-	};
-	Object.defineProperty(window, 'rescroll', { configurable: false, writable: false });
+	[
+		function ready() {
+			return isLoaded;
+		},
+		function reload() {
+			isLoaded = false;
+		},
+		function scrolledInto() {
+			return hasScrolledInto;
+		},
+		function rescroll() {
+			hasScrolledInto = false;
+		}
+	].bindTo(window);
 }
