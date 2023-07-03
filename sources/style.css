@@ -13,13 +13,11 @@
 		word-break: normal;
 		text-decoration: none;
 		overflow: visible;
-		position: absolute;
-		display: inline-block;
+		position: static;
+		display: inline;
 		margin: 0px;
 		border: 0px;
 		padding: 0px;
-		width: 100%;
-		height: 100%;
 	}
 	@supports (text-size-adjust: 100%) :is(html, body):not(.disabled-default-initializer) {
 		text-size-adjust: 100%; /* Prevent font scaling in landscape while allowing user zoom */
@@ -355,12 +353,18 @@
 	}
 	post > sub-post:before {
 		content: '';
+		position: absolute;
+		width: 100%;
+		height: 100%;
 		background-color: rgba(0, 0, 0, 0.5);
 		z-index: -1; /* -> layer[post-backdrop] */
 	}
 	post > sub-post:after {
 		content: '';
+		position: absolute;
 		border: 1px solid rgba(247, 247, 247, 0.7);
+		width: 100%;
+		height: 100%;
 		left: -1px;
 		top: -1px;
 		pointer-events: none;
@@ -383,6 +387,8 @@
 	body#blur post > sub-post:after {
 		border-radius: inherit;
 		border: 0px;
+		left: 0px;
+		top: 0px;
 	}
 	body#blur post.non-blur > sub-post:before {
 		background-color: rgba(239, 239, 239, 0.9);
