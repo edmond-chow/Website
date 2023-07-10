@@ -135,7 +135,7 @@
 	},
 	function isInside(node, parentNode = document.body) {
 		arguments.constrainedWithAndThrow(Element, Element);
-		if (node.isOfHeadTree() || parentNode.isOfHeadTree()) {
+		if (!node.isOfBodyTree() || !parentNode.isOfBodyTree()) {
 			return;
 		}
 		let rect = node.getBoundingClientRect();
@@ -148,7 +148,7 @@
 	},
 	function isScrollable(node) {
 		arguments.constrainedWithAndThrow(Element);
-		if (node.isOfHeadTree()) {
+		if (!node.isOfBodyTree()) {
 			return;
 		}
 		let scrollableX = node.scrollWidth > node.clientWidth;
@@ -157,7 +157,7 @@
 	},
 	function getParentNode(node) {
 		arguments.constrainedWithAndThrow(Element);
-		if (node.isOfHeadTree()) {
+		if (!node.isOfBodyTree()) {
 			return;
 		}
 		let parentNode = node.parentElement;
@@ -168,7 +168,7 @@
 	},
 	function inScrollable(node) {
 		arguments.constrainedWithAndThrow(Element);
-		if (node.isOfHeadTree()) {
+		if (!node.isOfBodyTree()) {
 			return;
 		}
 		while (node != document.body) {
@@ -278,9 +278,12 @@
 		}
 		return false;
 	},
+	function isOfBodyTree() {
+		return this.isOfHTMLTree() && !this.isOfHeadTree();
+	},
 	function surroundedBy(parent) {
 		arguments.constrainedWithAndThrow(String);
-		if (!this.isOfHTMLTree() || this.isOfHeadTree()) {
+		if (!this.isOfBodyTree()) {
 			return;
 		}
 		let parentNode = this.parentElement;
