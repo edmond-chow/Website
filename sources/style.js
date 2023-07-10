@@ -251,6 +251,16 @@
 		}
 		return array;
 	},
+	function isOfHTMLTree() {
+		let self = this;
+		while (self != null) {
+			if (self == document.documentElement) {
+				return true;
+			}
+			self = self.parentElement;
+		}
+		return false;
+	},
 	function isOfHeadTree() {
 		arguments.constrainedWithAndThrow();
 		if (this == document.documentElement) {
@@ -270,7 +280,7 @@
 	},
 	function surroundedBy(parent) {
 		arguments.constrainedWithAndThrow(String);
-		if (this.isOfHeadTree()) {
+		if (!this.isOfHTMLTree() || this.isOfHeadTree()) {
 			return;
 		}
 		let parentNode = this.parentElement;
