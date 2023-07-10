@@ -262,6 +262,9 @@
 				return true;
 			}
 			self = self.parentElement;
+			if (self == null) {
+				break;
+			}
 		}
 		return false;
 	},
