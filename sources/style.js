@@ -560,7 +560,7 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-container > blurred-filter {
 }
 `;
-				makeCascading(document.head, 'background-image', styleText);
+					makeCascading(document.head, 'background-image', styleText);
 				}
 			}
 			/* style#mobile-cascading */ {
