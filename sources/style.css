@@ -44,7 +44,7 @@
 		color: black;
 		letter-spacing: 0px;
 	}
-	body :not(.disabled-default-initializer) {
+	body :not(.disabled-default-initializer):not(style, link, script, meta) {
 		vertical-align: top;
 		text-align: left;
 		overflow-wrap: anywhere;
