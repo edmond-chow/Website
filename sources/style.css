@@ -126,6 +126,22 @@
 			font-size: 13.5px;
 			line-height: 18px;
 		}
+		/* mobile-sizing */
+		@media (pointer:none), (pointer:coarse) {
+			body {
+				min-height: var(--window-inner-height, auto);
+			}
+			@media only screen and (max-width: 1048px) {
+				body {
+					min-width: 1048px;
+				}
+			}
+			@media only screen and (max-width: 570px) {
+				body {
+					min-width: 570px;
+				}
+			}
+		}
 	}
 	@layer /* scrollable */ {
 		/* ::-webkit-scrollbar */
@@ -791,7 +807,7 @@
 			background-repeat: no-repeat;
 			background-position: center;
 			background-size: cover;
-			background-image: url('lake.jpg');
+			background-image: var(--background-image, url('lake.jpg'));
 		}
 		@media (pointer: coarse), (pointer: none) {
 			body major > sub-major > post > sub-post > backdrop-container.suspended {

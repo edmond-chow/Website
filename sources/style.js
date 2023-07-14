@@ -549,39 +549,27 @@
 		/* style */ {
 			/* style#background-image */ {
 				if (document.body.hasAttribute('background-image')) {
-					let styleText = `
+					makeCascading(document.head, 'background-image', `
 body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-container > blurred-filter {
-	background-image: ` + document.body.getAttribute('background-image') + `;
+	--background-image: url('` + new URL(document.body.getAttribute('background-image'), document.baseURI).href + `');
 }
-`;
-					makeCascading(document.head, 'background-image', styleText);
+`);
 				} else {
-					let styleText = `
+					makeCascading(document.head, 'background-image', `
 body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-container > blurred-filter {
+	--background-image: unset;
 }
-`;
-					makeCascading(document.head, 'background-image', styleText);
+`);
 				}
 			}
 			/* style#mobile-cascading */ {
-				let styleText = `
+				makeCascading(document.head, 'mobile-cascading', `
 @media (pointer:none), (pointer:coarse) {
 	body {
-		min-height: ` + window.innerHeight.toString() + `px;
-	}
-	@media only screen and (max-width: 1048px) {
-		body {
-			min-width: 1048px;
-		}
-	}
-	@media only screen and (max-width: 570px) {
-		body {
-			min-width: 570px;
-		}
+		--window-inner-height: ` + window.innerHeight.toString() + `px;
 	}
 }
-`;
-				makeCascading(document.head, 'mobile-cascading', styleText);
+`);
 			}
 		}
 		await suspend();
