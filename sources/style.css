@@ -8,7 +8,8 @@
 			background-color: #5F2BDE;
 		}
 		:focus-visible {
-			outline: 2px solid darkorange;
+			outline: 2px solid blanchedalmond;
+			outline-offset: 0px;
 		}
 		:before, :after {
 			vertical-align: middle;
@@ -301,6 +302,10 @@
 			}
 			top > a:hover {
 				background-color: rgba(221, 221, 221, 0.7);
+			}
+			top > a:focus-visible {
+				outline: 2px solid darkorange;
+				outline-offset: -2px;
 			}
 			top > a:hover:active {
 				background-color: rgba(201, 201, 201, 0.7);
@@ -663,6 +668,10 @@
 			button:hover {
 				color: black;
 				background-color: rgba(231, 231, 231, 0.9);
+			}
+			button:focus-visible {
+				outline: 2px solid darkorange;
+				outline-offset: 0px;
 			}
 			body#blur button:hover {
 				box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.5);

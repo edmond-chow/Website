@@ -626,24 +626,24 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 				}
 			}
 			/* locking an option and scrolling into the '.lock' when has been unlocked */ {
-				let topNotHoverNode = forAll('top:not(:hover)');
-				for (let i = 0; i < topNotHoverNode.length; i++) {
-					topNotHoverNode[i].classList.remove('unlocked');
-					let aLockNode = topNotHoverNode[i].getAll(':scope > a:not(.has-node).lock');
+				let topUnlockedNode = forAll('top:not(:is(:hover, :focus-within))');
+				for (let i = 0; i < topUnlockedNode.length; i++) {
+					topUnlockedNode[i].classList.remove('unlocked');
+					let aLockNode = topUnlockedNode[i].getAll(':scope > a:not(.has-node).lock');
 					if (aLockNode.length == 0) {
-						let aNode = topNotHoverNode[i].get(':scope > a:not(.has-node)');
+						let aNode = topUnlockedNode[i].get(':scope > a:not(.has-node)');
 						aNode?.classList.add('lock');
 					} else {
-						topNotHoverNode[i].scrollTop = aLockNode[0].offsetTop;
+						topUnlockedNode[i].scrollTop = aLockNode[0].offsetTop;
 						for (let j = 1; j < aLockNode.length; j++) {
 							aLockNode[j].classList.remove('lock');
 						}
 					}
 				}
-				let topHoverNotUnlockedNode = forAll('top:hover:not(.unlocked)');
-				for (let i = 0; i < topHoverNotUnlockedNode.length; i++) {
-					topHoverNotUnlockedNode[i].classList.add('unlocked');
-					topHoverNotUnlockedNode[i].scrollTop = 0;
+				let topNotUnlockedNode = forAll('top:is(:hover, :focus-within):not(.unlocked)');
+				for (let i = 0; i < topNotUnlockedNode.length; i++) {
+					topNotUnlockedNode[i].classList.add('unlocked');
+					topNotUnlockedNode[i].scrollTop = 0;
 				}
 			}
 			/*  '.icon', '.no-content' and '.has-node' for the 'top > a's */ {
