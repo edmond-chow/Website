@@ -1,20 +1,46 @@
 /* Array.prototype.bindTo(instance) */ {
+	const lock = { configurable: false, writable: false };
 	Array.prototype.bindTo = function bindTo(instance = window) {
 		for (let i = 0; i < this.length; i++) {
 			if (this[i] instanceof Function) {
 				instance[this[i].name] = this[i];
-				Object.defineProperty(instance, this[i].name, { configurable: false, writable: false });
+				Object.defineProperty(instance, this[i].name, lock);
 			}
 		};
 	};
 	[Array.prototype.bindTo].bindTo(Array.prototype);
+	const Nullable = function Nullable(type) {
+		this.type = type;
+		Object.defineProperty(this, 'type', lock);
+	};
+	[
+		function toNullable() {
+			return new Nullable(this);
+		}
+	].bindTo(Function.prototype);
+	[
+		function isNullable(container) {
+			return container instanceof Nullable;
+		},
+		function removeNullable(container) {
+			if (container instanceof Nullable) {
+				return container.type;
+			} else if (container instanceof Function) {
+				return container;
+			} else {
+				throw 'The \'container\' argument should be either a \'Nullable\' type or a \'Function\' type.';
+			}
+		}
+	].bindTo(window);
 	[
 		function constrainedWith(...types) {
 			if (this.length != types.length) {
 				return false;
 			}
 			for (let i = 0; i < this.length; i++) {
-				if (this[i] instanceof types[i] || Object.getPrototypeOf(this[i]) == types[i].prototype) {
+				if (isNullable(types[i]) && this[i] == null) {
+					continue;
+				} else if (this[i] instanceof removeNullable(types[i]) || Object.getPrototypeOf(this[i]) == removeNullable(types[i]).prototype) {
 					continue;
 				}
 				return false;
