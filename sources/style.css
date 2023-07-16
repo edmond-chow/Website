@@ -271,10 +271,9 @@
 			top > a /* -> */ {
 				text-align: center;
 				text-decoration: none;
-				display: block;
+				display: inline-block;
 				padding: 14px 16px;
 				transition-duration: 0.2s;
-				float: left;
 				line-height: 23px;
 				min-height: 23px;
 				font-size: 16px;
@@ -306,6 +305,9 @@
 			top > a:focus-visible {
 				outline: 2px solid darkorange;
 				outline-offset: -2px;
+			}
+			body#blur top > a:focus-visible {
+				border-radius: inherit;
 			}
 			top > a:hover:active {
 				background-color: rgba(201, 201, 201, 0.7);
@@ -615,6 +617,10 @@
 			}
 			body#blur dropdown > dropdown-content > a {
 				color: rgb(10, 10, 10);
+			}
+			dropdown > dropdown-content > a:focus-visible {
+				outline: 2px solid darkorange;
+				outline-offset: -2px;
 			}
 			dropdown > dropdown-content > a.has-node {
 				display: none;

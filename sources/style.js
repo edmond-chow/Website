@@ -466,9 +466,8 @@
 				switchFirst('post > sub-post > post-leader', 'post-leader-advance');
 				addFirst('post > sub-post > post-leader', 'post-leader-advance');
 				for (let i = 0; i < postNode.length; i++) {
-					let advanceChildNode = postNode[i].getAll(':scope > sub-post > post-content > advance > *');
+					let advanceChildNode = postNode[i].get(':scope > sub-post > post-content').getAll(':scope > advance > *');
 					postNode[i].get(':scope > sub-post > post-leader > post-leader-advance').prepend(...advanceChildNode);
-					postNode[i].get(':scope > sub-post > post-leader > post-leader-advance').classList.add('no-text');
 				}
 				switchFirst('post > sub-post > post-leader', 'post-leader-section');
 				addFirst('post > sub-post > post-leader', 'post-leader-section');
@@ -614,8 +613,9 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 		await suspend();
 		/* top */ {
 			let topNode = forAllTag('top');
-			/* resizing for the 'top' */ {
+			/* '.no-text' and resizing for the 'top' */ {
 				for (let i = 0; i < topNode.length; i++) {
+					topNode[i].classList.add('no-text');
 					if (document.body.clientWidth > 1226) {
 						topNode[i].id = 'large';
 					} else if (document.body.clientWidth >= 1048) {
@@ -741,9 +741,14 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 					}
 				}
 			}
-			/* '.no-text' for the 'post > sub-post > post-leader > post-leader-advance > dropdown's */ {
+			/* '.no-text' for the 'post > sub-post > post-leader > post-leader-advance's with ':scope > dropdown' */ {
 				for (let i = 0; i < postNode.length; i++) {
-					let dropdownNode = postNode[i].getAll(':scope > sub-post > post-leader > post-leader-advance > dropdown');
+					if (!postNode[i].has(':scope > sub-post > post-leader > post-leader-advance')) {
+						continue;
+					}
+					let postLeaderAdvanceNode = postNode[i].get(':scope > sub-post > post-leader > post-leader-advance');
+					postLeaderAdvanceNode.classList.add('no-text');
+					let dropdownNode = postLeaderAdvanceNode.getAll(':scope > dropdown');
 					for (let j = 0; j < dropdownNode.length; j++) {
 						dropdownNode[j].classList.add('no-text');
 					}
