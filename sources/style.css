@@ -7,6 +7,9 @@
 			color: white;
 			background-color: #5F2BDE;
 		}
+		:focus-visible {
+			outline: 2px solid darkorange;
+		}
 		:before, :after {
 			vertical-align: middle;
 			text-align: center;
@@ -258,7 +261,7 @@
 				margin-left: 0px;
 				margin-right: 0px;
 			}
-			top:hover {
+			top:is(:hover, :focus-within) {
 				max-height: calc(70% - 18px);
 				overflow: auto;
 				animation-name: show-top;
@@ -288,7 +291,7 @@
 				background-position: 10px 10px;
 				padding-left: 49px;
 			}
-			top:hover > a.icon {
+			top:is(:hover, :focus-within) > a.icon {
 				background-position: 10px center;
 			}
 			top > a.icon.no-content {
@@ -518,24 +521,24 @@
 			dropdown.has-disabled {
 				pointer-events: none;
 			}
-			dropdown:not(.has-disabled):hover {
+			dropdown:not(.has-disabled):is(:hover, :focus-within) {
 				z-index: 2; /* -> layer[dropdown] */
 			}
-			dropdown:not(.has-disabled):hover > :not(dropdown-content, inner-padding, outer-margin) {
+			dropdown:not(.has-disabled):is(:hover, :focus-within) > :not(dropdown-content, inner-padding, outer-margin) {
 				position: relative;
 				z-index: 1; /* -> layer[dropdown] -> layer[dropdown-element] */
 			}
 			dropdown > inner-padding /* -> */ {
 				display: none;
 			}
-			dropdown:not(.has-disabled):hover > inner-padding {
+			dropdown:not(.has-disabled):is(:hover, :focus-within) > inner-padding {
 				display: block;
 				padding: 3px 0px;
 			}
 			dropdown > outer-margin /* -> */ {
 				display: none;
 			}
-			dropdown:not(.has-disabled):hover > outer-margin {
+			dropdown:not(.has-disabled):is(:hover, :focus-within) > outer-margin {
 				display: block;
 				margin: -6px 0px;
 			}
@@ -554,13 +557,13 @@
 				border-radius: 5px;
 				background-color: white;
 			}
-			dropdown:not(.has-disabled):not(:hover) > dropdown-content:not(.hidden):first-of-type {
+			dropdown:not(.has-disabled):not(:is(:hover, :focus-within)) > dropdown-content:not(.hidden):first-of-type {
 				pointer-events: none;
 				display: block;
 				transform: translateY(-6px);
 				opacity: 0;
 			}
-			dropdown:not(.has-disabled):hover > dropdown-content:not(.hidden):first-of-type {
+			dropdown:not(.has-disabled):is(:hover, :focus-within) > dropdown-content:not(.hidden):first-of-type {
 				display: block;
 				transform: translateY(0px);
 				opacity: 1;
@@ -571,7 +574,7 @@
 			body#blur dropdown.has-single-button {
 				border-radius: 8px;
 			}
-			body#blur dropdown:not(.has-disabled):hover.has-single-button {
+			body#blur dropdown:not(.has-disabled):is(:hover, :focus-within).has-single-button {
 				border-bottom-left-radius: 0px;
 				border-bottom-right-radius: 0px;
 			}

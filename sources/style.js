@@ -859,6 +859,7 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 					} else {
 						buttonNode[i].classList.add('no-content');
 					}
+					buttonNode[i].disabled = buttonNode[i].classList.contains('disabled');
 				}
 			}
 		}
