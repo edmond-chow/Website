@@ -24,8 +24,10 @@
 			border: 0px;
 			padding: 0px;
 		}
-		@supports (text-size-adjust: 100%) :is(html, body):not(.disabled-default-initializer) {
-			text-size-adjust: 100%; /* Prevent font scaling in landscape while allowing user zoom */
+		@supports (text-size-adjust: 100%) {
+			:is(html, body):not(.disabled-default-initializer) {
+				text-size-adjust: 100%; /* Prevent font scaling in landscape while allowing user zoom */
+			}
 		}
 		:is(html, body):not(.disabled-default-initializer) {
 			vertical-align: top;
@@ -49,7 +51,7 @@
 			color: black;
 			letter-spacing: 0px;
 		}
-		body :not(.disabled-default-initializer):not(style, link, script, meta) {
+		body :not(.disabled-default-initializer):not(style, link, script, meta):not([hidden]) {
 			vertical-align: top;
 			text-align: left;
 			overflow-wrap: anywhere;
@@ -355,7 +357,7 @@
 			body#blur major.tiny > sub-major post {
 				border-radius: 6px;
 			}
-			post > img.icon /* -> */ {
+			post > post-icon /* -> */ {
 				position: relative;
 				margin: 0px 0px -64px 0px;
 				width: 64px;
@@ -366,13 +368,13 @@
 				-webkit-user-drag: none;
 				z-index: 1; /* -> layer[icon] */
 			}
-			major.tiny > sub-major post > img.icon {
+			major.tiny > sub-major post > post-icon {
 				width: 48px;
 				margin: 0px 0px -48px 0px;
 				top: 6px;
 				left: -24px;
 			}
-			post > img.icon:not([src]), post > img.icon[src=''] {
+			post:not([icon-src]) > post-icon {
 				display: none;
 			}
 			post > sub-post /* -> */ {
@@ -399,10 +401,10 @@
 				top: -1px;
 				pointer-events: none;
 			}
-			post > img.icon[src]:not([src='']) + sub-post {
+			post[icon-src] > post-icon + sub-post {
 				min-height: 80px;
 			}
-			major.tiny > sub-major post > img.icon[src]:not([src='']) + sub-post {
+			major.tiny > sub-major post[icon-src] > post-icon + sub-post {
 				min-height: 60px;
 			}
 			body#blur post > sub-post {
@@ -564,13 +566,13 @@
 				border-radius: 5px;
 				background-color: white;
 			}
-			dropdown:not(.has-disabled):not(:is(:hover, :focus-within)) > dropdown-content:not(.hidden):first-of-type {
+			dropdown:not(.has-disabled):not(:is(:hover, :focus-within)) > dropdown-content:not([hidden]):first-of-type {
 				pointer-events: none;
 				display: block;
 				transform: translateY(-6px);
 				opacity: 0;
 			}
-			dropdown:not(.has-disabled):is(:hover, :focus-within) > dropdown-content:not(.hidden):first-of-type {
+			dropdown:not(.has-disabled):is(:hover, :focus-within) > dropdown-content:not([hidden]):first-of-type {
 				display: block;
 				transform: translateY(0px);
 				opacity: 1;
@@ -740,7 +742,7 @@
 			post:last-of-type {
 				padding-bottom: 0px;
 			}
-			post > img.icon:not(:first-of-type) {
+			post > post-icon:not(:first-of-type) {
 				display: none;
 			}
 			post > sub-post:not(:first-of-type) {

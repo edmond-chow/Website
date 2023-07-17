@@ -33,6 +33,18 @@
 		}
 	].bindTo(window);
 	[
+		function addCompleteState() {
+			this.complete = (() => {
+				let keys = Object.keys(this);
+				for (let i = 0; i < keys.length; i++) {
+					if (this[keys[i]] == null) {
+						return false;
+					}
+				}
+				return true;
+			})();
+			Object.freeze(this);
+		},
 		function constrainedWith(...types) {
 			if (this.length != types.length) {
 				return false;
@@ -54,6 +66,46 @@
 		}
 	].bindTo(Object.prototype);
 }
+[
+	function Top(node) {
+		arguments.constrainedWithAndThrow(Element);
+		this.topNode = node;
+		this.addCompleteState();
+	},
+	function Major(node) {
+		arguments.constrainedWithAndThrow(Element);
+		this.majorNode = node;
+		this.subMajorNode = node.get(':scope > sub-major');
+		this.addCompleteState();
+	},
+	function Post(node) {
+		arguments.constrainedWithAndThrow(Element);
+		this.postNode = node;
+		this.subPostNode = node.get(':scope > sub-post');
+		this.postIconNode = node.get(':scope > post-icon');
+		this.scrollIntoNode = node.get(':scope > sub-post > scroll-into');
+		this.postLeaderNode = node.get(':scope > sub-post > post-leader');
+		this.postLeaderSectionNode = node.get(':scope > sub-post > post-leader > post-leader-section');
+		this.postLeaderOrderNode = node.get(':scope > sub-post > post-leader > post-leader-section > post-leader-order');
+		this.postLeaderTitleNode = node.get(':scope > sub-post > post-leader > post-leader-section > post-leader-title');
+		this.postLeaderAdvanceNode = node.get(':scope > sub-post > post-leader > post-leader-advance');
+		this.postContentNode = node.get(':scope > sub-post > post-content');
+		this.addCompleteState();
+	},
+	function Dropdown(node) {
+		arguments.constrainedWithAndThrow(Element);
+		this.dropdownNode = node;
+		this.innerPaddingNode = node.get(':scope > inner-padding');
+		this.dropdownContentNode = node.get(':scope > dropdown-content');
+		this.outerMarginNode = node.get(':scope > outer-margin');
+		this.addCompleteState();
+	},
+	function Button(node) {
+		arguments.constrainedWithAndThrow(Element);
+		this.buttonNode = node;
+		this.addCompleteState();
+	}
+].bindTo(window);
 [
 	function forAll(selector) {
 		return document.querySelectorAll(selector);
@@ -387,175 +439,148 @@
 		}
 	};
 	const marker = function marker() {
-		function getMarker(majorNode, stackCount, postNode, index) {
+		function getMarker(majorValue, stackCount, postArray, postIndex) {
 			let markerReversed = false;
-			if (majorNode.hasAttribute('marker-reversed')) {
-				if (majorNode.getAttribute('marker-reversed').split(' ')[stackCount]?.toLowerCase() == 'true') {
+			if (majorValue.majorNode.hasAttribute('marker-reversed')) {
+				if (majorValue.majorNode.getAttribute('marker-reversed').split(' ')[stackCount]?.toLowerCase() == 'true') {
 					markerReversed = true;
 				};
 			}
 			let markerStartedWith = 0;
-			if (majorNode.hasAttribute('marker-started-with')) {
-				let value = parseInt(majorNode.getAttribute('marker-started-with').split(' ')[stackCount]);
+			if (majorValue.majorNode.hasAttribute('marker-started-with')) {
+				let value = parseInt(majorValue.majorNode.getAttribute('marker-started-with').split(' ')[stackCount]);
 				if (!isNaN(value)) {
 					markerStartedWith = value;
 				};
 			}
 			if (markerReversed) {
-				markerStartedWith += postNode.length - 1 - index;
+				markerStartedWith += postArray.length - 1 - postIndex;
 			} else {
-				markerStartedWith += index;
+				markerStartedWith += postIndex;
 			}
 			return markerStartedWith;
 		}
-		let markedNode = [];
-		function subPostConducting(majorNode, stackCount, orderString, postNode) {
-			let subPostNode = postNode.getAll(':scope > sub-post > post-content > post');
-			for (let i = 0; i < subPostNode.length; i++) {
-				let subOrderString = orderString + '.' + getMarker(majorNode, stackCount + 1, subPostNode, i).toString();
-				markedNode.push(subPostNode[i]);
-				subPostNode[i].setAttribute('marker', subOrderString);
-				subPostConducting(majorNode, stackCount + 1, subOrderString, subPostNode[i]);
-			}
+		let markedArray = [];
+		function subPostConducting(majorValue, stackCount, orderString, postValue) {
+			Array.from(postValue.postContentNode.getAll(':scope > post')).map((value) => {
+				return new Post(value);
+			}).filter((value) => {
+				return value.complete;
+			}).forEach((subPostValue, subPostIndex, subPostArray) => {
+				let subOrderString = orderString + '.' + getMarker(majorValue, stackCount + 1, subPostArray, subPostIndex).toString();
+				markedArray.push(subPostValue);
+				subPostValue.postNode.setAttribute('marker', subOrderString);
+				subPostConducting(majorValue, stackCount + 1, subOrderString, subPostValue);
+			});
 		}
-		let majorNode = forAllTag('major');
-		for (let i = 0; i < majorNode.length; i++) {
-			if (!majorNode[i].has(':scope > sub-major')) {
-				continue;
+		Array.from(forAllTag('major')).map((value) => {
+			return new Major(value);
+		}).filter((value) => {
+			return value.complete;
+		}).forEach((majorValue) => {
+			Array.from(majorValue.subMajorNode.getAll(':scope > post')).map((value) => {
+				return new Post(value);
+			}).filter((value) => {
+				return value.complete;
+			}).forEach((postValue, postIndex, postArray) => {
+				let orderString = getMarker(majorValue, 0, postArray, postIndex).toString();
+				markedArray.push(postValue);
+				postValue.postNode.setAttribute('marker', orderString);
+				subPostConducting(majorValue, 0, orderString, postValue);
+			});
+		});
+		Array.from(forAllTag('post')).map((value) => {
+			return new Post(value);
+		}).filter((value) => {
+			return value.complete;
+		}).forEach((postValue) => {
+			let markedIndex = markedArray.findIndex((markedValue) => {
+				return markedValue == postValue;
+			});
+			if (markedIndex == -1) {
+				postValue.postNode.removeAttribute('marker');
 			}
-			let postNode = majorNode[i].get(':scope > sub-major').getAll(':scope > post');
-			for (let j = 0; j < postNode.length; j++) {
-				let orderString = getMarker(majorNode[i], 0, postNode, j).toString();
-				markedNode.push(postNode[j]);
-				postNode[j].setAttribute('marker', orderString);
-				subPostConducting(majorNode[i], 0, orderString, postNode[j]);
-			}
-		}
-		/* Clearing */ {
-			let postNode = forAllTag('post');
-			for (let i = 0; i < postNode.length; i++) {
-				let isMarked = false;
-				for (let j = 0; j < markedNode.length; j++) {
-					if (markedNode[j] == postNode[i]) {
-						isMarked = true;
-						break;
-					}
-				}
-				if (!isMarked) {
-					postNode[i].removeAttribute('marker');
-				}
-			}
-		}
+		});
 	};
 	const structuredTag = async function structuredTag() {
 		captureSpan();
 		/* major */ {
-			/* structuring for the 'major' */ {
-				insertSurround('major', 'sub-major');
-			}
+			/* structuring for the 'major' */ 
+			insertSurround('major', 'sub-major');
 		}
 		await suspend();
 		/* post */ {
-			let postNode = forAllTag('post');
-			/* structuring for the 'post's */ {
-				insertSurround('post', 'sub-post');
-				insertSurround('post > sub-post', 'post-content');
-				moveOutside('post > sub-post > post-content', 'post-leader');
-				switchFirst('post > sub-post', 'post-leader');
-				addFirst('post > sub-post', 'post-leader');
-				switchFirst('post > sub-post > post-leader', 'post-leader-advance');
-				addFirst('post > sub-post > post-leader', 'post-leader-advance');
-				for (let i = 0; i < postNode.length; i++) {
-					let advanceChildNode = postNode[i].get(':scope > sub-post > post-content').getAll(':scope > advance > *');
-					postNode[i].get(':scope > sub-post > post-leader > post-leader-advance').prepend(...advanceChildNode);
+			/* structuring for the 'post's */
+			insertSurround('post', 'sub-post');
+			moveOutside('post > sub-post', 'post-icon');
+			switchFirst('post', 'post-icon');
+			addFirst('post', 'post-icon');
+			insertSurround('post > sub-post', 'post-content');
+			moveOutside('post > sub-post > post-content', 'post-leader');
+			switchFirst('post > sub-post', 'post-leader');
+			addFirst('post > sub-post', 'post-leader');
+			switchFirst('post > sub-post > post-leader', 'post-leader-advance');
+			addFirst('post > sub-post > post-leader', 'post-leader-advance');
+			switchFirst('post > sub-post > post-leader', 'post-leader-section');
+			addFirst('post > sub-post > post-leader', 'post-leader-section');
+			switchFirst('post > sub-post > post-leader > post-leader-section', 'post-leader-title');
+			addFirst('post > sub-post > post-leader > post-leader-section', 'post-leader-title');
+			switchFirst('post > sub-post > post-leader > post-leader-section', 'post-leader-order');
+			addFirst('post > sub-post > post-leader > post-leader-section', 'post-leader-order');
+			moveOutside('post > sub-post > post-content', 'scroll-into');
+			switchFirst('post > sub-post', 'scroll-into');
+			addFirst('post > sub-post', 'scroll-into');
+			marker();
+			Array.from(forAllTag('post')).map((value) => {
+				return new Post(value);
+			}).forEach((value) => {
+				/* transferring for the 'post > sub-post > post-leader > post-leader-advance's */
+				let advanceChildNode = value.postContentNode.getAll(':scope > advance > *');
+				value.postLeaderAdvanceNode.prepend(...advanceChildNode);
+				/* titling for the 'post's */
+				if (value.postNode.hasAttribute('headline')) {
+					value.postLeaderTitleNode.innerText = value.postNode.getAttribute('headline');
+				} else {
+					value.postLeaderTitleNode.innerText = '{headline}';
 				}
-				switchFirst('post > sub-post > post-leader', 'post-leader-section');
-				addFirst('post > sub-post > post-leader', 'post-leader-section');
-				switchFirst('post > sub-post > post-leader > post-leader-section', 'post-leader-title');
-				addFirst('post > sub-post > post-leader > post-leader-section', 'post-leader-title');
-				switchFirst('post > sub-post > post-leader > post-leader-section', 'post-leader-order');
-				addFirst('post > sub-post > post-leader > post-leader-section', 'post-leader-order');
-				moveOutside('post > sub-post > post-content', 'scroll-into');
-				switchFirst('post > sub-post', 'scroll-into');
-				addFirst('post > sub-post', 'scroll-into');
-			}
-			/* adding the icon for the 'post's */ {
-				for (let i = 0; i < postNode.length; i++) {
-					let imgNode;
-					if (postNode[i].has(':scope > img.icon[alt=""]')) {
-						imgNode = postNode[i].get(':scope > img.icon');
+				/* transferring 'inner-class'-list for the 'post's */
+				if (value.postNode.hasAttribute('inner-class')) {
+					value.postContentNode.setAttribute('class', value.postNode.getAttribute('inner-class'));
+				}
+				/* ordering and hashing for the 'post's */
+				let orderString = '{index}';
+				if (value.postNode.hasAttribute('hash-id')) {
+					orderString = value.postNode.getAttribute('hash-id');
+				} else if (value.postNode.hasAttribute('marker')) {
+					if (value.postNode.hasAttribute('partial-hash-id')) {
+						orderString = value.postNode.getAttribute('marker').substring(0, value.postNode.getAttribute('marker').lastIndexOf('.') + 1) + value.postNode.getAttribute('partial-hash-id');
 					} else {
-						imgNode = document.createElement('img');
-						imgNode.classList.add('icon');
-						imgNode.setAttribute('alt', '');
-					}
-					let iconSrc = '';
-					if (postNode[i].hasAttribute('icon-src')) {
-						iconSrc = postNode[i].getAttribute('icon-src');
-					}
-					imgNode.setAttribute('src', iconSrc);
-					postNode[i].prepend(imgNode);
-				}
-			}
-			/* titling for the 'post's */ {
-				for (let i = 0; i < postNode.length; i++) {
-					if (postNode[i].hasAttribute('headline')) {
-						postNode[i].get(':scope > sub-post > post-leader > post-leader-section > post-leader-title').innerText = postNode[i].getAttribute('headline');
-					} else {
-						postNode[i].get(':scope > sub-post > post-leader > post-leader-section > post-leader-title').innerText = '{headline}';
+						orderString = value.postNode.getAttribute('marker');
 					}
 				}
-			}
-			/* transferring 'inner-class'-list for the 'post's */ {
-				let postInnerClassNode = forAll('post[inner-class]');
-				for (let i = 0; i < postInnerClassNode.length; i++) {
-					postInnerClassNode[i].get(':scope > sub-post > post-content').setAttribute('class', postInnerClassNode[i].getAttribute('inner-class'));
-				}
-			}
-			/* ordering and hashing for the 'post's */ {
-				marker();
-				for (let i = 0; i < postNode.length; i++) {
-					let orderSelector = ':scope > sub-post > post-leader > post-leader-section > post-leader-order';
-					let scrollSelector = ':scope > sub-post > scroll-into';
-					let orderString = '{index}';
-					if (postNode[i].hasAttribute('hash-id')) {
-						orderString = postNode[i].getAttribute('hash-id');
-					} else if (postNode[i].hasAttribute('marker')) {
-						if (postNode[i].hasAttribute('partial-hash-id')) {
-							orderString = postNode[i].getAttribute('marker').substring(0, postNode[i].getAttribute('marker').lastIndexOf('.') + 1) + postNode[i].getAttribute('partial-hash-id');
-						} else {
-							orderString = postNode[i].getAttribute('marker');
-						}
-					}
-					postNode[i].get(orderSelector).innerText = '#' + orderString;
-					postNode[i].get(scrollSelector).id = orderString;
-				}
-			}
-			/* dragging to the bottom for the 'post's */  {
-				for (let i = 0; i < postNode.length; i++) {
-					let postContentNode = postNode[i].get(':scope > sub-post > post-content');
-					let subPostNode = postContentNode.getAll(':scope > post');
-					postContentNode.append(...subPostNode);
-				}
-			}
+				value.postLeaderOrderNode.innerText = '#' + orderString;
+				value.scrollIntoNode.id = orderString;
+				/* dragging to the bottom for the 'post's */
+				let subPostNode = value.postContentNode.getAll(':scope > post');
+				value.postContentNode.append(...subPostNode);
+			});
 		}
 		await suspend();
 		/* dropdown */ {
-			let dropdownNode = forAllTag('dropdown');
-				/* structuring for the 'dropdown's */ {
-				insertSurround('dropdown', 'dropdown-content');
-				moveOutside('dropdown > dropdown-content', 'outer-margin');
-				switchFirst('dropdown', 'outer-margin');
-				addFirst('dropdown', 'outer-margin');
-				switchFirst('dropdown', 'dropdown-content');
-				moveOutside('dropdown > dropdown-content', 'inner-padding');
-				switchFirst('dropdown', 'inner-padding');
-				addFirst('dropdown', 'inner-padding');
-				for (let i = 0; i < dropdownNode.length; i++) {
-					let restNode = dropdownNode[i].getAll(':scope > :not(dropdown-content, inner-padding, outer-margin)');
-					dropdownNode[i].prepend(...restNode);
-				}
-			}
+			/* structuring for the 'dropdown's */
+			insertSurround('dropdown', 'dropdown-content');
+			moveOutside('dropdown > dropdown-content', 'outer-margin');
+			switchFirst('dropdown', 'outer-margin');
+			addFirst('dropdown', 'outer-margin');
+			switchFirst('dropdown', 'dropdown-content');
+			moveOutside('dropdown > dropdown-content', 'inner-padding');
+			switchFirst('dropdown', 'inner-padding');
+			addFirst('dropdown', 'inner-padding');
+			Array.from(forAllTag('dropdown')).map((value) => {
+				return new Dropdown(value);
+			}).forEach((value) => {
+				value.dropdownNode.prepend(...value.dropdownNode.getAll(':scope > :not(dropdown-content, inner-padding, outer-margin)'));
+			});
 		}
 		await suspend();
 		/* background-image with 'basis-layer, backdrop-container > blurred-filter' */ {
@@ -598,276 +623,220 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 			}
 		}
 		await suspend();
-		/* major */ {
-			let majorNode = forAllTag('major');
-			/* resizing for the 'major' */ {
-				for (let i = 0; i < majorNode.length; i++) {
-					if (document.body.clientWidth <= 750) {
-						majorNode[i].classList.add('tiny');
-					} else {
-						majorNode[i].classList.remove('tiny');
+		/* top */
+		Array.from(forAllTag('top')).map((value) => {
+			return new Top(value);
+		}).filter((value) => {
+			return value.complete;
+		}).forEach((value) => {
+			/* '.no-text' for the 'top' */
+			value.topNode.classList.add('no-text');
+			/* resizing for the 'top' */
+			if (document.body.clientWidth > 1226) {
+				value.topNode.id = 'large';
+			} else if (document.body.clientWidth >= 1048) {
+				value.topNode.id = 'medium';
+			} else {
+				value.topNode.id = 'small';
+			}
+			/* locking an option and scrolling into the '.lock' when has been unlocked */
+			if (value.topNode.matches(':not(:is(:hover, :focus-within))')) {
+				value.topNode.classList.remove('unlocked');
+				let aLockNode = value.topNode.getAll(':scope > a:not(.has-node).lock');
+				if (aLockNode.length == 0) {
+					let aNode = value.topNode.get(':scope > a:not(.has-node)');
+					aNode?.classList.add('lock');
+				} else {
+					value.topNode.scrollTop = aLockNode[0].offsetTop;
+					for (let i = 1; i < aLockNode.length; i++) {
+						aLockNode[i].classList.remove('lock');
 					}
 				}
+			} else if (value.topNode.matches(':is(:hover, :focus-within):not(.unlocked)')) {
+				value.topNode.classList.add('unlocked');
+				value.topNode.scrollTop = 0;
 			}
-		}
+			/*  '.icon', '.no-content' and '.has-node' for the 'top > a's */
+			Array.from(value.topNode.getAll(':scope > a')).forEach((value) => {
+				if (window.getComputedStyle(value).backgroundImage == 'none') {
+					value.classList.remove('icon');
+				} else {
+					value.classList.add('icon');
+				}
+				if (hasSubstance(value)) {
+					value.classList.remove('no-content');
+				} else {
+					value.classList.add('no-content');
+				}
+				if (hasTextOnly(value)) {
+					value.classList.remove('has-node');
+				} else {
+					value.classList.add('has-node');
+				}
+			});
+			/* ':not(a)'s surrounded by a 'a' for the 'top > :not(a)'s */
+			Array.from(value.topNode.getAll(':scope > :not(a)')).forEach((value) => {
+				value.surroundedBy('a');
+			});
+		});
 		await suspend();
-		/* top */ {
-			let topNode = forAllTag('top');
-			/* '.no-text' and resizing for the 'top' */ {
-				for (let i = 0; i < topNode.length; i++) {
-					topNode[i].classList.add('no-text');
-					if (document.body.clientWidth > 1226) {
-						topNode[i].id = 'large';
-					} else if (document.body.clientWidth >= 1048) {
-						topNode[i].id = 'medium';
-					} else {
-						topNode[i].id = 'small';
-					};
-				}
+		/* major */
+		Array.from(forAllTag('major')).map((value) => {
+			return new Major(value);
+		}).filter((value) => {
+			return value.complete;
+		}).forEach((value) => {
+			/* resizing for the 'major' */
+			if (document.body.clientWidth <= 750) {
+				value.majorNode.classList.add('tiny');
+			} else {
+				value.majorNode.classList.remove('tiny');
 			}
-			/* locking an option and scrolling into the '.lock' when has been unlocked */ {
-				let topUnlockedNode = forAll('top:not(:is(:hover, :focus-within))');
-				for (let i = 0; i < topUnlockedNode.length; i++) {
-					topUnlockedNode[i].classList.remove('unlocked');
-					let aLockNode = topUnlockedNode[i].getAll(':scope > a:not(.has-node).lock');
-					if (aLockNode.length == 0) {
-						let aNode = topUnlockedNode[i].get(':scope > a:not(.has-node)');
-						aNode?.classList.add('lock');
-					} else {
-						topUnlockedNode[i].scrollTop = aLockNode[0].offsetTop;
-						for (let j = 1; j < aLockNode.length; j++) {
-							aLockNode[j].classList.remove('lock');
-						}
-					}
-				}
-				let topNotUnlockedNode = forAll('top:is(:hover, :focus-within):not(.unlocked)');
-				for (let i = 0; i < topNotUnlockedNode.length; i++) {
-					topNotUnlockedNode[i].classList.add('unlocked');
-					topNotUnlockedNode[i].scrollTop = 0;
-				}
-			}
-			/*  '.icon', '.no-content' and '.has-node' for the 'top > a's */ {
-				let aNode = forAll('top > a');
-				for (let i = 0; i < aNode.length; i++) {
-					if (window.getComputedStyle(aNode[i]).backgroundImage == 'none') {
-						aNode[i].classList.remove('icon');
-					} else {
-						aNode[i].classList.add('icon');
-					}
-					if (hasSubstance(aNode[i])) {
-						aNode[i].classList.remove('no-content');
-					} else {
-						aNode[i].classList.add('no-content');
-					}
-					if (hasTextOnly(aNode[i])) {
-						aNode[i].classList.remove('has-node');
-					} else {
-						aNode[i].classList.add('has-node');
-					}
-				}
-			}
-			/* ':not(a)'s surrounded by a 'a' for the 'top > :not(a)'s */ {
-				let notANode = forAll('top > :not(a)');
-				for (let i = 0; i < notANode.length; i++) {
-					notANode[i].surroundedBy('a');
-				}
-			}
-		}
+		});
 		await suspend();
-		/* post */ {
-			let postNode = forAllTag('post');
-			/* '.no-content' for the pairs of 'post > sub-post > post-leader > post-leader-advance' and 'post > sub-post > post-content' */ {
-				for (let i = 0; i < postNode.length; i++) {
-					if (!postNode[i].has(':scope > sub-post > post-leader > post-leader-advance')) {
+		/* post */
+		Array.from(forAllTag('post')).map((value) => {
+			return new Post(value);
+		}).filter((value) => {
+			return value.complete;
+		}).forEach((value) => {
+			/* adding the icon for the 'post's */
+			if (value.postNode.hasAttribute('icon-src')) {
+				value.postIconNode.style.backgroundImage = `url('` + new URL(value.postNode.getAttribute('icon-src'), document.baseURI).href + `')`;
+			} else {
+				value.postIconNode.style.backgroundImage = 'unset';
+			}
+			/* '.no-content' for the pairs of 'post > sub-post > post-leader > post-leader-advance' and 'post > sub-post > post-content' */
+			if (hasSubstance(value.postLeaderAdvanceNode)) {
+				value.postLeaderAdvanceNode.classList.remove('no-content');
+			} else {
+				value.postLeaderAdvanceNode.classList.add('no-content');
+			}
+			if (hasSubstance(value.postContentNode)) {
+				value.postContentNode.classList.remove('no-content');
+			} else {
+				value.postContentNode.classList.add('no-content');
+			}
+			/* '.has-only-post' for the 'post > sub-post > post-content's */
+			function hasOnlyPost(parentNode) {
+				let childNode = parentNode.childNodes;
+				for (let i = 0; i < childNode.length; i++) {
+					if (childNode[i].nodeName == '#comment') {
+						continue;
+					} else if (childNode[i].nodeName == '#text' && childNode[i].wholeText.removeSpace() == '') {
+						continue;
+					} else if (childNode[i] instanceof Element && childNode[i].nodeName == 'br'.toUpperCase()) {
+						continue;
+					} else if (childNode[i] instanceof Element && childNode[i].nodeName == 'post'.toUpperCase()) {
+						continue;
+					} else if (childNode[i] instanceof Element && window.getComputedStyle(childNode[i]).display == 'none') {
 						continue;
 					}
-					let postLeaderAdvanceNode = postNode[i].get(':scope > sub-post > post-leader > post-leader-advance');
-					if (hasSubstance(postLeaderAdvanceNode)) {
-						postLeaderAdvanceNode.classList.remove('no-content');
-					} else {
-						postLeaderAdvanceNode.classList.add('no-content');
-					}
+					return false;
 				}
-				for (let i = 0; i < postNode.length; i++) {
-					if (!postNode[i].has(':scope > sub-post > post-content')) {
-						continue;
-					}
-					let postContentNode = postNode[i].get(':scope > sub-post > post-content');
-					if (hasSubstance(postContentNode)) {
-						postContentNode.classList.remove('no-content');
-					} else {
-						postContentNode.classList.add('no-content');
-					}
-				}
+				return true;
 			}
-			/* '.has-only-post' for the 'post > sub-post > post-content's */ {
-				for (let i = 0; i < postNode.length; i++) {
-					if (!postNode[i].has(':scope > sub-post > post-content')) {
-						continue;
-					}
-					let postContentNode = postNode[i].get(':scope > sub-post > post-content');
-					function hasOnlyPost(parentNode) {
-						let childNode = parentNode.childNodes;
-						for (let i = 0; i < childNode.length; i++) {
-							if (childNode[i].nodeName == '#comment') {
-								continue;
-							} else if (childNode[i].nodeName == '#text' && childNode[i].wholeText.removeSpace() == '') {
-								continue;
-							} else if (childNode[i] instanceof Element && childNode[i].nodeName == 'br'.toUpperCase()) {
-								continue;
-							} else if (childNode[i] instanceof Element && childNode[i].nodeName == 'post'.toUpperCase()) {
-								continue;
-							} else if (childNode[i] instanceof Element && window.getComputedStyle(childNode[i]).display == 'none') {
-								continue;
-							}
-							return false;
-						}
-						return true;
-					}
-					if (hasOnlyPost(postContentNode)) {
-						postContentNode.classList.add('has-only-post');
-					} else {
-						postContentNode.classList.remove('has-only-post');
-					}
-				}
+			if (hasOnlyPost(value.postContentNode)) {
+				value.postContentNode.classList.add('has-only-post');
+			} else {
+				value.postContentNode.classList.remove('has-only-post');
 			}
-			/* '.non-blur' for the 'post's */ {
-				marker();
-				for (let i = 0; i < postNode.length; i++) {
-					if (postNode[i].hasAttribute('marker')) {
-						postNode[i].classList.remove('non-blur');
-					} else {
-						postNode[i].classList.add('non-blur');
-					}
-				}
+			/* '.non-blur' for the 'post's */
+			if (value.postNode.hasAttribute('marker')) {
+				value.postNode.classList.remove('non-blur');
+			} else {
+				value.postNode.classList.add('non-blur');
 			}
-			/* '.no-text' for the 'post > sub-post > post-leader > post-leader-advance's with ':scope > dropdown' */ {
-				for (let i = 0; i < postNode.length; i++) {
-					if (!postNode[i].has(':scope > sub-post > post-leader > post-leader-advance')) {
-						continue;
-					}
-					let postLeaderAdvanceNode = postNode[i].get(':scope > sub-post > post-leader > post-leader-advance');
-					postLeaderAdvanceNode.classList.add('no-text');
-					let dropdownNode = postLeaderAdvanceNode.getAll(':scope > dropdown');
-					for (let j = 0; j < dropdownNode.length; j++) {
-						dropdownNode[j].classList.add('no-text');
-					}
-				}
-			}
-		}
+			/* '.no-text' for the 'post > sub-post > post-leader > post-leader-advance's with ':scope > dropdown' */
+			value.postLeaderAdvanceNode.classList.add('no-text');
+			Array.from(value.postLeaderAdvanceNode.getAll(':scope > dropdown')).forEach((value) => {
+				value.classList.add('no-text');
+			});
+		});
+		marker();
 		await suspend();
-		/* dropdown */ {
-			let dropdownNode = forAllTag('dropdown');
-			/* '.has-node' for the 'dropdown > dropdown-content > a's */ {
-				for (let i = 0; i < dropdownNode.length; i++) {
-					if (!dropdownNode[i].has(':scope > dropdown-content')) {
-						continue;
-					}
-					let aNode = dropdownNode[i].get(':scope > dropdown-content').getAll(':scope > a');
-					for (let j = 0; j < aNode.length; j++) {
-						if (hasTextOnly(aNode[j])) {
-							aNode[j].classList.remove('has-node');
-						} else {
-							aNode[j].classList.add('has-node');
-						}
-					}
+		Array.from(forAllTag('dropdown')).map((value) => {
+			return new Dropdown(value);
+		}).filter((value) => {
+			return value.complete;
+		}).forEach((value) => {
+			/* '.has-node' for the 'dropdown > dropdown-content > a's */
+			Array.from(value.dropdownContentNode.getAll(':scope > a')).forEach((value) => {
+				if (hasTextOnly(value)) {
+					value.classList.remove('has-node');
+				} else {
+					value.classList.add('has-node');
 				}
+			});
+			/* ':not(a)'s surrounded by a 'a' for the 'dropdown > dropdown-content > :not(a)'s */
+			Array.from(value.dropdownContentNode.getAll(':scope > :not(a)')).forEach((value) => {
+				value.surroundedBy('a');
+			});
+			/* '.has-disabled' for the 'dropdown's existing 'button.disabled's */
+			if (value.dropdownNode.has(':scope > button.disabled')) {
+				value.dropdownNode.classList.add('has-disabled');
+			} else {
+				value.dropdownNode.classList.remove('has-disabled');
 			}
-			/* ':not(a)'s surrounded by a 'a' for the 'dropdown > dropdown-content > :not(a)'s */ {
-				for (let i = 0; i < dropdownNode.length; i++) {
-					if (!dropdownNode[i].has(':scope > dropdown-content')) {
-						continue;
-					}
-					let notANode = dropdownNode[i].get(':scope > dropdown-content').getAll(':scope > :not(a)');
-					for (let j = 0; j < notANode.length; j++) {
-						notANode[j].surroundedBy('a');
-					}
-				}
+			/* setting the 'maxHeight', 'left' and 'right' style, and '.hidden' for a 'dropdown-content' */
+			let top = value.dropdownNode.getBoundingClientRect().bottom + 6;
+			let bottom = document.body.clientHeight - value.dropdownNode.getBoundingClientRect().bottom;
+			if (top < 69 || bottom < 64 || !inScrollable(value.dropdownNode)) {
+				value.dropdownContentNode.hidden = true;
+				value.dropdownContentNode.style.maxHeight = '';
+				value.dropdownContentNode.style.top = '';
+				value.dropdownContentNode.style.left = '';
+				value.dropdownContentNode.style.right = '';
+				return;
+			} else {
+				value.dropdownContentNode.hidden = false;
+				value.dropdownContentNode.style.maxHeight = (bottom - 28).toString() + 'px';
+				value.dropdownContentNode.style.top = top.toString() + 'px';
 			}
-			/* '.has-disabled' for the 'dropdown's existing 'button.disabled's */ {
-				for (let i = 0; i < dropdownNode.length; i++) {
-					if (dropdownNode[i].has('button.disabled')) {
-						dropdownNode[i].classList.add('has-disabled');
-					} else {
-						dropdownNode[i].classList.remove('has-disabled');
-					}
-				}
+			let left = value.dropdownNode.getBoundingClientRect().left;
+			if (left < 6) {
+				value.dropdownContentNode.style.left = '6px';
+				value.dropdownContentNode.style.right = '';
+			} else if (document.body.clientWidth - left - 6 < value.dropdownContentNode.offsetWidth) {
+				value.dropdownContentNode.style.left = '';
+				value.dropdownContentNode.style.right = '6px';
+			} else {
+				value.dropdownContentNode.style.left = left.toString() + 'px';
+				value.dropdownContentNode.style.right = '';
 			}
-			/* setting the 'maxHeight', 'left' and 'right' style, and '.hidden' for a 'dropdown-content' */ {
-				for (let i = 0; i < dropdownNode.length; i++) {
-					if (!dropdownNode[i].has(':scope > dropdown-content')) {
-						continue;
-					}
-					let targetNode = dropdownNode[i].get(':scope > dropdown-content');
-					let top = dropdownNode[i].getBoundingClientRect().bottom + 6;
-					let bottom = document.body.clientHeight - dropdownNode[i].getBoundingClientRect().bottom;
-					if (top < 69 || bottom < 64 || !inScrollable(dropdownNode[i])) {
-						targetNode.classList.add('hidden');
-						targetNode.style.maxHeight = '';
-						targetNode.style.top = '';
-						targetNode.style.left = '';
-						targetNode.style.right = '';
-						continue;
-					} else {
-						targetNode.classList.remove('hidden');
-						targetNode.style.maxHeight = (bottom - 28).toString() + 'px';
-						targetNode.style.top = top.toString() + 'px';
-					}
-					let left = dropdownNode[i].getBoundingClientRect().left;
-					if (left < 6) {
-						targetNode.style.left = '6px';
-						targetNode.style.right = '';
-					} else if (document.body.clientWidth - left - 6 < targetNode.offsetWidth) {
-						targetNode.style.left = '';
-						targetNode.style.right = '6px';
-					} else {
-						targetNode.style.left = left.toString() + 'px';
-						targetNode.style.right = '';
-					}
-				}
+			/* '.no-content' for a 'dropdown-content' */
+			if (hasSubstance(value.dropdownContentNode)) {
+				value.dropdownContentNode.classList.remove('no-content');
+			} else {
+				value.dropdownContentNode.classList.add('no-content');
 			}
-			/* '.no-content' for a 'dropdown-content' */ {
-				for (let i = 0; i < dropdownNode.length; i++) {
-					if (!dropdownNode[i].has(':scope > dropdown-content')) {
-						continue;
-					}
-					let dropdownContentNode = dropdownNode[i].get(':scope > dropdown-content');
-					if (hasSubstance(dropdownContentNode)) {
-						dropdownContentNode.classList.remove('no-content');
-					} else {
-						dropdownContentNode.classList.add('no-content');
-					}
-				}
+			/* '.has-single-button' for the 'dropdown's */
+			if (value.dropdownNode.has(':scope > button:first-of-type:last-of-type') && hasNoTextWithNode(value.dropdownNode)) {
+				value.dropdownNode.classList.add('has-single-button');
+			} else {
+				value.dropdownNode.classList.remove('has-single-button');
 			}
-			/* '.has-single-button' for the 'dropdown's */ {
-				for (let i = 0; i < dropdownNode.length; i++) {
-					if (dropdownNode[i].has(':scope > button:first-of-type:last-of-type') && hasNoTextWithNode(dropdownNode[i])) {
-						dropdownNode[i].classList.add('has-single-button');
-					} else {
-						dropdownNode[i].classList.remove('has-single-button');
-					}
-				}
-			}
-		}
+		});
 		await suspend();
-		/* button */ {
-			let buttonNode = forAllTag('button');
-			/* '.icon' and '.no-content' for the 'button's */ {
-				for (let i = 0; i < buttonNode.length; i++) {
-					if (window.getComputedStyle(buttonNode[i]).backgroundImage == 'none') {
-						buttonNode[i].classList.remove('icon');
-					} else {
-						buttonNode[i].classList.add('icon');
-					}
-					if (hasSubstance(buttonNode[i])) {
-						buttonNode[i].classList.remove('no-content');
-					} else {
-						buttonNode[i].classList.add('no-content');
-					}
-					buttonNode[i].disabled = buttonNode[i].classList.contains('disabled');
-				}
+		/* button */
+		Array.from(forAllTag('button')).map((value) => {
+			return new Button(value);
+		}).filter((value) => {
+			return value.complete;
+		}).forEach((value) => {
+			/* '.icon', '.no-content' and '[disabled]' for the 'button's */
+			if (window.getComputedStyle(value.buttonNode).backgroundImage == 'none') {
+				value.buttonNode.classList.remove('icon');
+			} else {
+				value.buttonNode.classList.add('icon');
 			}
-		}
+			if (hasSubstance(value.buttonNode)) {
+				value.buttonNode.classList.remove('no-content');
+			} else {
+				value.buttonNode.classList.add('no-content');
+			}
+			value.buttonNode.disabled = value.buttonNode.classList.contains('disabled');
+		});
 		await suspend();
 		/* . */ {
 			/* .no-space */ {
@@ -894,24 +863,26 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 			}
 		}
 		await suspend();
-		/* background-image with 'basis-layer, backdrop-container > blurred-filter' */ {
-			let postNode = forAll('body major > sub-major > post');
-			for (let i = 0; i < postNode.length; i++) {
-				if (!postNode[i].has(':scope > sub-post')) {
-					continue;
-				}
-				let subPostNode = postNode[i].get(':scope > sub-post');
-				if (!subPostNode.has(':scope > backdrop-container')) {
-					continue;
-				}
-				let backdropContainerNode = subPostNode.get(':scope > backdrop-container');
-				if (!inScrollable(subPostNode)) {
-					backdropContainerNode.classList.add('suspended');
-				} else {
-					backdropContainerNode.classList.remove('suspended');
-				}
-			}
-		}
+		/* background-image with 'basis-layer, backdrop-container > blurred-filter' */
+		Array.from(forAll('body major')).map((value) => {
+			return new Major(value);
+		}).filter((value) => {
+			return value.complete;
+		}).forEach((value) => {
+			Array.from(value.subMajorNode.getAll(':scope > post')).map((value) => {
+				return new Post(value);
+			}).filter((value) => {
+				return value.complete;
+			}).forEach((value) => {
+				Array.from(value.subPostNode.getAll(':scope > backdrop-container')).forEach((filter) => {
+					if (!inScrollable(value.subPostNode)) {
+						filter.classList.add('suspended');
+					} else {
+						filter.classList.remove('suspended');
+					}
+				});
+			});
+		});
 		await suspend();
 		document.dispatchEvent(eventFormedStyle);
 	};
