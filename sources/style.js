@@ -123,95 +123,91 @@
 		if (child == '') {
 			return;
 		}
-		let parentNode = forAll(parent);
-		for (let i = 0; i < parentNode.length; i++) {
-			if (parentNode[i].arrayForChild(child).length == 0) {
+		forAll(parent).forEach((value) => {
+			if (value.arrayForChild(child).length == 0) {
 				let substance = document.createElement(child);
-				substance.prepend(...parentNode[i].childNodes);
-				parentNode[i].prepend(substance);
+				substance.prepend(...value.childNodes);
+				value.prepend(substance);
 			}
-		}
+		});
 	},
 	function switchFirst(parent, child) {
 		arguments.constrainedWithAndThrow(String, String);
 		if (child == '') {
 			return;
 		}
-		let parentNode = forAll(parent);
-		for (let i = 0; i < parentNode.length; i++) {
-			parentNode[i].prepend(...parentNode[i].arrayForChild(child));
-		}
+		forAll(parent).forEach((value) => {
+			value.prepend(...value.arrayForChild(child));
+		});
 	},
 	function addFirst(parent, child) {
 		arguments.constrainedWithAndThrow(String, String);
 		if (child == '') {
 			return;
 		}
-		let parentNode = forAll(parent);
-		for (let i = 0; i < parentNode.length; i++) {
-			if (parentNode[i].children.length > 0 && parentNode[i].children[0].tagName.toUpperCase() == child.toUpperCase()) {
-				continue;
+		forAll(parent).forEach((value) => {
+			if (value.children.length > 0 && value.children[0].tagName.toUpperCase() == child.toUpperCase()) {
+				return;
 			}
 			let substance = document.createElement(child);
-			parentNode[i].prepend(substance);
-		}
+			value.prepend(substance);
+		});
 	},
 	function moveOutside(parent, child) {
 		arguments.constrainedWithAndThrow(String, String);
 		if (child == '') {
 			return;
 		}
-		let parentNode = forAll(parent);
-		for (let i = 0; i < parentNode.length; i++) {
-			parentNode[i].parentElement?.prepend(...parentNode[i].arrayForChild(child));
-		}
+		forAll(parent).forEach((value) => {
+			value.parentElement?.prepend(...value.arrayForChild(child));
+		});
 	},
 	function hasSubstance(parentNode) {
 		arguments.constrainedWithAndThrow(Element);
-		let childNode = parentNode.childNodes;
-		for (let i = 0; i < childNode.length; i++) {
-			if (childNode[i].nodeName == '#comment') {
-				continue;
-			} else if (childNode[i].nodeName == '#text' && childNode[i].wholeText.removeSpace() == '') {
-				continue;
-			} else if (childNode[i] instanceof Element && childNode[i].nodeName == 'br'.toUpperCase()) {
-				continue;
-			} else if (childNode[i] instanceof Element && window.getComputedStyle(childNode[i]).display == 'none') {
-				continue;
+		let has = false;
+		parentNode.childNodes.forEach((value) => {
+			if (value.nodeName == '#comment') {
+				return;
+			} else if (value.nodeName == '#text' && value.wholeText.removeSpace() == '') {
+				return;
+			} else if (value instanceof Element && value.nodeName == 'br'.toUpperCase()) {
+				return;
+			} else if (value instanceof Element && window.getComputedStyle(value).display == 'none') {
+				return;
 			}
-			return true;
-		}
-		return false;
+			has = true;
+		});
+		return has;
 	},
 	function hasTextOnly(parentNode) {
 		arguments.constrainedWithAndThrow(Element);
-		let childNode = parentNode.childNodes;
-		for (let i = 0; i < childNode.length; i++) {
-			if (childNode[i].nodeName == '#comment') {
-				continue;
-			} else if (childNode[i].nodeName == '#text') {
-				continue;
-			} else if (childNode[i] instanceof Element && childNode[i].nodeName == 'br'.toUpperCase()) {
-				continue;
+		let has = true;
+		parentNode.childNodes.forEach((value) => {
+			if (value.nodeName == '#comment') {
+				return;
+			} else if (value.nodeName == '#text') {
+				return;
+			} else if (value instanceof Element && value.nodeName == 'br'.toUpperCase()) {
+				return;
 			}
-			return false;
-		}
-		return true;
+			has = false;
+		});
+		return has;
 	},
 	function hasNoTextWithNode(parentNode) {
 		arguments.constrainedWithAndThrow(Element);
-		let childNode = parentNode.childNodes;
-		for (let i = 0; i < childNode.length; i++) {
-			if (childNode[i].nodeName == '#comment') {
-				continue;
-			} else if (childNode[i].nodeName == '#text' && childNode[i].wholeText.removeSpace() == '') {
-				continue;
-			} else if (childNode[i] instanceof Element && childNode[i].nodeName != 'br'.toUpperCase()) {
-				continue;
+		let has = true;
+		parentNode.childNodes.forEach((value) => {
+			if (value.nodeName == '#comment') {
+				return;
+			} else if (value.nodeName == '#text' && value.wholeText.removeSpace() == '') {
+				return;
+			} else if (value instanceof Element && value.nodeName != 'br'.toUpperCase()) {
+				return;
 			}
-			return false;
-		}
-		return true;
+			has = false;
+		});
+		return has;
 	},
 	function isInside(node, parentNode = document.body) {
 		arguments.constrainedWithAndThrow(Element, Element);
@@ -265,14 +261,13 @@
 		arguments.constrainedWithAndThrow(Element);
 		let parentNode = node.parentElement;
 		if (node.nodeName == 'a'.toUpperCase() && parentNode?.nodeName == 'top'.toUpperCase()) {
-			let childNode = parentNode.getAll(':scope > a');
-			for (let i = 0; i < childNode.length; i++) {
-				if (childNode[i] == node) {
-					childNode[i].classList.add('lock');
+			parentNode.getAll(':scope > a').forEach((value) => {
+				if (value == node) {
+					value.classList.add('lock');
 				} else {
-					childNode[i].classList.remove('lock');
+					value.classList.remove('lock');
 				}
-			}
+			});
 		}
 	},
 	function makeCascading(headNode, nodeId, styleText) {
@@ -281,11 +276,11 @@
 			let pseudoNode = function getPseudoNode() {
 				let cascadingNode = headNode.getAll(':scope > style');
 				let filteredNode = [];
-				for (let i = 0; i < cascadingNode.length; i++) {
-					if (cascadingNode[i].id == nodeId) {
-						filteredNode.push(cascadingNode[i]);
+				cascadingNode.forEach((value) => {
+					if (value.id == nodeId) {
+						filteredNode.push(value);
 					}
-				}
+				});
 				return filteredNode;
 			}();
 			if (pseudoNode.length == 0) {
@@ -294,9 +289,9 @@
 				headNode.append(styleNode);
 				return styleNode;
 			} else {
-				for (let i = 1; i < pseudoNode.length; i++) {
-					pseudoNode[i].remove();
-				}
+				pseudoNode.slice(1).forEach((value) => {
+					value.remove();
+				});
 				return pseudoNode[0];
 			}
 		}();
@@ -323,12 +318,11 @@
 	function arrayForChild(child) {
 		arguments.constrainedWithAndThrow(String);
 		let array = [];
-		let childNode = this.children;
-		for (let i = 0; i < childNode.length; i++) {
-			if (childNode[i].tagName.toUpperCase() == child.toUpperCase()) {
-				array.push(childNode[i]);
+		Array.from(this.children).forEach((value) => {
+			if (value.tagName.toUpperCase() == child.toUpperCase()) {
+				array.push(value);
 			}
-		}
+		});
 		return array;
 	},
 	function isOfHTMLTree() {
@@ -650,9 +644,9 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 					aNode?.classList.add('lock');
 				} else {
 					value.topNode.scrollTop = aLockNode[0].offsetTop;
-					for (let i = 1; i < aLockNode.length; i++) {
-						aLockNode[i].classList.remove('lock');
-					}
+					aLockNode.slice(1).forEach((value) => {
+						value.classList.remove('lock');
+					});
 				}
 			} else if (value.topNode.matches(':is(:hover, :focus-within):not(.unlocked)')) {
 				value.topNode.classList.add('unlocked');
@@ -722,22 +716,22 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 			}
 			/* '.has-only-post' for the 'post > sub-post > post-content's */
 			function hasOnlyPost(parentNode) {
-				let childNode = parentNode.childNodes;
-				for (let i = 0; i < childNode.length; i++) {
-					if (childNode[i].nodeName == '#comment') {
-						continue;
-					} else if (childNode[i].nodeName == '#text' && childNode[i].wholeText.removeSpace() == '') {
-						continue;
-					} else if (childNode[i] instanceof Element && childNode[i].nodeName == 'br'.toUpperCase()) {
-						continue;
-					} else if (childNode[i] instanceof Element && childNode[i].nodeName == 'post'.toUpperCase()) {
-						continue;
-					} else if (childNode[i] instanceof Element && window.getComputedStyle(childNode[i]).display == 'none') {
-						continue;
+				let has = true;
+				parentNode.childNodes.forEach((value) => {
+					if (value.nodeName == '#comment') {
+						return;
+					} else if (value.nodeName == '#text' && value.wholeText.removeSpace() == '') {
+						return;
+					} else if (value instanceof Element && value.nodeName == 'br'.toUpperCase()) {
+						return;
+					} else if (value instanceof Element && value.nodeName == 'post'.toUpperCase()) {
+						return;
+					} else if (value instanceof Element && window.getComputedStyle(value).display == 'none') {
+						return;
 					}
-					return false;
-				}
-				return true;
+					has = false;
+				});
+				return has;
 			}
 			if (hasOnlyPost(value.postContentNode)) {
 				value.postContentNode.classList.add('has-only-post');
