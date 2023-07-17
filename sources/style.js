@@ -1,12 +1,12 @@
 /* Array.prototype.bindTo(instance) */ {
 	const lock = { configurable: false, writable: false };
 	Array.prototype.bindTo = function bindTo(instance = window) {
-		for (let i = 0; i < this.length; i++) {
-			if (this[i] instanceof Function) {
-				instance[this[i].name] = this[i];
-				Object.defineProperty(instance, this[i].name, lock);
+		this.forEach((value) => {
+			if (value instanceof Function) {
+				instance[value.name] = value;
+				Object.defineProperty(instance, value.name, lock);
 			}
-		};
+		});
 	};
 	[Array.prototype.bindTo].bindTo(Array.prototype);
 	const Nullable = function Nullable(type) {
@@ -35,29 +35,31 @@
 	[
 		function addCompleteState() {
 			this.complete = (() => {
-				let keys = Object.keys(this);
-				for (let i = 0; i < keys.length; i++) {
-					if (this[keys[i]] == null) {
-						return false;
+				let complete = true;
+				Object.keys(this).forEach((value) => {
+					if (this[value] == null) {
+						complete = false;
 					}
-				}
-				return true;
+				});
+				return complete;
 			})();
 			Object.freeze(this);
 		},
 		function constrainedWith(...types) {
-			if (this.length != types.length) {
+			let arguments = Array.from(this);
+			if (arguments.length != types.length) {
 				return false;
 			}
-			for (let i = 0; i < this.length; i++) {
-				if (isNullable(types[i]) && this[i] == null) {
-					continue;
-				} else if (this[i] instanceof removeNullable(types[i]) || Object.getPrototypeOf(this[i]) == removeNullable(types[i]).prototype) {
-					continue;
+			let constrained = true;
+			arguments.forEach((value, index) => {
+				if (isNullable(types[index]) && value == null) {
+					return;
+				} else if (value instanceof removeNullable(types[index]) || Object.getPrototypeOf(value) == removeNullable(types[index]).prototype) {
+					return;
 				}
-				return false;
-			}
-			return true;
+				constrained = false;
+			});
+			return constrained;
 		},
 		function constrainedWithAndThrow(...types) {
 			if (!this.constrainedWith(...types)) {
@@ -69,18 +71,18 @@
 [
 	function Top(node) {
 		arguments.constrainedWithAndThrow(Element);
-		this.topNode = node;
+		this.topNode = node.nodeName == 'top'.toUpperCase() ? node : null;
 		this.addCompleteState();
 	},
 	function Major(node) {
 		arguments.constrainedWithAndThrow(Element);
-		this.majorNode = node;
+		this.majorNode = node.nodeName == 'major'.toUpperCase() ? node : null;
 		this.subMajorNode = node.get(':scope > sub-major');
 		this.addCompleteState();
 	},
 	function Post(node) {
 		arguments.constrainedWithAndThrow(Element);
-		this.postNode = node;
+		this.postNode = node.nodeName == 'post'.toUpperCase() ? node : null;
 		this.subPostNode = node.get(':scope > sub-post');
 		this.postIconNode = node.get(':scope > post-icon');
 		this.scrollIntoNode = node.get(':scope > sub-post > scroll-into');
@@ -94,7 +96,7 @@
 	},
 	function Dropdown(node) {
 		arguments.constrainedWithAndThrow(Element);
-		this.dropdownNode = node;
+		this.dropdownNode = node.nodeName == 'dropdown'.toUpperCase() ? node : null;
 		this.innerPaddingNode = node.get(':scope > inner-padding');
 		this.dropdownContentNode = node.get(':scope > dropdown-content');
 		this.outerMarginNode = node.get(':scope > outer-margin');
@@ -102,19 +104,19 @@
 	},
 	function Button(node) {
 		arguments.constrainedWithAndThrow(Element);
-		this.buttonNode = node;
+		this.buttonNode = node.nodeName == 'button'.toUpperCase() ? node : null;
 		this.addCompleteState();
 	}
 ].bindTo(window);
 [
 	function forAll(selector) {
-		return document.querySelectorAll(selector);
+		return Array.from(document.querySelectorAll(selector));
 	},
 	function forAllTag(name) {
-		return document.getElementsByTagName(name);
+		return Array.from(document.getElementsByTagName(name));
 	},
 	function forAllClass(name) {
-		return document.getElementsByClassName(name);
+		return Array.from(document.getElementsByClassName(name));
 	},
 	function insertSurround(parent, child) {
 		arguments.constrainedWithAndThrow(String, String);
@@ -316,7 +318,7 @@
 		return this.querySelector(selector);
 	},
 	function getAll(selector) {
-		return this.querySelectorAll(selector);
+		return Array.from(this.querySelectorAll(selector));
 	},
 	function arrayForChild(child) {
 		arguments.constrainedWithAndThrow(String);
@@ -462,7 +464,7 @@
 		}
 		let markedArray = [];
 		function subPostConducting(majorValue, stackCount, orderString, postValue) {
-			Array.from(postValue.postContentNode.getAll(':scope > post')).map((value) => {
+			postValue.postContentNode.getAll(':scope > post').map((value) => {
 				return new Post(value);
 			}).filter((value) => {
 				return value.complete;
@@ -473,12 +475,12 @@
 				subPostConducting(majorValue, stackCount + 1, subOrderString, subPostValue);
 			});
 		}
-		Array.from(forAllTag('major')).map((value) => {
+		forAllTag('major').map((value) => {
 			return new Major(value);
 		}).filter((value) => {
 			return value.complete;
 		}).forEach((majorValue) => {
-			Array.from(majorValue.subMajorNode.getAll(':scope > post')).map((value) => {
+			majorValue.subMajorNode.getAll(':scope > post').map((value) => {
 				return new Post(value);
 			}).filter((value) => {
 				return value.complete;
@@ -489,7 +491,7 @@
 				subPostConducting(majorValue, 0, orderString, postValue);
 			});
 		});
-		Array.from(forAllTag('post')).map((value) => {
+		forAllTag('post').map((value) => {
 			return new Post(value);
 		}).filter((value) => {
 			return value.complete;
@@ -531,12 +533,9 @@
 			switchFirst('post > sub-post', 'scroll-into');
 			addFirst('post > sub-post', 'scroll-into');
 			marker();
-			Array.from(forAllTag('post')).map((value) => {
+			forAllTag('post').map((value) => {
 				return new Post(value);
 			}).forEach((value) => {
-				/* transferring for the 'post > sub-post > post-leader > post-leader-advance's */
-				let advanceChildNode = value.postContentNode.getAll(':scope > advance > *');
-				value.postLeaderAdvanceNode.prepend(...advanceChildNode);
 				/* titling for the 'post's */
 				if (value.postNode.hasAttribute('headline')) {
 					value.postLeaderTitleNode.innerText = value.postNode.getAttribute('headline');
@@ -563,6 +562,9 @@
 				/* dragging to the bottom for the 'post's */
 				let subPostNode = value.postContentNode.getAll(':scope > post');
 				value.postContentNode.append(...subPostNode);
+				/* transferring for the 'post > sub-post > post-leader > post-leader-advance's */
+				let advanceChildNode = value.postContentNode.getAll(':scope > advance > *');
+				value.postLeaderAdvanceNode.prepend(...advanceChildNode);
 			});
 		}
 		await suspend();
@@ -576,7 +578,7 @@
 			moveOutside('dropdown > dropdown-content', 'inner-padding');
 			switchFirst('dropdown', 'inner-padding');
 			addFirst('dropdown', 'inner-padding');
-			Array.from(forAllTag('dropdown')).map((value) => {
+			forAllTag('dropdown').map((value) => {
 				return new Dropdown(value);
 			}).forEach((value) => {
 				value.dropdownNode.prepend(...value.dropdownNode.getAll(':scope > :not(dropdown-content, inner-padding, outer-margin)'));
@@ -624,7 +626,7 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 		}
 		await suspend();
 		/* top */
-		Array.from(forAllTag('top')).map((value) => {
+		forAllTag('top').map((value) => {
 			return new Top(value);
 		}).filter((value) => {
 			return value.complete;
@@ -657,7 +659,7 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 				value.topNode.scrollTop = 0;
 			}
 			/*  '.icon', '.no-content' and '.has-node' for the 'top > a's */
-			Array.from(value.topNode.getAll(':scope > a')).forEach((value) => {
+			value.topNode.getAll(':scope > a').forEach((value) => {
 				if (window.getComputedStyle(value).backgroundImage == 'none') {
 					value.classList.remove('icon');
 				} else {
@@ -675,13 +677,13 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 				}
 			});
 			/* ':not(a)'s surrounded by a 'a' for the 'top > :not(a)'s */
-			Array.from(value.topNode.getAll(':scope > :not(a)')).forEach((value) => {
+			value.topNode.getAll(':scope > :not(a)').forEach((value) => {
 				value.surroundedBy('a');
 			});
 		});
 		await suspend();
 		/* major */
-		Array.from(forAllTag('major')).map((value) => {
+		forAllTag('major').map((value) => {
 			return new Major(value);
 		}).filter((value) => {
 			return value.complete;
@@ -696,7 +698,7 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 		await suspend();
 		/* post */
 		marker();
-		Array.from(forAllTag('post')).map((value) => {
+		forAllTag('post').map((value) => {
 			return new Post(value);
 		}).filter((value) => {
 			return value.complete;
@@ -750,18 +752,18 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 			}
 			/* '.no-text' for the 'post > sub-post > post-leader > post-leader-advance's with ':scope > dropdown' */
 			value.postLeaderAdvanceNode.classList.add('no-text');
-			Array.from(value.postLeaderAdvanceNode.getAll(':scope > dropdown')).forEach((value) => {
+			value.postLeaderAdvanceNode.getAll(':scope > dropdown').forEach((value) => {
 				value.classList.add('no-text');
 			});
 		});
 		await suspend();
-		Array.from(forAllTag('dropdown')).map((value) => {
+		forAllTag('dropdown').map((value) => {
 			return new Dropdown(value);
 		}).filter((value) => {
 			return value.complete;
 		}).forEach((value) => {
 			/* '.has-node' for the 'dropdown > dropdown-content > a's */
-			Array.from(value.dropdownContentNode.getAll(':scope > a')).forEach((value) => {
+			value.dropdownContentNode.getAll(':scope > a').forEach((value) => {
 				if (hasTextOnly(value)) {
 					value.classList.remove('has-node');
 				} else {
@@ -769,7 +771,7 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 				}
 			});
 			/* ':not(a)'s surrounded by a 'a' for the 'dropdown > dropdown-content > :not(a)'s */
-			Array.from(value.dropdownContentNode.getAll(':scope > :not(a)')).forEach((value) => {
+			value.dropdownContentNode.getAll(':scope > :not(a)').forEach((value) => {
 				value.surroundedBy('a');
 			});
 			/* '.has-disabled' for the 'dropdown's existing 'button.disabled's */
@@ -779,31 +781,33 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 				value.dropdownNode.classList.remove('has-disabled');
 			}
 			/* setting the 'maxHeight', 'left' and 'right' style, and '.hidden' for a 'dropdown-content' */
-			let top = value.dropdownNode.getBoundingClientRect().bottom + 6;
-			let bottom = document.body.clientHeight - value.dropdownNode.getBoundingClientRect().bottom;
-			if (top < 69 || bottom < 64 || !inScrollable(value.dropdownNode)) {
-				value.dropdownContentNode.hidden = true;
-				value.dropdownContentNode.style.maxHeight = '';
-				value.dropdownContentNode.style.top = '';
-				value.dropdownContentNode.style.left = '';
-				value.dropdownContentNode.style.right = '';
-				return;
-			} else {
-				value.dropdownContentNode.hidden = false;
-				value.dropdownContentNode.style.maxHeight = (bottom - 28).toString() + 'px';
-				value.dropdownContentNode.style.top = top.toString() + 'px';
-			}
-			let left = value.dropdownNode.getBoundingClientRect().left;
-			if (left < 6) {
-				value.dropdownContentNode.style.left = '6px';
-				value.dropdownContentNode.style.right = '';
-			} else if (document.body.clientWidth - left - 6 < value.dropdownContentNode.offsetWidth) {
-				value.dropdownContentNode.style.left = '';
-				value.dropdownContentNode.style.right = '6px';
-			} else {
-				value.dropdownContentNode.style.left = left.toString() + 'px';
-				value.dropdownContentNode.style.right = '';
-			}
+			(() => {
+				let top = value.dropdownNode.getBoundingClientRect().bottom + 6;
+				let bottom = document.body.clientHeight - value.dropdownNode.getBoundingClientRect().bottom;
+				if (top < 69 || bottom < 64 || !inScrollable(value.dropdownNode)) {
+					value.dropdownContentNode.hidden = true;
+					value.dropdownContentNode.style.maxHeight = '';
+					value.dropdownContentNode.style.top = '';
+					value.dropdownContentNode.style.left = '';
+					value.dropdownContentNode.style.right = '';
+					return;
+				} else {
+					value.dropdownContentNode.hidden = false;
+					value.dropdownContentNode.style.maxHeight = (bottom - 28).toString() + 'px';
+					value.dropdownContentNode.style.top = top.toString() + 'px';
+				}
+				let left = value.dropdownNode.getBoundingClientRect().left;
+				if (left < 6) {
+					value.dropdownContentNode.style.left = '6px';
+					value.dropdownContentNode.style.right = '';
+				} else if (document.body.clientWidth - left - 6 < value.dropdownContentNode.offsetWidth) {
+					value.dropdownContentNode.style.left = '';
+					value.dropdownContentNode.style.right = '6px';
+				} else {
+					value.dropdownContentNode.style.left = left.toString() + 'px';
+					value.dropdownContentNode.style.right = '';
+				}
+			})();
 			/* '.no-content' for a 'dropdown-content' */
 			if (hasSubstance(value.dropdownContentNode)) {
 				value.dropdownContentNode.classList.remove('no-content');
@@ -819,7 +823,7 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 		});
 		await suspend();
 		/* button */
-		Array.from(forAllTag('button')).map((value) => {
+		forAllTag('button').map((value) => {
 			return new Button(value);
 		}).filter((value) => {
 			return value.complete;
@@ -838,43 +842,39 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 			value.buttonNode.disabled = value.buttonNode.classList.contains('disabled');
 		});
 		await suspend();
-		/* . */ {
-			/* .no-space */ {
-				let anyNoSpaceNode = forAllClass('no-space');
-				for (let i = 0; i < anyNoSpaceNode.length; i++) {
-					let childNode = anyNoSpaceNode[i].childNodes;
-					for (let j = 0; j < childNode.length; j++) {
-						if (childNode[j].nodeName == '#text' && childNode[j].wholeText.removeSpace() == '') {
-							childNode[j].textContent = '';
-						}
-					}
+		/* .no-space */
+		forAllClass('no-space').map((value) => {
+			return Array.from(value.childNodes);
+		}).forEach((value) => {
+			value.forEach((value) => {
+				if (value.nodeName == '#text' && value.wholeText.removeSpace() == '') {
+					value.textContent = '';
 				}
-			}
-			/* .no-text */ {
-				let anyNoSpaceNode = forAllClass('no-text');
-				for (let i = 0; i < anyNoSpaceNode.length; i++) {
-					let childNode = anyNoSpaceNode[i].childNodes;
-					for (let j = 0; j < childNode.length; j++) {
-						if (childNode[j].nodeName == '#text') {
-							childNode[j].textContent = '';
-						}
-					}
+			});
+		});
+		/* .no-text */
+		forAllClass('no-text').map((value) => {
+			return Array.from(value.childNodes);
+		}).forEach((value) => {
+			value.forEach((value) => {
+				if (value.nodeName == '#text') {
+					value.textContent = '';
 				}
-			}
-		}
+			});
+		});
 		await suspend();
 		/* background-image with 'basis-layer, backdrop-container > blurred-filter' */
-		Array.from(forAll('body major')).map((value) => {
+		forAll('body major').map((value) => {
 			return new Major(value);
 		}).filter((value) => {
 			return value.complete;
 		}).forEach((value) => {
-			Array.from(value.subMajorNode.getAll(':scope > post')).map((value) => {
+			value.subMajorNode.getAll(':scope > post').map((value) => {
 				return new Post(value);
 			}).filter((value) => {
 				return value.complete;
 			}).forEach((value) => {
-				Array.from(value.subPostNode.getAll(':scope > backdrop-container')).forEach((filter) => {
+				value.subPostNode.getAll(':scope > backdrop-container').forEach((filter) => {
 					if (!inScrollable(value.subPostNode)) {
 						filter.classList.add('suspended');
 					} else {
