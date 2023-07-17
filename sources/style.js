@@ -855,7 +855,7 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 		await suspend();
 		/* .no-space */
 		forAllClass('no-space').map((value) => {
-			return Array.from(value.childNodes);
+			return value.childNodes;
 		}).forEach((value) => {
 			value.forEach((value) => {
 				if (value.nodeName == '#text' && value.wholeText.removeSpace() == '') {
@@ -865,7 +865,7 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 		});
 		/* .no-text */
 		forAllClass('no-text').map((value) => {
-			return Array.from(value.childNodes);
+			return value.childNodes;
 		}).forEach((value) => {
 			value.forEach((value) => {
 				if (value.nodeName == '#text') {
