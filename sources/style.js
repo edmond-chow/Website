@@ -5,6 +5,8 @@
 			if (value instanceof Function) {
 				instance[value.name] = value;
 				Object.defineProperty(instance, value.name, lock);
+				Object.defineProperty(value, 'prototype', lock);
+				Object.defineProperty(value.prototype, 'constructor', lock);
 			}
 		});
 	};
@@ -70,17 +72,26 @@
 }
 [
 	function Top(node) {
+		if (!new.target) {
+			return;
+		}
 		arguments.constrainedWithAndThrow(Element);
 		this.topNode = node.nodeName == 'top'.toUpperCase() ? node : null;
 		this.addCompleteState();
 	},
 	function Major(node) {
+		if (!new.target) {
+			return;
+		}
 		arguments.constrainedWithAndThrow(Element);
 		this.majorNode = node.nodeName == 'major'.toUpperCase() ? node : null;
 		this.subMajorNode = node.get(':scope > sub-major');
 		this.addCompleteState();
 	},
 	function Post(node) {
+		if (!new.target) {
+			return;
+		}
 		arguments.constrainedWithAndThrow(Element);
 		this.postNode = node.nodeName == 'post'.toUpperCase() ? node : null;
 		this.subPostNode = node.get(':scope > sub-post');
@@ -95,6 +106,9 @@
 		this.addCompleteState();
 	},
 	function Dropdown(node) {
+		if (!new.target) {
+			return;
+		}
 		arguments.constrainedWithAndThrow(Element);
 		this.dropdownNode = node.nodeName == 'dropdown'.toUpperCase() ? node : null;
 		this.innerPaddingNode = node.get(':scope > inner-padding');
@@ -103,6 +117,9 @@
 		this.addCompleteState();
 	},
 	function Button(node) {
+		if (!new.target) {
+			return;
+		}
 		arguments.constrainedWithAndThrow(Element);
 		this.buttonNode = node.nodeName == 'button'.toUpperCase() ? node : null;
 		this.addCompleteState();
