@@ -495,7 +495,7 @@
 			return value.complete;
 		}).forEach((postValue) => {
 			let markedIndex = markedArray.findIndex((markedValue) => {
-				return markedValue == postValue;
+				return markedValue.postNode == postValue.postNode;
 			});
 			if (markedIndex == -1) {
 				postValue.postNode.removeAttribute('marker');
@@ -695,6 +695,7 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 		});
 		await suspend();
 		/* post */
+		marker();
 		Array.from(forAllTag('post')).map((value) => {
 			return new Post(value);
 		}).filter((value) => {
@@ -753,7 +754,6 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 				value.classList.add('no-text');
 			});
 		});
-		marker();
 		await suspend();
 		Array.from(forAllTag('dropdown')).map((value) => {
 			return new Dropdown(value);
