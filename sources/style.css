@@ -24,6 +24,12 @@
 			border: 0px;
 			padding: 0px;
 		}
+		style, link, script, meta {
+			display: none;
+		}
+		[hidden] {
+			display: none;
+		}
 		@supports (text-size-adjust: 100%) {
 			:is(html, body):not(.disabled-default-initializer) {
 				text-size-adjust: 100%; /* Prevent font scaling in landscape while allowing user zoom */
