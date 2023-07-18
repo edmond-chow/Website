@@ -438,6 +438,36 @@
 			});
 		}
 	].bindTo(window);
+	/* { interrupted-resume } */ {
+		let capturedSync = 0;
+		let capturedAsync = 0;
+		requestAnimationFrame(async () => {
+			while (true) {
+				capturedSync = performance.now();
+				if (performance.now() - capturedAsync > 500) {
+					captureSpan();
+				};
+				await new Promise(function executor(resolve) {
+					setTimeout(function handler() {
+						resolve();
+					}, 250);
+				});
+			}
+		});
+		requestAnimationFrame(async () => {
+			while (true) {
+				capturedAsync = performance.now();
+				if (performance.now() - capturedSync > 500) {
+					captureSpan();
+				};
+				await new Promise(function executor(resolve) {
+					setTimeout(function handler() {
+						resolve();
+					}, 250);
+				});
+			}
+		});
+	}
 }
 /* { hidden } */ {
 	let isLoaded = false;
