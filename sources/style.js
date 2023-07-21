@@ -441,32 +441,31 @@
 	/* { interrupted-resume } */ {
 		let capturedSync = 0;
 		let capturedAsync = 0;
-		requestAnimationFrame(async () => {
+		let tickDeffer = () => {
+			return new Promise(function executor(resolve) {
+				setTimeout(function handler() {
+					resolve();
+				}, 250);
+			});
+		};
+		(async () => {
 			while (true) {
 				capturedSync = performance.now();
 				if (performance.now() - capturedAsync > 500) {
 					captureSpan();
 				};
-				await new Promise(function executor(resolve) {
-					setTimeout(function handler() {
-						resolve();
-					}, 250);
-				});
+				await tickDeffer();
 			}
-		});
-		requestAnimationFrame(async () => {
+		})();
+		(async () => {
 			while (true) {
 				capturedAsync = performance.now();
 				if (performance.now() - capturedSync > 500) {
 					captureSpan();
 				};
-				await new Promise(function executor(resolve) {
-					setTimeout(function handler() {
-						resolve();
-					}, 250);
-				});
+				await tickDeffer();
 			}
-		});
+		})();
 	}
 }
 /* { hidden } */ {
@@ -940,12 +939,6 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 			}
 		}
 	};
-	requestAnimationFrame(async function deffer() {
-		while (true) {
-			await delegate();
-			await mustSuspend();
-		}
-	});
 	[
 		function ready() {
 			arguments.constrainedWithAndThrow();
@@ -964,4 +957,11 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 			hasScrolledInto = false;
 		}
 	].bindTo(window);
+	(async () => {
+		captureSpan();
+		while (true) {
+			await mustSuspend();
+			await delegate();
+		}
+	})();
 }
