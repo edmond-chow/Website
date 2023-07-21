@@ -289,8 +289,8 @@
 	},
 	function makeCascading(headNode, nodeId, styleText) {
 		arguments.constrainedWithAndThrow(Element, String, String);
-		let styleNode = function getStyleNode() {
-			let pseudoNode = function getPseudoNode() {
+		let styleNode = (() => {
+			let pseudoNode = (() => {
 				let cascadingNode = headNode.getAll(':scope > style');
 				let filteredNode = [];
 				cascadingNode.forEach((value) => {
@@ -299,7 +299,7 @@
 					}
 				});
 				return filteredNode;
-			}();
+			})();
 			if (pseudoNode.length == 0) {
 				let styleNode = document.createElement('style');
 				styleNode.id = nodeId;
@@ -311,7 +311,7 @@
 				});
 				return pseudoNode[0];
 			}
-		}();
+		})();
 		if (styleNode.childNodes.length != 1) {
 			while (styleNode.firstChild != null) {
 				styleNode.removeChild(styleNode.firstChild);
@@ -411,7 +411,7 @@
 ].bindTo(String.prototype);
 /* { async } */ {
 	let captured = 0;
-	const getAccumulated = function getAccumulated() {
+	const getAccumulated = () => {
 		return performance.now() - captured;
 	};
 	[
@@ -474,15 +474,15 @@
 	let hasScrolledInto = false;
 	const eventStructuredTag = new CustomEvent('structuredTag');
 	const eventFormedStyle = new CustomEvent('formedStyle');
-	const scrollIntoView = function scrollIntoView() {
+	const scrollIntoView = () => {
 		let hash = document.location.hash;
 		if (hash.substring(0, 1) == '#') {
 			document.location.hash = '#';
 			document.location.hash = hash;
 		}
 	};
-	const marker = function marker() {
-		function getMarker(majorValue, stackCount, postArray, postIndex) {
+	const marker = () => {
+		let getMarker = (majorValue, stackCount, postArray, postIndex) => {
 			let markerReversed = false;
 			if (majorValue.majorNode.hasAttribute('marker-reversed')) {
 				if (majorValue.majorNode.getAttribute('marker-reversed').split(' ')[stackCount]?.toLowerCase() == 'true') {
@@ -502,9 +502,9 @@
 				markerStartedWith += postIndex;
 			}
 			return markerStartedWith;
-		}
+		};
 		let markedArray = [];
-		function subPostConducting(majorValue, stackCount, orderString, postValue) {
+		let subPostConducting = (majorValue, stackCount, orderString, postValue) => {
 			postValue.postContentNode.getAll(':scope > post').map((value) => {
 				return new Post(value);
 			}).filter((value) => {
@@ -515,7 +515,7 @@
 				subPostValue.postNode.setAttribute('marker', subOrderString);
 				subPostConducting(majorValue, stackCount + 1, subOrderString, subPostValue);
 			});
-		}
+		};
 		forAllTag('major').map((value) => {
 			return new Major(value);
 		}).filter((value) => {
@@ -927,7 +927,7 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 		await suspend();
 		document.dispatchEvent(eventFormedStyle);
 	};
-	const delegate = async function delegate() {
+	const delegate = async () => {
 		if (document.readyState == 'complete') {
 			if (isLoaded == false) {
 				await structuredTag();
