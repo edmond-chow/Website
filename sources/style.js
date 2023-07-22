@@ -1,486 +1,463 @@
-/* Array.prototype.bindTo(instance) */ {
-	const lock = { configurable: false, writable: false };
-	Array.prototype.bindTo = function bindTo(instance = window) {
-		this.forEach((value) => {
-			if (value instanceof Function) {
-				instance[value.name] = value;
-				Object.defineProperty(instance, value.name, lock);
-				Object.defineProperty(value, 'prototype', lock);
-				Object.defineProperty(value.prototype, 'constructor', lock);
-			}
-		});
-	};
-	[Array.prototype.bindTo].bindTo(Array.prototype);
-	const Nullable = function Nullable(type) {
-		this.type = type;
-		Object.defineProperty(this, 'type', lock);
-	};
-	[
-		function toNullable() {
-			return new Nullable(this);
-		}
-	].bindTo(Function.prototype);
-	[
-		function isNullable(container) {
-			return container instanceof Nullable;
-		},
-		function removeNullable(container) {
-			if (container instanceof Nullable) {
-				return container.type;
-			} else if (container instanceof Function) {
-				return container;
-			} else {
-				throw 'The \'container\' argument should be either a \'Nullable\' type or a \'Function\' type.';
-			}
-		}
-	].bindTo(window);
-	[
-		function addCompleteState() {
-			this.complete = (() => {
-				let complete = true;
-				Object.keys(this).forEach((value) => {
-					if (this[value] == null) {
-						complete = false;
-					}
-				});
-				return complete;
-			})();
-			Object.freeze(this);
-		},
-		function constrainedWith(...types) {
-			let arguments = Array.from(this);
-			if (arguments.length != types.length) {
-				return false;
-			}
-			let constrained = true;
-			arguments.forEach((value, index) => {
-				if (isNullable(types[index]) && value == null) {
-					return;
-				} else if (value instanceof removeNullable(types[index]) || Object.getPrototypeOf(value) == removeNullable(types[index]).prototype) {
-					return;
+(async () => {
+	/* [Array.prototype.bindTo].bindTo(instance = window) */
+	(() => {
+		let lock = { configurable: false, writable: false };
+		Array.prototype.bindTo = function bindTo(instance = window) {
+			this.forEach((value) => {
+				if (value instanceof Function) {
+					instance[value.name] = value;
+					Object.defineProperty(instance, value.name, lock);
+					Object.defineProperty(value, 'prototype', lock);
+					Object.defineProperty(value.prototype, 'constructor', lock);
 				}
-				constrained = false;
-			});
-			return constrained;
-		},
-		function constrainedWithAndThrow(...types) {
-			if (!this.constrainedWith(...types)) {
-				throw 'The function arguments should match up the parameter types.';
-			}
-		}
-	].bindTo(Object.prototype);
-}
-[
-	function Top(node) {
-		if (!new.target) {
-			return;
-		}
-		arguments.constrainedWithAndThrow(Element);
-		this.topNode = node.nodeName == 'top'.toUpperCase() ? node : null;
-		this.addCompleteState();
-	},
-	function Major(node) {
-		if (!new.target) {
-			return;
-		}
-		arguments.constrainedWithAndThrow(Element);
-		this.majorNode = node.nodeName == 'major'.toUpperCase() ? node : null;
-		this.subMajorNode = node.get(':scope > sub-major');
-		this.addCompleteState();
-	},
-	function Post(node) {
-		if (!new.target) {
-			return;
-		}
-		arguments.constrainedWithAndThrow(Element);
-		this.postNode = node.nodeName == 'post'.toUpperCase() ? node : null;
-		this.subPostNode = node.get(':scope > sub-post');
-		this.postIconNode = node.get(':scope > post-icon');
-		this.scrollIntoNode = node.get(':scope > sub-post > scroll-into');
-		this.postLeaderNode = node.get(':scope > sub-post > post-leader');
-		this.postLeaderSectionNode = node.get(':scope > sub-post > post-leader > post-leader-section');
-		this.postLeaderOrderNode = node.get(':scope > sub-post > post-leader > post-leader-section > post-leader-order');
-		this.postLeaderTitleNode = node.get(':scope > sub-post > post-leader > post-leader-section > post-leader-title');
-		this.postLeaderAdvanceNode = node.get(':scope > sub-post > post-leader > post-leader-advance');
-		this.postContentNode = node.get(':scope > sub-post > post-content');
-		this.addCompleteState();
-	},
-	function Dropdown(node) {
-		if (!new.target) {
-			return;
-		}
-		arguments.constrainedWithAndThrow(Element);
-		this.dropdownNode = node.nodeName == 'dropdown'.toUpperCase() ? node : null;
-		this.innerPaddingNode = node.get(':scope > inner-padding');
-		this.dropdownContentNode = node.get(':scope > dropdown-content');
-		this.outerMarginNode = node.get(':scope > outer-margin');
-		this.addCompleteState();
-	},
-	function Button(node) {
-		if (!new.target) {
-			return;
-		}
-		arguments.constrainedWithAndThrow(Element);
-		this.buttonNode = node.nodeName == 'button'.toUpperCase() ? node : null;
-		this.addCompleteState();
-	}
-].bindTo(window);
-[
-	function forAll(selector) {
-		return Array.from(document.querySelectorAll(selector));
-	},
-	function forAllTag(name) {
-		return Array.from(document.getElementsByTagName(name));
-	},
-	function forAllClass(name) {
-		return Array.from(document.getElementsByClassName(name));
-	},
-	function insertSurround(parent, child) {
-		arguments.constrainedWithAndThrow(String, String);
-		if (child == '') {
-			return;
-		}
-		forAll(parent).forEach((value) => {
-			if (value.arrayForChild(child).length == 0) {
-				let substance = document.createElement(child);
-				substance.prepend(...value.childNodes);
-				value.prepend(substance);
-			}
-		});
-	},
-	function switchFirst(parent, child) {
-		arguments.constrainedWithAndThrow(String, String);
-		if (child == '') {
-			return;
-		}
-		forAll(parent).forEach((value) => {
-			value.prepend(...value.arrayForChild(child));
-		});
-	},
-	function addFirst(parent, child) {
-		arguments.constrainedWithAndThrow(String, String);
-		if (child == '') {
-			return;
-		}
-		forAll(parent).forEach((value) => {
-			if (value.children.length > 0 && value.children[0].tagName.toUpperCase() == child.toUpperCase()) {
-				return;
-			}
-			let substance = document.createElement(child);
-			value.prepend(substance);
-		});
-	},
-	function moveOutside(parent, child) {
-		arguments.constrainedWithAndThrow(String, String);
-		if (child == '') {
-			return;
-		}
-		forAll(parent).forEach((value) => {
-			value.parentElement?.prepend(...value.arrayForChild(child));
-		});
-	},
-	function hasSubstance(parentNode) {
-		arguments.constrainedWithAndThrow(Element);
-		let has = false;
-		parentNode.childNodes.forEach((value) => {
-			if (value.nodeName == '#comment') {
-				return;
-			} else if (value.nodeName == '#text' && value.wholeText.removeSpace() == '') {
-				return;
-			} else if (value instanceof Element && value.nodeName == 'br'.toUpperCase()) {
-				return;
-			} else if (value instanceof Element && window.getComputedStyle(value).display == 'none') {
-				return;
-			}
-			has = true;
-		});
-		return has;
-	},
-	function hasTextOnly(parentNode) {
-		arguments.constrainedWithAndThrow(Element);
-		let has = true;
-		parentNode.childNodes.forEach((value) => {
-			if (value.nodeName == '#comment') {
-				return;
-			} else if (value.nodeName == '#text') {
-				return;
-			} else if (value instanceof Element && value.nodeName == 'br'.toUpperCase()) {
-				return;
-			}
-			has = false;
-		});
-		return has;
-	},
-	function hasNoTextWithNode(parentNode) {
-		arguments.constrainedWithAndThrow(Element);
-		let has = true;
-		parentNode.childNodes.forEach((value) => {
-			if (value.nodeName == '#comment') {
-				return;
-			} else if (value.nodeName == '#text' && value.wholeText.removeSpace() == '') {
-				return;
-			} else if (value instanceof Element && value.nodeName != 'br'.toUpperCase()) {
-				return;
-			}
-			has = false;
-		});
-		return has;
-	},
-	function isInside(node, parentNode = document.body) {
-		arguments.constrainedWithAndThrow(Element, Element);
-		if (!node.isOfBodyTree() || !parentNode.isOfBodyTree()) {
-			return;
-		}
-		let rect = node.getBoundingClientRect();
-		let parentRect = parentNode != document.body ? parentNode.getBoundingClientRect() : new DOMRect(0, 0, document.body.clientWidth, document.body.clientHeight);
-		let left = rect.x < parentRect.x + parentRect.width;
-		let top = rect.y < parentRect.y + parentRect.height;
-		let right = rect.x + rect.width > parentRect.x;
-		let bottom = rect.y + rect.height > parentRect.y;
-		return (left && right) && (top && bottom);
-	},
-	function isScrollable(node) {
-		arguments.constrainedWithAndThrow(Element);
-		if (!node.isOfBodyTree()) {
-			return;
-		}
-		let scrollableX = node.scrollWidth > node.clientWidth;
-		let scrollableY = node.scrollHeight > node.clientHeight;
-		return scrollableX || scrollableY;
-	},
-	function getParentNode(node) {
-		arguments.constrainedWithAndThrow(Element);
-		if (!node.isOfBodyTree()) {
-			return;
-		}
-		let parentNode = node.parentElement;
-		while (parentNode != document.body && !isScrollable(parentNode)) {
-			parentNode = parentNode.parentElement;
-		}
-		return parentNode;
-	},
-	function inScrollable(node) {
-		arguments.constrainedWithAndThrow(Element);
-		if (!node.isOfBodyTree()) {
-			return;
-		}
-		while (node != document.body) {
-			let parentNode = getParentNode(node);
-			if (isInside(node, parentNode)) {
-				node = parentNode;
-			} else {
-				return false;
-			}
-		}
-		return true;
-	},
-	function setLocked(node) {
-		arguments.constrainedWithAndThrow(Element);
-		let parentNode = node.parentElement;
-		if (node.nodeName == 'a'.toUpperCase() && parentNode?.nodeName == 'top'.toUpperCase()) {
-			parentNode.getAll(':scope > a').forEach((value) => {
-				if (value == node) {
-					value.classList.add('lock');
-				} else {
-					value.classList.remove('lock');
-				}
-			});
-		}
-	},
-	function makeCascading(headNode, nodeId, styleText) {
-		arguments.constrainedWithAndThrow(Element, String, String);
-		let styleNode = (() => {
-			let pseudoNode = (() => {
-				let cascadingNode = headNode.getAll(':scope > style');
-				let filteredNode = [];
-				cascadingNode.forEach((value) => {
-					if (value.id == nodeId) {
-						filteredNode.push(value);
-					}
-				});
-				return filteredNode;
-			})();
-			if (pseudoNode.length == 0) {
-				let styleNode = document.createElement('style');
-				styleNode.id = nodeId;
-				headNode.append(styleNode);
-				return styleNode;
-			} else {
-				pseudoNode.slice(1).forEach((value) => {
-					value.remove();
-				});
-				return pseudoNode[0];
-			}
-		})();
-		if (styleNode.childNodes.length != 1) {
-			while (styleNode.firstChild != null) {
-				styleNode.removeChild(styleNode.firstChild);
-			}
-			styleNode.append(document.createTextNode(styleText));
-		} else if (styleNode.firstChild.wholeText != styleText) {
-			styleNode.firstChild.textContent = styleText;
-		}
-	}
-].bindTo(window);
-[
-	function has(selector) {
-		return this.querySelector(selector) != null;
-	},
-	function get(selector) {
-		return this.querySelector(selector);
-	},
-	function getAll(selector) {
-		return Array.from(this.querySelectorAll(selector));
-	},
-	function arrayForChild(child) {
-		arguments.constrainedWithAndThrow(String);
-		let array = [];
-		Array.from(this.children).forEach((value) => {
-			if (value.tagName.toUpperCase() == child.toUpperCase()) {
-				array.push(value);
-			}
-		});
-		return array;
-	},
-	function isOfHTMLTree() {
-		let self = this;
-		while (self != null) {
-			if (self == document.documentElement) {
-				return true;
-			}
-			self = self.parentElement;
-		}
-		return false;
-	},
-	function isOfHeadTree() {
-		arguments.constrainedWithAndThrow();
-		if (this == document.documentElement) {
-			return true;
-		}
-		let self = this;
-		while (self != document.documentElement) {
-			if (self == document.head) {
-				return true;
-			}
-			self = self.parentElement;
-			if (self == null) {
-				break;
-			}
-		}
-		return false;
-	},
-	function isOfBodyTree() {
-		return this.isOfHTMLTree() && !this.isOfHeadTree();
-	},
-	function surroundedBy(parent) {
-		arguments.constrainedWithAndThrow(String);
-		if (!this.isOfBodyTree()) {
-			return;
-		}
-		let parentNode = this.parentElement;
- 		let surroundingNode = document.createElement(parent);
-		surroundingNode.append(this);
-		parentNode?.append(surroundingNode);
-	}
-].bindTo(Element.prototype);
-[
-	function removeSpace() {
-		arguments.constrainedWithAndThrow();
-		return this.replace(/\t/g, '').replace(/\r/g, '').replace(/\n/g, '').replace(/\f/g, '')
-			.replace(/\u0020/g, '')
-			.replace(/\u00A0/g, '')
-			.replace(/\u1680/g, '')
-			.replace(/\u180E/g, '')
-			.replace(/\u2000/g, '')
-			.replace(/\u2001/g, '')
-			.replace(/\u2002/g, '')
-			.replace(/\u2003/g, '')
-			.replace(/\u2004/g, '')
-			.replace(/\u2005/g, '')
-			.replace(/\u2006/g, '')
-			.replace(/\u2007/g, '')
-			.replace(/\u2008/g, '')
-			.replace(/\u2009/g, '')
-			.replace(/\u200A/g, '')
-			.replace(/\u200B/g, '')
-			.replace(/\u202F/g, '')
-			.replace(/\u205F/g, '')
-			.replace(/\u3000/g, '')
-			.replace(/\uFEFF/g, '');
-	}
-].bindTo(String.prototype);
-/* { async } */ {
-	let captured = 0;
-	const getAccumulated = () => {
-		return performance.now() - captured;
-	};
-	[
-		function captureSpan() {
-			arguments.constrainedWithAndThrow();
-			captured = performance.now();
-		},
-		function suspend() {
-			arguments.constrainedWithAndThrow();
-			if (getAccumulated() <= 25) {
-				return new Promise((resolve) => {
-					resolve();
-				});
-			}
-			return mustSuspend();
-		},
-		function mustSuspend() {
-			arguments.constrainedWithAndThrow();
-			return new Promise((resolve) => {
-				setTimeout(() => {
-					captureSpan();
-					resolve();
-				}, getAccumulated());
-			});
-		}
-	].bindTo(window);
-	/* { interrupted-resume } */ {
-		let capturedSync = 0;
-		let capturedAsync = 0;
-		let tickDeffer = () => {
-			return new Promise((resolve) => {
-				setTimeout(() => {
-					resolve();
-				}, 250);
 			});
 		};
-		(async () => {
-			while (true) {
-				capturedSync = performance.now();
-				if (performance.now() - capturedAsync > 500) {
-					captureSpan();
-				};
-				await tickDeffer();
+		[Array.prototype.bindTo].bindTo(Array.prototype);
+		let Nullable = function Nullable(type) {
+			this.type = type;
+			Object.defineProperty(this, 'type', lock);
+		};
+		[
+			function toNullable() {
+				return new Nullable(this);
 			}
-		})();
-		(async () => {
-			while (true) {
-				capturedAsync = performance.now();
-				if (performance.now() - capturedSync > 500) {
-					captureSpan();
-				};
-				await tickDeffer();
+		].bindTo(Function.prototype);
+		[
+			function isNullable(container) {
+				return container instanceof Nullable;
+			},
+			function removeNullable(container) {
+				if (container instanceof Nullable) {
+					return container.type;
+				} else if (container instanceof Function) {
+					return container;
+				} else {
+					throw 'The \'container\' argument should be either a \'Nullable\' type or a \'Function\' type.';
+				}
 			}
-		})();
-	}
-}
-/* { hidden } */ {
+		].bindTo(window);
+		[
+			function addCompleteState() {
+				this.complete = (() => {
+					let complete = true;
+					Object.keys(this).forEach((value) => {
+						if (this[value] == null) {
+							complete = false;
+						}
+					});
+					return complete;
+				})();
+				Object.freeze(this);
+			},
+			function constrainedWith(...types) {
+				let arguments = Array.from(this);
+				if (arguments.length != types.length) {
+					return false;
+				}
+				let constrained = true;
+				arguments.forEach((value, index) => {
+					if (isNullable(types[index]) && value == null) {
+						return;
+					} else if (value instanceof removeNullable(types[index]) || Object.getPrototypeOf(value) == removeNullable(types[index]).prototype) {
+						return;
+					}
+					constrained = false;
+				});
+				return constrained;
+			},
+			function constrainedWithAndThrow(...types) {
+				if (!this.constrainedWith(...types)) {
+					throw 'The function arguments should match up the parameter types.';
+				}
+			}
+		].bindTo(Object.prototype);
+	})();
+	/* { control-flow } */
+	(() => {
+		let captured = 0;
+		let getAccumulated = () => {
+			return performance.now() - captured < 500 ? performance.now() - captured : 500;
+		};
+		[
+			function getCaptured() {
+				return captured;
+			},
+			function captureSpan() {
+				arguments.constrainedWithAndThrow();
+				captured = performance.now();
+			},
+			function suspend() {
+				arguments.constrainedWithAndThrow();
+				if (getAccumulated() <= 25) {
+					return new Promise((resolve) => {
+						resolve();
+					});
+				}
+				return mustSuspend();
+			},
+			function mustSuspend() {
+				arguments.constrainedWithAndThrow();
+				return new Promise((resolve) => {
+					setTimeout(() => {
+						captureSpan();
+						resolve();
+					}, getAccumulated());
+				});
+			}
+		].bindTo(window);
+	})();
+	await mustSuspend();
+	[
+		function Top(node) {
+			if (!new.target) {
+				return;
+			}
+			arguments.constrainedWithAndThrow(Element);
+			this.topNode = node.nodeName == 'top'.toUpperCase() ? node : null;
+			this.addCompleteState();
+		},
+		function Major(node) {
+			if (!new.target) {
+				return;
+			}
+			arguments.constrainedWithAndThrow(Element);
+			this.majorNode = node.nodeName == 'major'.toUpperCase() ? node : null;
+			this.subMajorNode = node.get(':scope > sub-major');
+			this.addCompleteState();
+		},
+		function Post(node) {
+			if (!new.target) {
+				return;
+			}
+			arguments.constrainedWithAndThrow(Element);
+			this.postNode = node.nodeName == 'post'.toUpperCase() ? node : null;
+			this.subPostNode = node.get(':scope > sub-post');
+			this.postIconNode = node.get(':scope > post-icon');
+			this.scrollIntoNode = node.get(':scope > sub-post > scroll-into');
+			this.postLeaderNode = node.get(':scope > sub-post > post-leader');
+			this.postLeaderSectionNode = node.get(':scope > sub-post > post-leader > post-leader-section');
+			this.postLeaderOrderNode = node.get(':scope > sub-post > post-leader > post-leader-section > post-leader-order');
+			this.postLeaderTitleNode = node.get(':scope > sub-post > post-leader > post-leader-section > post-leader-title');
+			this.postLeaderAdvanceNode = node.get(':scope > sub-post > post-leader > post-leader-advance');
+			this.postContentNode = node.get(':scope > sub-post > post-content');
+			this.addCompleteState();
+		},
+		function Dropdown(node) {
+			if (!new.target) {
+				return;
+			}
+			arguments.constrainedWithAndThrow(Element);
+			this.dropdownNode = node.nodeName == 'dropdown'.toUpperCase() ? node : null;
+			this.innerPaddingNode = node.get(':scope > inner-padding');
+			this.dropdownContentNode = node.get(':scope > dropdown-content');
+			this.outerMarginNode = node.get(':scope > outer-margin');
+			this.addCompleteState();
+		},
+		function Button(node) {
+			if (!new.target) {
+				return;
+			}
+			arguments.constrainedWithAndThrow(Element);
+			this.buttonNode = node.nodeName == 'button'.toUpperCase() ? node : null;
+			this.addCompleteState();
+		}
+	].bindTo(window);
+	[
+		function forAll(selector) {
+			return Array.from(document.querySelectorAll(selector));
+		},
+		function forAllTag(name) {
+			return Array.from(document.getElementsByTagName(name));
+		},
+		function forAllClass(name) {
+			return Array.from(document.getElementsByClassName(name));
+		},
+		function insertSurround(parent, child) {
+			arguments.constrainedWithAndThrow(String, String);
+			if (child == '') {
+				return;
+			}
+			forAll(parent).forEach((value) => {
+				if (value.arrayForChild(child).length == 0) {
+					let substance = document.createElement(child);
+					substance.prepend(...value.childNodes);
+					value.prepend(substance);
+				}
+			});
+		},
+		function switchFirst(parent, child) {
+			arguments.constrainedWithAndThrow(String, String);
+			if (child == '') {
+				return;
+			}
+			forAll(parent).forEach((value) => {
+				value.prepend(...value.arrayForChild(child));
+			});
+		},
+		function addFirst(parent, child) {
+			arguments.constrainedWithAndThrow(String, String);
+			if (child == '') {
+				return;
+			}
+			forAll(parent).forEach((value) => {
+				if (value.children.length > 0 && value.children[0].tagName.toUpperCase() == child.toUpperCase()) {
+					return;
+				}
+				let substance = document.createElement(child);
+				value.prepend(substance);
+			});
+		},
+		function moveOutside(parent, child) {
+			arguments.constrainedWithAndThrow(String, String);
+			if (child == '') {
+				return;
+			}
+			forAll(parent).forEach((value) => {
+				value.parentElement?.prepend(...value.arrayForChild(child));
+			});
+		},
+		function hasSubstance(parentNode) {
+			arguments.constrainedWithAndThrow(Element);
+			let has = false;
+			parentNode.childNodes.forEach((value) => {
+				if (value.nodeName == '#comment') {
+					return;
+				} else if (value.nodeName == '#text' && value.wholeText.removeSpace() == '') {
+					return;
+				} else if (value instanceof Element && value.nodeName == 'br'.toUpperCase()) {
+					return;
+				} else if (value instanceof Element && window.getComputedStyle(value).display == 'none') {
+					return;
+				}
+				has = true;
+			});
+			return has;
+		},
+		function hasTextOnly(parentNode) {
+			arguments.constrainedWithAndThrow(Element);
+			let has = true;
+			parentNode.childNodes.forEach((value) => {
+				if (value.nodeName == '#comment') {
+					return;
+				} else if (value.nodeName == '#text') {
+					return;
+				} else if (value instanceof Element && value.nodeName == 'br'.toUpperCase()) {
+					return;
+				}
+				has = false;
+			});
+			return has;
+		},
+		function hasNoTextWithNode(parentNode) {
+			arguments.constrainedWithAndThrow(Element);
+			let has = true;
+			parentNode.childNodes.forEach((value) => {
+				if (value.nodeName == '#comment') {
+					return;
+				} else if (value.nodeName == '#text' && value.wholeText.removeSpace() == '') {
+					return;
+				} else if (value instanceof Element && value.nodeName != 'br'.toUpperCase()) {
+					return;
+				}
+				has = false;
+			});
+			return has;
+		},
+		function isInside(node, parentNode = document.body) {
+			arguments.constrainedWithAndThrow(Element, Element);
+			if (!node.isOfBodyTree() || !parentNode.isOfBodyTree()) {
+				return;
+			}
+			let rect = node.getBoundingClientRect();
+			let parentRect = parentNode != document.body ? parentNode.getBoundingClientRect() : new DOMRect(0, 0, document.body.clientWidth, document.body.clientHeight);
+			let left = rect.x < parentRect.x + parentRect.width;
+			let top = rect.y < parentRect.y + parentRect.height;
+			let right = rect.x + rect.width > parentRect.x;
+			let bottom = rect.y + rect.height > parentRect.y;
+			return (left && right) && (top && bottom);
+		},
+		function isScrollable(node) {
+			arguments.constrainedWithAndThrow(Element);
+			if (!node.isOfBodyTree()) {
+				return;
+			}
+			let scrollableX = node.scrollWidth > node.clientWidth;
+			let scrollableY = node.scrollHeight > node.clientHeight;
+			return scrollableX || scrollableY;
+		},
+		function getParentNode(node) {
+			arguments.constrainedWithAndThrow(Element);
+			if (!node.isOfBodyTree()) {
+				return;
+			}
+			let parentNode = node.parentElement;
+			while (parentNode != document.body && !isScrollable(parentNode)) {
+				parentNode = parentNode.parentElement;
+			}
+			return parentNode;
+		},
+		function inScrollable(node) {
+			arguments.constrainedWithAndThrow(Element);
+			if (!node.isOfBodyTree()) {
+				return;
+			}
+			while (node != document.body) {
+				let parentNode = getParentNode(node);
+				if (isInside(node, parentNode)) {
+					node = parentNode;
+				} else {
+					return false;
+				}
+			}
+			return true;
+		},
+		function setLocked(node) {
+			arguments.constrainedWithAndThrow(Element);
+			let parentNode = node.parentElement;
+			if (node.nodeName == 'a'.toUpperCase() && parentNode?.nodeName == 'top'.toUpperCase()) {
+				parentNode.getAll(':scope > a').forEach((value) => {
+					if (value == node) {
+						value.classList.add('lock');
+					} else {
+						value.classList.remove('lock');
+					}
+				});
+			}
+		},
+		function makeCascading(headNode, nodeId, styleText) {
+			arguments.constrainedWithAndThrow(Element, String, String);
+			let styleNode = (() => {
+				let pseudoNode = (() => {
+					let cascadingNode = headNode.getAll(':scope > style');
+					let filteredNode = [];
+					cascadingNode.forEach((value) => {
+						if (value.id == nodeId) {
+							filteredNode.push(value);
+						}
+					});
+					return filteredNode;
+				})();
+				if (pseudoNode.length == 0) {
+					let styleNode = document.createElement('style');
+					styleNode.id = nodeId;
+					headNode.append(styleNode);
+					return styleNode;
+				} else {
+					pseudoNode.slice(1).forEach((value) => {
+						value.remove();
+					});
+					return pseudoNode[0];
+				}
+			})();
+			if (styleNode.childNodes.length != 1) {
+				while (styleNode.firstChild != null) {
+					styleNode.removeChild(styleNode.firstChild);
+				}
+				styleNode.append(document.createTextNode(styleText));
+			} else if (styleNode.firstChild.wholeText != styleText) {
+				styleNode.firstChild.textContent = styleText;
+			}
+		}
+	].bindTo(window);
+	[
+		function has(selector) {
+			return this.querySelector(selector) != null;
+		},
+		function get(selector) {
+			return this.querySelector(selector);
+		},
+		function getAll(selector) {
+			return Array.from(this.querySelectorAll(selector));
+		},
+		function arrayForChild(child) {
+			arguments.constrainedWithAndThrow(String);
+			let array = [];
+			Array.from(this.children).forEach((value) => {
+				if (value.tagName.toUpperCase() == child.toUpperCase()) {
+					array.push(value);
+				}
+			});
+			return array;
+		},
+		function isOfHTMLTree() {
+			let self = this;
+			while (self != null) {
+				if (self == document.documentElement) {
+					return true;
+				}
+				self = self.parentElement;
+			}
+			return false;
+		},
+		function isOfHeadTree() {
+			arguments.constrainedWithAndThrow();
+			if (this == document.documentElement) {
+				return true;
+			}
+			let self = this;
+			while (self != document.documentElement) {
+				if (self == document.head) {
+					return true;
+				}
+				self = self.parentElement;
+				if (self == null) {
+					break;
+				}
+			}
+			return false;
+		},
+		function isOfBodyTree() {
+			return this.isOfHTMLTree() && !this.isOfHeadTree();
+		},
+		function surroundedBy(parent) {
+			arguments.constrainedWithAndThrow(String);
+			if (!this.isOfBodyTree()) {
+				return;
+			}
+			let parentNode = this.parentElement;
+ 			let surroundingNode = document.createElement(parent);
+			surroundingNode.append(this);
+			parentNode?.append(surroundingNode);
+		}
+	].bindTo(Element.prototype);
+	[
+		function removeSpace() {
+			arguments.constrainedWithAndThrow();
+			return this.replace(/\t/g, '').replace(/\r/g, '').replace(/\n/g, '').replace(/\f/g, '')
+				.replace(/\u0020/g, '')
+				.replace(/\u00A0/g, '')
+				.replace(/\u1680/g, '')
+				.replace(/\u180E/g, '')
+				.replace(/\u2000/g, '')
+				.replace(/\u2001/g, '')
+				.replace(/\u2002/g, '')
+				.replace(/\u2003/g, '')
+				.replace(/\u2004/g, '')
+				.replace(/\u2005/g, '')
+				.replace(/\u2006/g, '')
+				.replace(/\u2007/g, '')
+				.replace(/\u2008/g, '')
+				.replace(/\u2009/g, '')
+				.replace(/\u200A/g, '')
+				.replace(/\u200B/g, '')
+				.replace(/\u202F/g, '')
+				.replace(/\u205F/g, '')
+				.replace(/\u3000/g, '')
+				.replace(/\uFEFF/g, '');
+		}
+	].bindTo(String.prototype);
 	let isLoaded = false;
 	let hasScrolledInto = false;
-	const eventStructuredTag = new CustomEvent('structuredTag');
-	const eventFormedStyle = new CustomEvent('formedStyle');
-	const scrollIntoView = () => {
+	let eventStructuredTag = new CustomEvent('structuredTag');
+	let eventFormedStyle = new CustomEvent('formedStyle');
+	let scrollIntoView = () => {
 		let hash = document.location.hash;
 		if (hash.substring(0, 1) == '#') {
 			document.location.hash = '#';
 			document.location.hash = hash;
 		}
 	};
-	const marker = () => {
+	let marker = () => {
 		let getMarker = (majorValue, stackCount, postArray, postIndex) => {
 			let markerReversed = false;
 			if (majorValue.majorNode.hasAttribute('marker-reversed')) {
@@ -544,7 +521,7 @@
 			}
 		});
 	};
-	const structuredTag = async function structuredTag() {
+	let structuredTag = async () => {
 		captureSpan();
 		/* major */ {
 			/* structuring for the 'major' */ 
@@ -636,7 +613,7 @@
 		await suspend();
 		document.dispatchEvent(eventStructuredTag);
 	};
-	const formedStyle = async function formedStyle() {
+	let formedStyle = async () => {
 		captureSpan();
 		/* style */ {
 			/* style#background-image */ {
@@ -926,7 +903,7 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 		await suspend();
 		document.dispatchEvent(eventFormedStyle);
 	};
-	const delegate = async () => {
+	let delegate = async () => {
 		if (document.readyState == 'complete') {
 			if (isLoaded == false) {
 				await structuredTag();
@@ -957,11 +934,8 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 			hasScrolledInto = false;
 		}
 	].bindTo(window);
-	(async () => {
-		captureSpan();
-		while (true) {
-			await mustSuspend();
-			await delegate();
-		}
-	})();
-}
+	while (true) {
+		await mustSuspend();
+		await delegate();
+	}
+})();
