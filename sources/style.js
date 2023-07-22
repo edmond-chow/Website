@@ -422,7 +422,7 @@
 		function suspend() {
 			arguments.constrainedWithAndThrow();
 			if (getAccumulated() <= 25) {
-				return new Promise(function executor(resolve) {
+				return new Promise((resolve) => {
 					resolve();
 				});
 			}
@@ -430,8 +430,8 @@
 		},
 		function mustSuspend() {
 			arguments.constrainedWithAndThrow();
-			return new Promise(function executor(resolve) {
-				setTimeout(function deffer() {
+			return new Promise((resolve) => {
+				setTimeout(() => {
 					captureSpan();
 					resolve();
 				}, getAccumulated());
@@ -442,8 +442,8 @@
 		let capturedSync = 0;
 		let capturedAsync = 0;
 		let tickDeffer = () => {
-			return new Promise(function executor(resolve) {
-				setTimeout(function handler() {
+			return new Promise((resolve) => {
+				setTimeout(() => {
 					resolve();
 				}, 250);
 			});
