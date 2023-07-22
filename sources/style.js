@@ -107,6 +107,7 @@
 		].bindTo(window);
 	})();
 	await mustSuspend();
+	/* constructor() */
 	[
 		function Top(node) {
 			if (!new.target) {
@@ -162,6 +163,7 @@
 			this.addCompleteState();
 		}
 	].bindTo(window);
+	/* { functionality } */
 	[
 		function forAll(selector) {
 			return Array.from(document.querySelectorAll(selector));
@@ -446,6 +448,7 @@
 				.replace(/\uFEFF/g, '');
 		}
 	].bindTo(String.prototype);
+	/* { event-dispatcher } */
 	let isLoaded = false;
 	let hasScrolledInto = false;
 	let eventStructuredTag = new CustomEvent('structuredTag');
