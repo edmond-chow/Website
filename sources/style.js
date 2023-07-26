@@ -78,6 +78,20 @@
 		let getAccumulated = () => {
 			return performance.now() - captured < 500 ? performance.now() - captured : 500;
 		};
+		let loop = [];
+		setInterval(() => {
+			loop = loop.filter((value) => {
+				return value.callback != null;
+			});
+			loop.forEach((value) => {
+				if (value.rest > 0) {
+					value.rest -= 5;
+				} else {
+					value.callback.call(null);
+					value.callback = null;
+				}
+			});
+		}, 5);
 		[
 			function getCaptured() {
 				return captured;
@@ -98,10 +112,13 @@
 			function mustSuspend() {
 				arguments.constrainedWithAndThrow();
 				return new Promise((resolve) => {
-					setTimeout(() => {
-						captureSpan();
-						resolve();
-					}, getAccumulated());
+					loop.push({
+						rest: getAccumulated(),
+						callback: () => {
+							captureSpan();
+							resolve();
+						}
+					});
 				});
 			}
 		].bindTo(window);
