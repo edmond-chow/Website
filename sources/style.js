@@ -84,9 +84,7 @@
 				return value.callback != null;
 			});
 			loop.forEach((value) => {
-				if (value.rest > 0) {
-					value.rest -= 5;
-				} else {
+				if (value.deferred < performance.now()) {
 					value.callback.call(null);
 					value.callback = null;
 				}
@@ -113,7 +111,7 @@
 				arguments.constrainedWithAndThrow();
 				return new Promise((resolve) => {
 					loop.push({
-						rest: getAccumulated(),
+						deferred: performance.now() + getAccumulated(),
 						callback: () => {
 							captureSpan();
 							resolve();
