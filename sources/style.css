@@ -222,6 +222,7 @@
 				position: fixed;
 				margin: 0px -1px;
 				border: 1px solid #e7e7e7;
+				transition-property: max-height;
 				transition-duration: 0.5s;
 				background-color: #f3f3f3;
 				max-height: 51px;
@@ -281,6 +282,7 @@
 				text-decoration: none;
 				display: inline-block;
 				padding: 14px 16px;
+				transition-property: color, background-color;
 				transition-duration: 0.2s;
 				background-size: 0px;
 				line-height: 23px;
@@ -564,6 +566,7 @@
 				position: fixed;
 				display: none;
 				padding: 8px 0px;
+				transition-property: transform;
 				transition-duration: 0.5s;
 				background-color: rgb(40, 40, 40);
 				min-height: 36px;
@@ -656,6 +659,7 @@
 				line-height: 21px;
 				min-height: 53px;
 				font-size: 16px;
+				transition-property: color, background-color;
 				transition-duration: 0.4s;
 				background-size: 0px;
 				background-color: #4CAF50;
