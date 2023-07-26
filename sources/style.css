@@ -222,7 +222,7 @@
 				position: fixed;
 				margin: 0px -1px;
 				border: 1px solid #e7e7e7;
-				transition-property: max-height;
+				transition-property: margin-left, margin-right, max-height, width, left, right;
 				transition-duration: 0.5s;
 				background-color: #f3f3f3;
 				max-height: 51px;
