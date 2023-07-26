@@ -282,6 +282,7 @@
 				display: inline-block;
 				padding: 14px 16px;
 				transition-duration: 0.2s;
+				background-size: 0px;
 				line-height: 23px;
 				min-height: 23px;
 				font-size: 16px;
@@ -366,6 +367,7 @@
 			post > post-icon /* -> */ {
 				position: relative;
 				margin: 0px 0px -64px 0px;
+				background-size: cover;
 				width: 64px;
 				aspect-ratio: 1;
 				top: 8px;
@@ -617,8 +619,8 @@
 				width: 150px;
 				color: white;
 				background-size: 24px;
-				background-position: 16px center;
 				background-repeat: no-repeat;
+				background-position: 16px center;
 				cursor: default;
 				user-select: none;
 				-webkit-user-drag: none;
@@ -655,8 +657,9 @@
 				min-height: 53px;
 				font-size: 16px;
 				transition-duration: 0.4s;
-				color: white;
+				background-size: 0px;
 				background-color: #4CAF50;
+				color: white;
 				cursor: default;
 				user-select: none;
 				-webkit-user-drag: none;
@@ -668,11 +671,11 @@
 				border-radius: 8px;
 			}
 			button.icon {
+				background-size: 31px;
 				background-repeat: no-repeat;
 				background-position: 11px center;
 				padding-left: 48px;
 				padding-right: 24px;
-				background-size: 31px;
 			}
 			button.icon.no-content {
 				padding: 16px;
@@ -712,11 +715,11 @@
 				border-radius: 5px;
 			}
 			button.advance.icon {
+				background-size: 16px;
 				background-repeat: no-repeat;
 				background-position: 10px center;
 				padding-left: 31px;
 				padding-right: 15px;
-				background-size: 16px;
 			}
 			button.advance.icon.no-content {
 				padding: 10px;
