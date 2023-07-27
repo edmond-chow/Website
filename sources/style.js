@@ -656,7 +656,7 @@
 							}
 						});
 					});
-					await defer(250);
+					await defer(100);
 				}
 			})();
 		}
