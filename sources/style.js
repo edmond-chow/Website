@@ -118,6 +118,16 @@
 						}
 					});
 				});
+			},
+			function defer(timeout) {
+				return new Promise((resolve) => {
+					loop.push({
+						deferred: performance.now() + timeout,
+						callback: () => {
+							resolve();
+						}
+					});
+				});
 			}
 		].bindTo(window);
 	})();
@@ -627,6 +637,28 @@
 			addFirst('body major > sub-major > post > sub-post', 'backdrop-container');
 			switchFirst('body major > sub-major > post > sub-post > backdrop-container', 'blurred-filter');
 			addFirst('body major > sub-major > post > sub-post > backdrop-container', 'blurred-filter');
+			(async () => {
+				while (true) {
+					forAll('body major').map((value) => {
+						return new Major(value);
+					}).filter((value) => {
+						return value.complete;
+					}).forEach((value) => {
+						value.subMajorNode.getAll(':scope > post').map((value) => {
+							return new Post(value);
+						}).filter((value) => {
+							return value.complete;
+						}).forEach((value) => {
+							if (!inScrollable(value.subPostNode)) {
+								value.subPostNode.classList.add('suspended-backdrop');
+							} else {
+								value.subPostNode.classList.remove('suspended-backdrop');
+							}
+						});
+					});
+					await defer(250);
+				}
+			})();
 		}
 		await suspend();
 		document.dispatchEvent(eventStructuredTag);
@@ -894,25 +926,6 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 			value.forEach((value) => {
 				if (value.nodeName == '#text') {
 					value.textContent = '';
-				}
-			});
-		});
-		await suspend();
-		/* background-image with 'basis-layer, backdrop-container > blurred-filter' */
-		forAll('body major').map((value) => {
-			return new Major(value);
-		}).filter((value) => {
-			return value.complete;
-		}).forEach((value) => {
-			value.subMajorNode.getAll(':scope > post').map((value) => {
-				return new Post(value);
-			}).filter((value) => {
-				return value.complete;
-			}).forEach((value) => {
-				if (!inScrollable(value.subPostNode)) {
-					value.subPostNode.classList.add('suspended-backdrop');
-				} else {
-					value.subPostNode.classList.remove('suspended-backdrop');
 				}
 			});
 		});
