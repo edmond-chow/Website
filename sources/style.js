@@ -483,9 +483,6 @@
 		if (hash.substring(0, 1) == '#') {
 			document.location.hash = '#';
 			document.location.hash = hash;
-			defer(500);
-			document.location.hash = '#';
-			document.location.hash = hash;
 		}
 	};
 	let marker = () => {
