@@ -909,13 +909,11 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 			}).filter((value) => {
 				return value.complete;
 			}).forEach((value) => {
-				value.subPostNode.getAll(':scope > backdrop-container').forEach((filter) => {
-					if (!inScrollable(value.subPostNode)) {
-						filter.classList.add('suspended');
-					} else {
-						filter.classList.remove('suspended');
-					}
-				});
+				if (!inScrollable(value.subPostNode)) {
+					value.subPostNode.classList.add('suspended-backdrop');
+				} else {
+					value.subPostNode.classList.remove('suspended-backdrop');
+				}
 			});
 		});
 		await suspend();

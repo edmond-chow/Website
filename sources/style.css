@@ -803,6 +803,20 @@
 			}
 		}
 	}
+	@layer /* backdrop-before */ {
+		@media (pointer: coarse), (pointer: none) {
+			@keyframes show-backdrop {
+				from {
+					opacity: 0;
+					display: block;
+				}
+				to {
+					opacity: 1;
+					display: block;
+				}
+			}
+		}
+	}
 	@layer /* backdrop */ {
 		/* background-image with 'basis-layer, backdrop-container > blurred-filter' */
 		body basis-layer {
@@ -843,8 +857,19 @@
 			background-image: var(--background-image, url('lake.jpg'));
 		}
 		@media (pointer: coarse), (pointer: none) {
-			body major > sub-major > post > sub-post > backdrop-container.suspended {
+			body major > sub-major > post > sub-post {
+				transition-property: background-color;
+				transition-duration: 0.5s;
+			}
+			body major > sub-major > post > sub-post.suspended-backdrop:before {
+				background-color: transparent;
+			}
+			body major > sub-major > post > sub-post.suspended-backdrop > backdrop-container {
 				display: none;
+			}
+			body major > sub-major > post > sub-post:not(.suspended-backdrop) > backdrop-container {
+				animation-name: show-backdrop;
+				animation-duration: 0.5s;
 			}
 		}
 	}
