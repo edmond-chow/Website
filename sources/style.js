@@ -7,8 +7,11 @@
 				if (value instanceof Function) {
 					instance[value.name] = value;
 					Object.defineProperty(instance, value.name, lock);
-					Object.defineProperty(value, 'prototype', lock);
-					Object.defineProperty(value.prototype, 'constructor', lock);
+					if (value.prototype instanceof Object) {
+						Object.defineProperty(value, 'prototype', lock);
+						value.prototype.constructor = value;
+						Object.defineProperty(value.prototype, 'constructor', lock);
+					}
 				}
 			});
 		};
