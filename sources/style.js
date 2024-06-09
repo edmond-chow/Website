@@ -1,206 +1,182 @@
 (async () => {
-	/* [Array.prototype.bindTo].bindTo(instance = window) */
-	(() => {
-		let lock = { configurable: false, writable: false };
-		Array.prototype.bindTo = function bindTo(instance = window) {
-			this.forEach((value) => {
-				if (value instanceof Function) {
-					instance[value.name] = value;
-					Object.defineProperty(instance, value.name, lock);
-					if (value.prototype instanceof Object) {
-						Object.defineProperty(value, 'prototype', lock);
-						value.prototype.constructor = value;
-						Object.defineProperty(value.prototype, 'constructor', lock);
-					}
+	/* { binder } */
+	let lock = { configurable: false, writable: false };
+	Array.prototype.bindTo = function bindTo(instance = window) {
+		this.forEach((value) => {
+			if (value instanceof Function) {
+				instance[value.name] = value;
+				Object.defineProperty(instance, value.name, lock);
+				if (value.prototype instanceof Object) {
+					Object.defineProperty(value, 'prototype', lock);
+					value.prototype.constructor = value;
+					Object.defineProperty(value.prototype, 'constructor', lock);
 				}
-			});
-		};
-		[Array.prototype.bindTo].bindTo(Array.prototype);
-		let Nullable = function Nullable(type) {
+			}
+		});
+	};
+	[Array.prototype.bindTo].bindTo(Array.prototype);
+	/* { reflection } */
+	class Nullable {
+		constructor(type) {
 			this.type = type;
-			Object.defineProperty(this, 'type', lock);
-		};
-		[
-			function toNullable() {
-				return new Nullable(this);
-			}
-		].bindTo(Function.prototype);
-		[
-			function isNullable(container) {
-				return container instanceof Nullable;
-			},
-			function removeNullable(container) {
-				if (container instanceof Nullable) {
-					return container.type;
-				} else if (container instanceof Function) {
-					return container;
-				} else {
-					throw 'The \'container\' argument should be either a \'Nullable\' type or a \'Function\' type.';
-				}
-			}
-		].bindTo(window);
-		[
-			function addCompleteState() {
-				this.complete = (() => {
-					let complete = true;
-					Object.keys(this).forEach((value) => {
-						if (this[value] == null) {
-							complete = false;
-						}
-					});
-					return complete;
-				})();
-				Object.freeze(this);
-			},
-			function constrainedWith(...types) {
-				let arguments = Array.from(this);
-				if (arguments.length != types.length) {
-					return false;
-				}
-				let constrained = true;
-				arguments.forEach((value, index) => {
-					if (isNullable(types[index]) && value == null) {
-						return;
-					} else if (value instanceof removeNullable(types[index]) || Object.getPrototypeOf(value) == removeNullable(types[index]).prototype) {
-						return;
-					}
-					constrained = false;
-				});
-				return constrained;
-			},
-			function constrainedWithAndThrow(...types) {
-				if (!this.constrainedWith(...types)) {
-					throw 'The function arguments should match up the parameter types.';
-				}
-			}
-		].bindTo(Object.prototype);
-	})();
-	/* { control-flow } */
-	(() => {
-		let captured = 0;
-		let getAccumulated = () => {
-			return performance.now() - captured < 500 ? performance.now() - captured : 500;
-		};
-		let loop = [];
-		setInterval(() => {
-			loop = loop.filter((value) => {
-				return value.callback != null;
-			});
-			loop.forEach((value) => {
-				if (value.deferred < performance.now()) {
-					value.callback.call(null);
-					value.callback = null;
-				}
-			});
-		}, 5);
-		[
-			function getCaptured() {
-				return captured;
-			},
-			function captureSpan() {
-				arguments.constrainedWithAndThrow();
-				captured = performance.now();
-			},
-			function suspend() {
-				arguments.constrainedWithAndThrow();
-				if (getAccumulated() <= 25) {
-					return new Promise((resolve) => {
-						resolve();
-					});
-				}
-				return mustSuspend();
-			},
-			function mustSuspend() {
-				arguments.constrainedWithAndThrow();
-				return new Promise((resolve) => {
-					loop.push({
-						deferred: performance.now() + getAccumulated(),
-						callback: () => {
-							captureSpan();
-							resolve();
-						}
-					});
-				});
-			},
-			function defer(timeout) {
-				return new Promise((resolve) => {
-					loop.push({
-						deferred: performance.now() + timeout,
-						callback: () => {
-							resolve();
-						}
-					});
-				});
-			}
-		].bindTo(window);
-	})();
-	await mustSuspend();
-	/* constructor() */
+			Object.freeze(this);
+		}
+	};
+	[Nullable].bindTo({});
 	[
-		function Top(node) {
-			if (!new.target) {
-				return;
-			}
-			arguments.constrainedWithAndThrow(Element);
-			this.topNode = node.nodeName == 'top'.toUpperCase() ? node : null;
-			this.addCompleteState();
+		function toNullable() {
+			return new Nullable(this);
+		}
+	].bindTo(Function.prototype);
+	[
+		function isNullable(container) {
+			return container instanceof Nullable;
 		},
-		function Major(node) {
-			if (!new.target) {
-				return;
+		function removeNullable(container) {
+			if (container instanceof Nullable) {
+				return container.type;
+			} else if (container instanceof Function) {
+				return container;
+			} else {
+				throw 'The \'container\' argument should be either a \'Nullable\' type or a \'Function\' type.';
 			}
-			arguments.constrainedWithAndThrow(Element);
-			this.majorNode = node.nodeName == 'major'.toUpperCase() ? node : null;
-			this.subMajorNode = node.get(':scope > sub-major');
-			this.addCompleteState();
-		},
-		function Post(node) {
-			if (!new.target) {
-				return;
-			}
-			arguments.constrainedWithAndThrow(Element);
-			this.postNode = node.nodeName == 'post'.toUpperCase() ? node : null;
-			this.subPostNode = node.get(':scope > sub-post');
-			this.postIconNode = node.get(':scope > post-icon');
-			this.scrollIntoNode = node.get(':scope > sub-post > scroll-into');
-			this.postLeaderNode = node.get(':scope > sub-post > post-leader');
-			this.postLeaderSectionNode = node.get(':scope > sub-post > post-leader > post-leader-section');
-			this.postLeaderOrderNode = node.get(':scope > sub-post > post-leader > post-leader-section > post-leader-order');
-			this.postLeaderTitleNode = node.get(':scope > sub-post > post-leader > post-leader-section > post-leader-title');
-			this.postLeaderAdvanceNode = node.get(':scope > sub-post > post-leader > post-leader-advance');
-			this.postContentNode = node.get(':scope > sub-post > post-content');
-			this.addCompleteState();
-		},
-		function Dropdown(node) {
-			if (!new.target) {
-				return;
-			}
-			arguments.constrainedWithAndThrow(Element);
-			this.dropdownNode = node.nodeName == 'dropdown'.toUpperCase() ? node : null;
-			this.innerPaddingNode = node.get(':scope > inner-padding');
-			this.dropdownContentNode = node.get(':scope > dropdown-content');
-			this.outerMarginNode = node.get(':scope > outer-margin');
-			this.addCompleteState();
-		},
-		function Button(node) {
-			if (!new.target) {
-				return;
-			}
-			arguments.constrainedWithAndThrow(Element);
-			this.buttonNode = node.nodeName == 'button'.toUpperCase() ? node : null;
-			this.addCompleteState();
 		}
 	].bindTo(window);
+	[
+		function addCompleteState() {
+			this.complete = (() => {
+				let complete = true;
+				Object.keys(this).forEach((value) => {
+					if (this[value] == null) {
+						complete = false;
+					}
+				});
+				return complete;
+			})();
+			Object.freeze(this);
+		},
+		function constrainedWith(...types) {
+			let arguments = Array.from(this);
+			if (arguments.length != types.length) {
+				return false;
+			}
+			let constrained = true;
+			arguments.forEach((value, index) => {
+				if (isNullable(types[index]) && value == null) {
+					return;
+				} else if (value instanceof removeNullable(types[index]) || Object.getPrototypeOf(value) == removeNullable(types[index]).prototype) {
+					return;
+				}
+				constrained = false;
+			});
+			return constrained;
+		},
+		function constrainedWithAndThrow(...types) {
+			if (!this.constrainedWith(...types)) {
+				throw 'The function arguments should match up the parameter types.';
+			}
+		}
+	].bindTo(Object.prototype);
+	/* { asynchronous } */
+	class Continuation {
+		constructor(resolve = null, condition = null) {
+			this.resolve = resolve;
+			this.condition = condition;
+			this.accomplished = false;
+		}
+		completed() {
+			return this.condition != null ? this.condition.call(null) : true;
+		}
+		pending() {
+			return !this.accomplished;
+		}
+		invoke() {
+			if (!this.accomplished) {
+				this.resolve?.call(null);
+				this.accomplished = true;
+			}
+		}
+	};
+	let continuations = [];
+	setInterval(() => {
+		continuations = continuations.filter((continuation) => {
+			return continuation.pending();
+		});
+		continuations.forEach((continuation) => {
+			if (continuation.completed()) {
+				continuation.invoke();
+			}
+		});
+	}, 0);
+	[
+		function suspend(condition = null) {
+			[condition].constrainedWithAndThrow(Function.toNullable());
+			return new Promise((resolve) => {
+				continuations.push(new Continuation(resolve, condition));
+			});
+		}
+	].bindTo(window);
+	await suspend();
+	/* { constructors } */
+	class Top {
+		constructor(head) {
+			arguments.constrainedWithAndThrow(Element);
+			this.topNode = head.nodeName == 'top'.toUpperCase() ? head : null;
+			this.addCompleteState();
+		}
+	};
+	class Major {
+		constructor(head) {
+			arguments.constrainedWithAndThrow(Element);
+			this.majorNode = head.nodeName == 'major'.toUpperCase() ? head : null;
+			this.subMajorNode = head.get(':scope > sub-major');
+			this.addCompleteState();
+		}
+	};
+	class Post {
+		constructor(head) {
+			arguments.constrainedWithAndThrow(Element);
+			this.postNode = head.nodeName == 'post'.toUpperCase() ? head : null;
+			this.subPostNode = head.get(':scope > sub-post');
+			this.postIconNode = head.get(':scope > post-icon');
+			this.scrollIntoNode = head.get(':scope > sub-post > scroll-into');
+			this.postLeaderNode = head.get(':scope > sub-post > post-leader');
+			this.postLeaderSectionNode = head.get(':scope > sub-post > post-leader > post-leader-section');
+			this.postLeaderOrderNode = head.get(':scope > sub-post > post-leader > post-leader-section > post-leader-order');
+			this.postLeaderTitleNode = head.get(':scope > sub-post > post-leader > post-leader-section > post-leader-title');
+			this.postLeaderAdvanceNode = head.get(':scope > sub-post > post-leader > post-leader-advance');
+			this.postContentNode = head.get(':scope > sub-post > post-content');
+			this.addCompleteState();
+		}
+	};
+	class Dropdown {
+		constructor(head) {
+			arguments.constrainedWithAndThrow(Element);
+			this.dropdownNode = head.nodeName == 'dropdown'.toUpperCase() ? head : null;
+			this.innerPaddingNode = head.get(':scope > inner-padding');
+			this.dropdownContentNode = head.get(':scope > dropdown-content');
+			this.outerMarginNode = head.get(':scope > outer-margin');
+			this.addCompleteState();
+		}
+	};
+	class Button {
+		constructor(head) {
+			arguments.constrainedWithAndThrow(Element);
+			this.buttonNode = head.nodeName == 'button'.toUpperCase() ? head : null;
+			this.addCompleteState();
+		}
+	};
+	[Top, Major, Post, Dropdown, Button].bindTo(window);
 	/* { functionality } */
 	[
 		function forAll(selector) {
 			return Array.from(document.querySelectorAll(selector));
 		},
-		function forAllTag(name) {
-			return Array.from(document.getElementsByTagName(name));
+		function forAllTag(tagName) {
+			return Array.from(document.getElementsByTagName(tagName));
 		},
-		function forAllClass(name) {
-			return Array.from(document.getElementsByClassName(name));
+		function forAllClass(classNames) {
+			return Array.from(document.getElementsByClassName(classNames));
 		},
 		function insertSurround(parent, child) {
 			arguments.constrainedWithAndThrow(String, String);
@@ -553,7 +529,6 @@
 		});
 	};
 	let structuredTag = async () => {
-		captureSpan();
 		/* major */ {
 			/* structuring for the 'major' */ 
 			insertSurround('major', 'sub-major');
@@ -645,7 +620,6 @@
 		document.dispatchEvent(eventStructuredTag);
 	};
 	let formedStyle = async () => {
-		captureSpan();
 		/* style */ {
 			/* style#background-image */ {
 				if (document.body.hasAttribute('background-image')) {
@@ -964,7 +938,7 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 		}
 	].bindTo(window);
 	while (true) {
-		await mustSuspend();
+		await suspend();
 		await delegate();
 	}
 })();
