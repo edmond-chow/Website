@@ -274,7 +274,7 @@
 			if (!currentNode.isOfBodyTree() || !parentNode.isOfBodyTree()) {
 				return;
 			}
-			let rect = node.getBoundingClientRect();
+			let rect = currentNode.getBoundingClientRect();
 			let parentRect = parentNode != document.body ? parentNode.getBoundingClientRect() : new DOMRect(0, 0, document.body.clientWidth, document.body.clientHeight);
 			let left = rect.x < parentRect.x + parentRect.width;
 			let top = rect.y < parentRect.y + parentRect.height;
