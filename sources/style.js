@@ -120,14 +120,14 @@
 	/* { constructors } */
 	class Top {
 		constructor(head) {
-			arguments.constrainedWithAndThrow(Element);
+			[head].constrainedWithAndThrow(Element);
 			this.topNode = head.nodeName == 'top'.toUpperCase() ? head : null;
 			this.addCompleteState();
 		}
 	};
 	class Major {
 		constructor(head) {
-			arguments.constrainedWithAndThrow(Element);
+			[head].constrainedWithAndThrow(Element);
 			this.majorNode = head.nodeName == 'major'.toUpperCase() ? head : null;
 			this.subMajorNode = head.get(':scope > sub-major');
 			this.addCompleteState();
@@ -135,7 +135,7 @@
 	};
 	class Post {
 		constructor(head) {
-			arguments.constrainedWithAndThrow(Element);
+			[head].constrainedWithAndThrow(Element);
 			this.postNode = head.nodeName == 'post'.toUpperCase() ? head : null;
 			this.subPostNode = head.get(':scope > sub-post');
 			this.postIconNode = head.get(':scope > post-icon');
@@ -151,7 +151,7 @@
 	};
 	class Dropdown {
 		constructor(head) {
-			arguments.constrainedWithAndThrow(Element);
+			[head].constrainedWithAndThrow(Element);
 			this.dropdownNode = head.nodeName == 'dropdown'.toUpperCase() ? head : null;
 			this.innerPaddingNode = head.get(':scope > inner-padding');
 			this.dropdownContentNode = head.get(':scope > dropdown-content');
@@ -161,7 +161,7 @@
 	};
 	class Button {
 		constructor(head) {
-			arguments.constrainedWithAndThrow(Element);
+			[head].constrainedWithAndThrow(Element);
 			this.buttonNode = head.nodeName == 'button'.toUpperCase() ? head : null;
 			this.addCompleteState();
 		}
@@ -178,52 +178,52 @@
 		function forAllClass(classNames) {
 			return Array.from(document.getElementsByClassName(classNames));
 		},
-		function insertSurround(parent, child) {
-			arguments.constrainedWithAndThrow(String, String);
-			if (child == '') {
+		function insertSurround(parentSelector, childName) {
+			[parentSelector, childName].constrainedWithAndThrow(String, String);
+			if (childName == '') {
 				return;
 			}
-			forAll(parent).forEach((value) => {
-				if (value.arrayForChild(child).length == 0) {
-					let substance = document.createElement(child);
+			forAll(parentSelector).forEach((value) => {
+				if (value.arrayForChild(childName).length == 0) {
+					let substance = document.createElement(childName);
 					substance.prepend(...value.childNodes);
 					value.prepend(substance);
 				}
 			});
 		},
-		function switchFirst(parent, child) {
-			arguments.constrainedWithAndThrow(String, String);
-			if (child == '') {
+		function switchFirst(parentSelector, childName) {
+			[parentSelector, childName].constrainedWithAndThrow(String, String);
+			if (childName == '') {
 				return;
 			}
-			forAll(parent).forEach((value) => {
-				value.prepend(...value.arrayForChild(child));
+			forAll(parentSelector).forEach((value) => {
+				value.prepend(...value.arrayForChild(childName));
 			});
 		},
-		function addFirst(parent, child) {
-			arguments.constrainedWithAndThrow(String, String);
-			if (child == '') {
+		function addFirst(parentSelector, childName) {
+			[parentSelector, childName].constrainedWithAndThrow(String, String);
+			if (childName == '') {
 				return;
 			}
-			forAll(parent).forEach((value) => {
-				if (value.children.length > 0 && value.children[0].tagName.toUpperCase() == child.toUpperCase()) {
+			forAll(parentSelector).forEach((value) => {
+				if (value.children.length > 0 && value.children[0].tagName.toUpperCase() == childName.toUpperCase()) {
 					return;
 				}
-				let substance = document.createElement(child);
+				let substance = document.createElement(childName);
 				value.prepend(substance);
 			});
 		},
-		function moveOutside(parent, child) {
-			arguments.constrainedWithAndThrow(String, String);
-			if (child == '') {
+		function moveOutside(parentSelector, childName) {
+			[parentSelector, childName].constrainedWithAndThrow(String, String);
+			if (childName == '') {
 				return;
 			}
-			forAll(parent).forEach((value) => {
-				value.parentElement?.prepend(...value.arrayForChild(child));
+			forAll(parentSelector).forEach((value) => {
+				value.parentElement?.prepend(...value.arrayForChild(childName));
 			});
 		},
 		function hasSubstance(parentNode) {
-			arguments.constrainedWithAndThrow(Element);
+			[parentNode].constrainedWithAndThrow(Element);
 			let has = false;
 			parentNode.childNodes.forEach((value) => {
 				if (value.nodeName == '#comment') {
@@ -240,7 +240,7 @@
 			return has;
 		},
 		function hasTextOnly(parentNode) {
-			arguments.constrainedWithAndThrow(Element);
+			[parentNode].constrainedWithAndThrow(Element);
 			let has = true;
 			parentNode.childNodes.forEach((value) => {
 				if (value.nodeName == '#comment') {
@@ -255,7 +255,7 @@
 			return has;
 		},
 		function hasNoTextWithNode(parentNode) {
-			arguments.constrainedWithAndThrow(Element);
+			[parentNode].constrainedWithAndThrow(Element);
 			let has = true;
 			parentNode.childNodes.forEach((value) => {
 				if (value.nodeName == '#comment') {
@@ -269,9 +269,9 @@
 			});
 			return has;
 		},
-		function isInside(node, parentNode = document.body) {
-			arguments.constrainedWithAndThrow(Element, Element);
-			if (!node.isOfBodyTree() || !parentNode.isOfBodyTree()) {
+		function isInside(currentNode, parentNode = document.body) {
+			[currentNode, parentNode].constrainedWithAndThrow(Element, Element);
+			if (!currentNode.isOfBodyTree() || !parentNode.isOfBodyTree()) {
 				return;
 			}
 			let rect = node.getBoundingClientRect();
@@ -282,47 +282,47 @@
 			let bottom = rect.y + rect.height > parentRect.y;
 			return (left && right) && (top && bottom);
 		},
-		function isScrollable(node) {
-			arguments.constrainedWithAndThrow(Element);
-			if (!node.isOfBodyTree()) {
+		function isScrollable(currentNode) {
+			[currentNode].constrainedWithAndThrow(Element);
+			if (!currentNode.isOfBodyTree()) {
 				return;
 			}
-			let scrollableX = node.scrollWidth > node.clientWidth;
-			let scrollableY = node.scrollHeight > node.clientHeight;
+			let scrollableX = currentNode.scrollWidth > currentNode.clientWidth;
+			let scrollableY = currentNode.scrollHeight > currentNode.clientHeight;
 			return scrollableX || scrollableY;
 		},
-		function getParentNode(node) {
-			arguments.constrainedWithAndThrow(Element);
-			if (!node.isOfBodyTree()) {
+		function getParentNode(currentNode) {
+			[currentNode].constrainedWithAndThrow(Element);
+			if (!currentNode.isOfBodyTree()) {
 				return;
 			}
-			let parentNode = node.parentElement;
+			let parentNode = currentNode.parentElement;
 			while (parentNode != document.body && !isScrollable(parentNode)) {
 				parentNode = parentNode.parentElement;
 			}
 			return parentNode;
 		},
-		function inScrollable(node) {
-			arguments.constrainedWithAndThrow(Element);
-			if (!node.isOfBodyTree()) {
+		function inScrollable(currentNode) {
+			[currentNode].constrainedWithAndThrow(Element);
+			if (!currentNode.isOfBodyTree()) {
 				return;
 			}
-			while (node != document.body) {
-				let parentNode = getParentNode(node);
-				if (isInside(node, parentNode)) {
-					node = parentNode;
+			while (currentNode != document.body) {
+				let parentNode = getParentNode(currentNode);
+				if (isInside(currentNode, parentNode)) {
+					currentNode = parentNode;
 				} else {
 					return false;
 				}
 			}
 			return true;
 		},
-		function setLocked(node) {
-			arguments.constrainedWithAndThrow(Element);
-			let parentNode = node.parentElement;
-			if (node.nodeName == 'a'.toUpperCase() && parentNode?.nodeName == 'top'.toUpperCase()) {
+		function setLocked(currentNode) {
+			[currentNode].constrainedWithAndThrow(Element);
+			let parentNode = currentNode.parentElement;
+			if (currentNode.nodeName == 'a'.toUpperCase() && parentNode?.nodeName == 'top'.toUpperCase()) {
 				parentNode.getAll(':scope > a').forEach((value) => {
-					if (value == node) {
+					if (value == currentNode) {
 						value.classList.add('lock');
 					} else {
 						value.classList.remove('lock');
@@ -331,7 +331,7 @@
 			}
 		},
 		function makeCascading(headNode, nodeId, styleText) {
-			arguments.constrainedWithAndThrow(Element, String, String);
+			[headNode, nodeId, styleText].constrainedWithAndThrow(Element, String, String);
 			let styleNode = (() => {
 				let pseudoNode = (() => {
 					let cascadingNode = headNode.getAll(':scope > style');
@@ -375,11 +375,11 @@
 		function getAll(selector) {
 			return Array.from(this.querySelectorAll(selector));
 		},
-		function arrayForChild(child) {
-			arguments.constrainedWithAndThrow(String);
+		function arrayForChild(childName) {
+			[childName].constrainedWithAndThrow(String);
 			let array = [];
 			Array.from(this.children).forEach((value) => {
-				if (value.tagName.toUpperCase() == child.toUpperCase()) {
+				if (value.tagName.toUpperCase() == childName.toUpperCase()) {
 					array.push(value);
 				}
 			});
@@ -396,7 +396,6 @@
 			return false;
 		},
 		function isOfHeadTree() {
-			arguments.constrainedWithAndThrow();
 			if (this == document.documentElement) {
 				return true;
 			}
@@ -428,7 +427,6 @@
 	].bindTo(Element.prototype);
 	[
 		function removeSpace() {
-			arguments.constrainedWithAndThrow();
 			return this.replace(/\t/g, '').replace(/\r/g, '').replace(/\n/g, '').replace(/\f/g, '')
 				.replace(/\u0020/g, '')
 				.replace(/\u00A0/g, '')
@@ -454,7 +452,7 @@
 	].bindTo(String.prototype);
 	/* { event-dispatcher } */
 	let isLoaded = false;
-	let hasScrolledInto = false;
+	let hasScrolled = false;
 	let eventStructuredTag = new CustomEvent('structuredTag');
 	let eventFormedStyle = new CustomEvent('formedStyle');
 	let scrollIntoView = () => {
@@ -913,28 +911,24 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 				isLoaded = true;
 			}
 			await formedStyle();
-			if (hasScrolledInto == false) {
+			if (hasScrolled == false) {
 				scrollIntoView();
-				hasScrolledInto = true;
+				hasScrolled = true;
 			}
 		}
 	};
 	[
 		function ready() {
-			arguments.constrainedWithAndThrow();
 			return isLoaded;
 		},
 		function reload() {
-			arguments.constrainedWithAndThrow();
 			isLoaded = false;
 		},
 		function scrolledInto() {
-			arguments.constrainedWithAndThrow();
-			return hasScrolledInto;
+			return hasScrolled;
 		},
 		function rescroll() {
-			arguments.constrainedWithAndThrow();
-			hasScrolledInto = false;
+			hasScrolled = false;
 		}
 	].bindTo(window);
 	while (true) {
