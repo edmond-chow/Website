@@ -79,7 +79,7 @@
 	].bindTo(Object.prototype);
 	/* { asynchronous } */
 	class Continuation {
-		constructor(resolve = null, condition = null) {
+		constructor(resolve, condition) {
 			this.resolve = resolve;
 			this.condition = condition;
 			this.accomplished = false;
@@ -92,7 +92,7 @@
 		}
 		invoke() {
 			if (!this.accomplished) {
-				this.resolve?.call(null);
+				this.resolve();
 				this.accomplished = true;
 			}
 		}
@@ -907,16 +907,14 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 		document.dispatchEvent(eventFormedStyle);
 	};
 	let delegate = async () => {
-		if (document.readyState == 'complete') {
-			if (isLoaded == false) {
-				await structuredTag();
-				isLoaded = true;
-			}
-			await formedStyle();
-			if (hasScrolled == false) {
-				scrollIntoView();
-				hasScrolled = true;
-			}
+		if (isLoaded == false) {
+			await structuredTag();
+			isLoaded = true;
+		}
+		await formedStyle();
+		if (hasScrolled == false) {
+			scrollIntoView();
+			hasScrolled = true;
 		}
 	};
 	[
@@ -929,12 +927,15 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 		function scrolledInto() {
 			return hasScrolled;
 		},
-		function rescroll() {
+		function rescrollView() {
 			hasScrolled = false;
 		}
 	].bindTo(window);
+	await suspend(() => {
+		return document.readyState == 'complete';
+	});
 	while (true) {
-		await suspend();
 		await delegate();
+		await suspend();
 	}
 })();
