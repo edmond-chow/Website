@@ -457,7 +457,9 @@
 	let eventFormedStyle = new CustomEvent('formedStyle');
 	let scrollIntoView = () => {
 		let hash = document.location.hash;
-		if (hash.substring(0, 1) == '#') {
+		if (hash.length == 0) {
+			scrollTo(scrollX, 0);
+		} else {
 			document.location.hash = '#';
 			document.location.hash = hash;
 		}
