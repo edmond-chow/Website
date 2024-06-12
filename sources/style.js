@@ -657,11 +657,17 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 			value.topNode.classList.add('no-text');
 			/* resizing for the 'top' */
 			if (document.body.clientWidth > 1226) {
-				value.topNode.id = 'large';
+				value.topNode.classList.remove('small');
+				value.topNode.classList.remove('medium');
+				value.topNode.classList.add('large');
 			} else if (document.body.clientWidth >= 1048) {
-				value.topNode.id = 'medium';
+				value.topNode.classList.remove('small');
+				value.topNode.classList.add('medium');
+				value.topNode.classList.remove('large');
 			} else {
-				value.topNode.id = 'small';
+				value.topNode.classList.add('small');
+				value.topNode.classList.remove('medium');
+				value.topNode.classList.remove('large');
 			}
 			/* locking an option and scrolling into the '.lock' when has been unlocked */
 			if (value.topNode.matches(':not(:is(:hover, :focus-within))')) {

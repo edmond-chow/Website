@@ -168,7 +168,7 @@
 			body::-webkit-scrollbar-track, body::-webkit-scrollbar-corner {
 				background-color: #f1f1f1;
 			}
-			body#blur top::-webkit-scrollbar-track:vertical, body#blur dropdown > dropdown-content::-webkit-scrollbar-track:vertical {
+			body.blur top::-webkit-scrollbar-track:vertical, body.blur dropdown > dropdown-content::-webkit-scrollbar-track:vertical {
 				border-top-right-radius: 5px;
 				border-bottom-right-radius: 5px;
 			}
@@ -187,7 +187,7 @@
 				border: 4px solid transparent;
 				background-clip: padding-box;
 			}
-			body#blur::-webkit-scrollbar-thumb, body#blur ::-webkit-scrollbar-thumb {
+			body.blur::-webkit-scrollbar-thumb, body.blur ::-webkit-scrollbar-thumb {
 				border-radius: 8px;
 			}
 		}
@@ -209,7 +209,7 @@
 			post > sub-post > post-content :is(h1, h2, h3, h4, h5, h6, p, pre) {
 				color: white;
 			}
-			body#blur post > sub-post > post-content :is(h1, h2, h3, h4, h5, h6, p, pre) {
+			body.blur post > sub-post > post-content :is(h1, h2, h3, h4, h5, h6, p, pre) {
 				color: rgba(0, 0, 0, 0.5);
 			}
 		}
@@ -232,42 +232,42 @@
 				right: 8%;
 				z-index: 3; /* -> layer[top] */
 			}
-			body#blur top {
+			body.blur top {
 				border-radius: 5px;
 				border: 0px;
 				top: 9px;
 				box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.5);
 			}
-			top#small {
+			top.small {
 				left: 8px;
 				right: 8px;
 				margin-left: 0px;
 				margin-right: 0px;
 				width: calc(100% - 18px);
 			}
-			body#blur top#small {
+			body.blur top.small {
 				left: 9px;
 				right: 9px;
 			}
-			top#medium {
+			top.medium {
 				left: calc((100% - 1032px) / 2);
 				right: calc((100% - 1032px) / 2);
 				margin-left: 0px;
 				margin-right: 0px;
 				width: 1030px;
 			}
-			body#blur top#medium {
+			body.blur top.medium {
 				left: calc((100% - 1032px) / 2 + 1px);
 				right: calc((100% - 1032px) / 2 + 1px);
 			}
-			top#large {
+			top.large {
 				left: 8%;
 				right: 8%;
 				margin-left: -1px;
 				margin-right: -1px;
 				width: 84%;
 			}
-			body#blur top#large {
+			body.blur top.large {
 				margin-left: 0px;
 				margin-right: 0px;
 			}
@@ -317,7 +317,7 @@
 				outline: 2px solid darkorange;
 				outline-offset: -2px;
 			}
-			body#blur top > a:focus-visible {
+			body.blur top > a:focus-visible {
 				border-radius: inherit;
 			}
 			top > a:hover:active {
@@ -360,10 +360,10 @@
 			major.tiny > sub-major post {
 				padding: 3px 0px;
 			}
-			body#blur post {
+			body.blur post {
 				border-radius: 8px;
 			}
-			body#blur major.tiny > sub-major post {
+			body.blur major.tiny > sub-major post {
 				border-radius: 6px;
 			}
 			post > post-icon /* -> */ {
@@ -417,22 +417,22 @@
 			major.tiny > sub-major post[icon-src] > post-icon + sub-post {
 				min-height: 60px;
 			}
-			body#blur post > sub-post {
+			body.blur post > sub-post {
 				border-radius: inherit;
 				border: 0px;
 			}
-			body#blur post > sub-post:before {
+			body.blur post > sub-post:before {
 				border-radius: inherit;
 				background-color: rgba(255, 255, 255, 0.3);
 				box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.5);
 			}
-			body#blur post > sub-post:after {
+			body.blur post > sub-post:after {
 				border-radius: inherit;
 				border: 0px;
 				left: 0px;
 				top: 0px;
 			}
-			body#blur post.non-blur > sub-post:before {
+			body.blur post.non-blur > sub-post:before {
 				background-color: rgba(239, 239, 239, 0.9);
 			}
 			post > sub-post > post-leader /* -> */ {
@@ -446,7 +446,7 @@
 				max-width: calc(100% - 15px);
 				width: calc(100% - 15px);
 			}
-			body#blur post > sub-post > post-leader {
+			body.blur post > sub-post > post-leader {
 				border-top-left-radius: inherit;
 				border-top-right-radius: inherit;
 			}
@@ -467,7 +467,7 @@
 			major.tiny > sub-major post > sub-post > post-leader > post-leader-section > post-leader-order {
 				padding: 15px 15px 24px 15px;
 			}
-			body#blur post > sub-post > post-leader > post-leader-section > post-leader-order {
+			body.blur post > sub-post > post-leader > post-leader-section > post-leader-order {
 				color: rgba(0, 0, 0, 0.5);
 			}
 			post > sub-post > post-leader > post-leader-section > post-leader-title /* -> */ {
@@ -482,7 +482,7 @@
 			major.tiny > sub-major post > sub-post > post-leader > post-leader-section > post-leader-title {
 				padding: 15px 15px 24px 15px;
 			}
-			body#blur post > sub-post > post-leader > post-leader-section > post-leader-title {
+			body.blur post > sub-post > post-leader > post-leader-section > post-leader-title {
 				color: rgba(0, 0, 0, 0.5);
 			}
 			post > sub-post > post-leader > post-leader-advance /* -> */ {
@@ -502,7 +502,7 @@
 			major.tiny > sub-major post > sub-post > post-leader > post-leader-advance.no-content {
 				padding: 9px 15px 9px 0px;
 			}
-			body#blur post > sub-post > post-leader > post-leader-advance {
+			body.blur post > sub-post > post-leader > post-leader-advance {
 				border-top-right-radius: inherit;
 			}
 			post > sub-post > post-content /* -> */ {
@@ -520,7 +520,7 @@
 				padding: 0px;
 				min-height: 6px;
 			}
-			body#blur post > sub-post > post-content {
+			body.blur post > sub-post > post-content {
 				border-bottom-left-radius: inherit;
 				border-bottom-right-radius: inherit;
 			}
@@ -529,7 +529,7 @@
 				left: -8px;
 				top: -70px;
 			}
-			body#blur post > sub-post > scroll-into {
+			body.blur post > sub-post > scroll-into {
 				top: -69px;
 			}
 			/* dropdown */
@@ -573,7 +573,7 @@
 				min-width: 175px;
 				box-shadow: 0 0 32px rgba(0, 0, 0, 0.5);
 			}
-			body#blur dropdown > dropdown-content {
+			body.blur dropdown > dropdown-content {
 				border-radius: 5px;
 				background-color: white;
 			}
@@ -591,10 +591,10 @@
 			dropdown.has-single-button {
 				margin: 3px;
 			}
-			body#blur dropdown.has-single-button {
+			body.blur dropdown.has-single-button {
 				border-radius: 8px;
 			}
-			body#blur dropdown:not(.has-disabled):is(:hover, :focus-within).has-single-button {
+			body.blur dropdown:not(.has-disabled):is(:hover, :focus-within).has-single-button {
 				border-bottom-left-radius: 0px;
 				border-bottom-right-radius: 0px;
 			}
@@ -609,7 +609,7 @@
 				line-height: 20px;
 				color: rgba(255, 255, 255, 0.5);
 			}
-			body#blur dropdown > dropdown-content.no-content:after {
+			body.blur dropdown > dropdown-content.no-content:after {
 				color: rgba(10, 10, 10, 0.5);
 			}
 			dropdown > dropdown-content > a /* -> */ {
@@ -628,7 +628,7 @@
 				user-select: none;
 				-webkit-user-drag: none;
 			}
-			body#blur dropdown > dropdown-content > a {
+			body.blur dropdown > dropdown-content > a {
 				color: rgb(10, 10, 10);
 			}
 			dropdown > dropdown-content > a:focus-visible {
@@ -641,13 +641,13 @@
 			dropdown > dropdown-content > a:hover {
 				background-color: rgb(57, 57, 57);
 			}
-			body#blur dropdown > dropdown-content > a:hover {
+			body.blur dropdown > dropdown-content > a:hover {
 				background-color: rgb(238, 238, 238);
 			}
 			dropdown > dropdown-content > a:hover:active {
 				background-color: rgb(80, 80, 80);
 			}
-			body#blur dropdown > dropdown-content > a:hover:active {
+			body.blur dropdown > dropdown-content > a:hover:active {
 				background-color: rgb(211, 211, 211);
 			}
 			/* button */
@@ -671,7 +671,7 @@
 			button.no-content {
 				width: 85px;
 			}
-			body#blur button {
+			body.blur button {
 				border-radius: 8px;
 			}
 			button.icon {
@@ -694,7 +694,7 @@
 				outline: 2px solid darkorange;
 				outline-offset: 0px;
 			}
-			body#blur button:hover {
+			body.blur button:hover {
 				box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.5);
 			}
 			button:hover:active {
@@ -715,7 +715,7 @@
 			button.advance.no-content {
 				width: 56px;
 			}
-			body#blur button.advance {
+			body.blur button.advance {
 				border-radius: 5px;
 			}
 			button.advance.icon {
@@ -833,11 +833,11 @@
 			height: 100%;
 			z-index: -2; /* -> layer[page-backdrop] */
 		}
-		body#blur major > sub-major > post > sub-post > backdrop-container {
+		body.blur major > sub-major > post > sub-post > backdrop-container {
 			background-color: black;
 			clip-path: inset(0px round 8px);
 		}
-		body#blur major.tiny > sub-major > post > sub-post > backdrop-container {
+		body.blur major.tiny > sub-major > post > sub-post > backdrop-container {
 			clip-path: inset(0px round 5px);
 		}
 		body major > sub-major > post > sub-post > backdrop-container > blurred-filter {
@@ -847,10 +847,10 @@
 			top: -50px;
 			left: -50px;
 		}
-		body#blur major > sub-major > post > sub-post > backdrop-container > blurred-filter {
+		body.blur major > sub-major > post > sub-post > backdrop-container > blurred-filter {
 			filter: blur(20px);
 		}
-		body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-container > blurred-filter {
+		body basis-layer, body.blur major > sub-major > post > sub-post > backdrop-container > blurred-filter {
 			background-repeat: no-repeat;
 			background-position: center;
 			background-size: cover;
@@ -878,10 +878,10 @@
 		body basis-layer:not(:first-of-type) {
 			display: none;
 		}
-		body#blur major > sub-major > post > sub-post > backdrop-container:not(:first-of-type) {
+		body.blur major > sub-major > post > sub-post > backdrop-container:not(:first-of-type) {
 			display: none;
 		}
-		body#blur major > sub-major > post > sub-post > backdrop-container > blurred-filter:not(:first-of-type) {
+		body.blur major > sub-major > post > sub-post > backdrop-container > blurred-filter:not(:first-of-type) {
 			display: none;
 		}
 	}
