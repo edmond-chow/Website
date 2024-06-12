@@ -455,12 +455,13 @@
 	let hasScrolled = false;
 	let eventStructuredTag = new CustomEvent('structuredTag');
 	let eventFormedStyle = new CustomEvent('formedStyle');
-	let scrollIntoView = () => {
+	let scrollIntoView = async () => {
 		let hash = document.location.hash;
 		if (hash.length == 0) {
 			scrollTo(scrollX, 0);
 		} else {
 			document.location.hash = '#';
+			await suspend();
 			document.location.hash = hash;
 		}
 	};
@@ -919,7 +920,7 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 		}
 		await formedStyle();
 		if (hasScrolled == false) {
-			scrollIntoView();
+			await scrollIntoView();
 			hasScrolled = true;
 		}
 	};
