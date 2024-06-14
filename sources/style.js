@@ -43,18 +43,6 @@
 		}
 	].bindTo(window);
 	[
-		function addCompleteState() {
-			this.complete = (() => {
-				let complete = true;
-				Object.keys(this).forEach((value) => {
-					if (this[value] == null) {
-						complete = false;
-					}
-				});
-				return complete;
-			})();
-			Object.freeze(this);
-		},
 		function constrainedWith(...types) {
 			let arguments = Array.from(this);
 			if (arguments.length != types.length) {
@@ -118,24 +106,38 @@
 	].bindTo(window);
 	await suspend();
 	/* { constructors } */
-	class Top {
+	class ICompleted {
+		addCompleteState() {
+			this.complete = true;
+			Object.keys(this).forEach((value) => {
+				if (this[value] == null) {
+					this.complete = false;
+				}
+			});
+			Object.freeze(this);
+		}
+	};
+	class Top extends ICompleted {
 		constructor(head) {
 			[head].constrainedWithAndThrow(Element);
+			super();
 			this.topNode = head.nodeName == 'top'.toUpperCase() ? head : null;
 			this.addCompleteState();
 		}
 	};
-	class Major {
+	class Major extends ICompleted {
 		constructor(head) {
 			[head].constrainedWithAndThrow(Element);
+			super();
 			this.majorNode = head.nodeName == 'major'.toUpperCase() ? head : null;
 			this.subMajorNode = head.get(':scope > sub-major');
 			this.addCompleteState();
 		}
 	};
-	class Post {
+	class Post extends ICompleted {
 		constructor(head) {
 			[head].constrainedWithAndThrow(Element);
+			super();
 			this.postNode = head.nodeName == 'post'.toUpperCase() ? head : null;
 			this.subPostNode = head.get(':scope > sub-post');
 			this.postIconNode = head.get(':scope > post-icon');
@@ -149,9 +151,10 @@
 			this.addCompleteState();
 		}
 	};
-	class Dropdown {
+	class Dropdown extends ICompleted {
 		constructor(head) {
 			[head].constrainedWithAndThrow(Element);
+			super();
 			this.dropdownNode = head.nodeName == 'dropdown'.toUpperCase() ? head : null;
 			this.innerPaddingNode = head.get(':scope > inner-padding');
 			this.dropdownContentNode = head.get(':scope > dropdown-content');
@@ -159,9 +162,10 @@
 			this.addCompleteState();
 		}
 	};
-	class Button {
+	class Button extends ICompleted {
 		constructor(head) {
 			[head].constrainedWithAndThrow(Element);
+			super();
 			this.buttonNode = head.nodeName == 'button'.toUpperCase() ? head : null;
 			this.addCompleteState();
 		}
