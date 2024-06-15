@@ -1,15 +1,16 @@
 (async () => {
 	/* { binder } */
-	let lock = { configurable: false, writable: false };
-	Array.prototype.bindTo = function bindTo(instance = window) {
+	let getDescriptor = (value, enumerable) => {
+		return { value: value, writable: false, enumerable: enumerable, configurable: false };
+	};
+	Array.prototype.bindTo = function bindTo(scope = window) {
 		this.forEach((value) => {
 			if (value instanceof Function) {
-				instance[value.name] = value;
-				Object.defineProperty(instance, value.name, lock);
+				Object.defineProperty(value, 'name', getDescriptor(value.name, true));
+				Object.defineProperty(scope, value.name, getDescriptor(value, true));
 				if (value.prototype instanceof Object) {
-					Object.defineProperty(value, 'prototype', lock);
-					value.prototype.constructor = value;
-					Object.defineProperty(value.prototype, 'constructor', lock);
+					Object.defineProperty(value, 'prototype', getDescriptor(value.prototype, false));
+					Object.defineProperty(value.prototype, 'constructor', getDescriptor(value.prototype.constructor, false));
 				}
 			}
 		});
@@ -48,16 +49,24 @@
 			if (arguments.length != types.length) {
 				return false;
 			}
-			let constrained = true;
-			arguments.forEach((value, index) => {
-				if (isNullable(types[index]) && value == null) {
-					return;
-				} else if (value instanceof removeNullable(types[index]) || Object.getPrototypeOf(value) == removeNullable(types[index]).prototype) {
-					return;
+			for (let i = 0; i < arguments.length; i++) {
+				let argument = arguments[i];
+				let type = types[i];
+				if (isNullable(type)) {
+					if (argument == null) {
+						continue;
+					}
+					type = removeNullable(type);
 				}
-				constrained = false;
-			});
-			return constrained;
+				if (argument instanceof type) {
+					continue;
+				} else if (Object.getPrototypeOf(argument) == type.prototype) {
+					continue;
+				} else {
+					return false;
+				}
+			}
+			return true;
 		},
 		function constrainedWithAndThrow(...types) {
 			if (!this.constrainedWith(...types)) {
