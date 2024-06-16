@@ -16,6 +16,7 @@
 		});
 	};
 	[Array.prototype.bindTo].bindTo(Array.prototype);
+	[getDescriptor].bindTo(window);
 	/* { reflection } */
 	class Nullable {
 		constructor(type) {
@@ -50,17 +51,16 @@
 				return false;
 			}
 			for (let i = 0; i < arguments.length; i++) {
-				let argument = arguments[i];
-				let type = types[i];
-				if (isNullable(type)) {
-					if (argument == null) {
+				let typeDecayed = removeNullable(types[i]);
+				if (arguments[i] == null) {
+					if (isNullable(types[i])) {
 						continue;
+					} else {
+						return false;
 					}
-					type = removeNullable(type);
-				}
-				if (argument instanceof type) {
+				} else if (arguments[i] instanceof typeDecayed) {
 					continue;
-				} else if (Object.getPrototypeOf(argument) == type.prototype) {
+				} else if (Object.getPrototypeOf(arguments[i]) == typeDecayed.prototype) {
 					continue;
 				} else {
 					return false;
