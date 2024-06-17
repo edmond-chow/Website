@@ -98,9 +98,6 @@
 				let scope = static ? type : type.prototype;
 				if (Object.getOwnPropertyDescriptor(scope, key).hasOwnProperty('value')) {
 					Object.defineProperty(scope, key, { writable: false, enumerable: true, configurable: false });
-					if (scope.key instanceof Object) {
-						Object.freeze(scope.key);
-					}
 				} else {
 					Object.defineProperty(scope, key, { enumerable: true, configurable: false });
 				}
