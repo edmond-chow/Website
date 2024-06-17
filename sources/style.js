@@ -13,7 +13,7 @@
 				Object.defineProperty(value, 'prototype', getSealed(value.prototype, false));
 				Object.defineProperty(value.prototype, 'constructor', getSealed(value, false));
 				if (protoize) {
-					Object.preventExtensions(value.prototype);
+					Object.freeze(value.prototype);
 				}
 			}
 			if (!extensible) {
