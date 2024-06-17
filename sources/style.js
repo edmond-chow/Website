@@ -95,7 +95,12 @@
 		function shareProperties(type, keys, static = false) {
 			[type, keys, static, type.prototype].constrainedWithAndThrow(Function, Array, Boolean, Object);
 			keys.forEach((key) => {
-				Object.defineProperty(static ? type : type.prototype, key, { enumerable: true, configurable: false });
+				let scope = static ? type : type.prototype;
+				if (Object.getOwnPropertyDescriptor(scope, key).hasOwnProperty('value')) {
+					Object.defineProperty(scope, key, { writable: false, enumerable: true, configurable: false });
+				} else {
+					Object.defineProperty(scope, key, { enumerable: true, configurable: false });
+				}
 			});
 		}
 	].bindTo(window);
