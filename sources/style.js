@@ -3,7 +3,7 @@
 	let getSealed = (value, enumerable) => {
 		return { value: value, writable: false, enumerable: enumerable, configurable: false };
 	};
-	Array.prototype.bindTo = function bindTo(scope, sealed = true, protoize = true) {
+	Array.prototype.bindTo = function bindTo(scope, sealed = true, protoize = false) {
 		this.filter((value) => {
 			return value instanceof Function;
 		}).forEach((value) => {
@@ -12,8 +12,16 @@
 			if (value.hasOwnProperty('prototype')) {
 				Object.defineProperty(value, 'prototype', getSealed(value.prototype, false));
 				Object.defineProperty(value.prototype, 'constructor', getSealed(value, false));
+				Object.getOwnPropertyNames(value.prototype).forEach((name) => {
+					let descriptor = Object.getOwnPropertyDescriptor(value.prototype, name);
+					if (descriptor.hasOwnProperty('value')) {
+						descriptor.writable = false;
+					}
+					descriptor.configurable = false;
+					Object.defineProperty(value.prototype, name, descriptor);
+				});
 				if (protoize) {
-					Object.freeze(value.prototype);
+					Object.preventExtensions(value.prototype);
 				}
 			}
 			if (sealed) {
@@ -58,7 +66,9 @@
 			}
 			for (let i = 0; i < arguments.length; i++) {
 				let typeDecayed = removeNullable(types[i]);
-				if (arguments[i] == null) {
+				if (arguments[i] === undefined) {
+					throw 'Some sort of function arguments should be exist.';
+				} else if (arguments[i] == null) {
 					if (isNullable(types[i])) {
 						continue;
 					} else {
@@ -208,7 +218,7 @@
 			Object.freeze(this);
 		}
 	};
-	hardFreeze(window, [Top, Major, Post, Dropdown, Button], true);
+	hardFreeze(window, [Top, Major, Post, Dropdown, Button], false);
 	/* { functionality } */
 	[
 		function forAll(selector) {
