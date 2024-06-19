@@ -3,6 +3,31 @@
 	let getSealed = (value, enumerable) => {
 		return { value: value, writable: false, enumerable: enumerable, configurable: false };
 	};
+	let seal = (object, extensible) => {
+		Object.getOwnPropertyNames(object).forEach((name) => {
+			let descriptor = Object.getOwnPropertyDescriptor(object, name);
+			descriptor.configurable = false;
+			Object.defineProperty(object, name, descriptor);
+		});
+		if (!extensible) {
+			Object.preventExtensions(object);
+		}
+		return object;
+	};
+	let freeze = (object, extensible) => {
+		Object.getOwnPropertyNames(object).forEach((name) => {
+			let descriptor = Object.getOwnPropertyDescriptor(object, name);
+			if (descriptor.hasOwnProperty('value')) {
+				descriptor.writable = false;
+			}
+			descriptor.configurable = false;
+			Object.defineProperty(object, name, descriptor);
+		});
+		if (!extensible) {
+			Object.preventExtensions(object);
+		}
+		return object;
+	};
 	Array.prototype.bindTo = function bindTo(scope, sealed = true, protoize = false) {
 		this.filter((value) => {
 			return value instanceof Function;
@@ -14,17 +39,7 @@
 				let prototype = value['prototype'];
 				Object.defineProperty(value, 'prototype', getSealed(prototype, false));
 				Object.defineProperty(prototype, 'constructor', getSealed(value, false));
-				Object.getOwnPropertyNames(prototype).forEach((name) => {
-					let descriptor = Object.getOwnPropertyDescriptor(prototype, name);
-					if (descriptor.hasOwnProperty('value')) {
-						descriptor.writable = false;
-					}
-					descriptor.configurable = false;
-					Object.defineProperty(prototype, name, descriptor);
-				});
-				if (protoize) {
-					Object.preventExtensions(prototype);
-				}
+				freeze(prototype, !protoize);
 			}
 			if (sealed) {
 				Object.seal(value);
@@ -32,12 +47,12 @@
 		});
 	};
 	[Array.prototype.bindTo].bindTo(Array.prototype);
-	[getSealed].bindTo(window);
+	[getSealed, seal, freeze].bindTo(window);
 	/* { reflection } */
 	class Nullable {
 		constructor(type) {
 			this.type = type;
-			Object.freeze(this);
+			freeze(this, true);
 		}
 	};
 	[Nullable].bindTo({});
@@ -157,67 +172,73 @@
 	].bindTo(window);
 	await suspend();
 	/* { constructors } */
+	let isMatched = (head, name) => {
+		return head.nodeName == name.toUpperCase();
+	};
+	let switchIf = (matched, value) => {
+		return matched ? value : null;
+	};
+	let isCompleted = (object) => {
+		return Object.getOwnPropertyNames(object).every((name) => {
+			return object[name] != null;
+		});
+	};
 	class Top {
 		constructor(head) {
 			[head].constrainedWithAndThrow(Element);
-			this.completed = head.nodeName == 'top'.toUpperCase();
-			if (this.completed) {
-				this.topNode = head;
-			}
-			Object.freeze(this);
+			let matched = isMatched(head, 'top');
+			this.topNode = switchIf(matched, head);
+			this.completed = isCompleted(this);
+			freeze(this, true);
 		}
 	};
 	class Major {
 		constructor(head) {
 			[head].constrainedWithAndThrow(Element);
-			this.completed = head.nodeName == 'major'.toUpperCase();
-			if (this.completed) {
-				this.majorNode = head;
-				this.subMajorNode = head.get(':scope > sub-major');
-			}
-			Object.freeze(this);
+			let matched = isMatched(head, 'major');
+			this.majorNode = switchIf(matched, head);
+			this.subMajorNode = switchIf(matched, head.get(':scope > sub-major'));
+			this.completed = isCompleted(this);
+			freeze(this, true);
 		}
 	};
 	class Post {
 		constructor(head) {
 			[head].constrainedWithAndThrow(Element);
-			this.completed = head.nodeName == 'post'.toUpperCase();
-			if (this.completed) {
-				this.postNode = head;
-				this.subPostNode = head.get(':scope > sub-post');
-				this.postIconNode = head.get(':scope > post-icon');
-				this.scrollIntoNode = head.get(':scope > sub-post > scroll-into');
-				this.postLeaderNode = head.get(':scope > sub-post > post-leader');
-				this.postLeaderSectionNode = head.get(':scope > sub-post > post-leader > post-leader-section');
-				this.postLeaderOrderNode = head.get(':scope > sub-post > post-leader > post-leader-section > post-leader-order');
-				this.postLeaderTitleNode = head.get(':scope > sub-post > post-leader > post-leader-section > post-leader-title');
-				this.postLeaderAdvanceNode = head.get(':scope > sub-post > post-leader > post-leader-advance');
-				this.postContentNode = head.get(':scope > sub-post > post-content');
-			}
-			Object.freeze(this);
+			let matched = isMatched(head, 'post');
+			this.postNode = switchIf(matched, head);
+			this.subPostNode = switchIf(matched, head.get(':scope > sub-post'));
+			this.postIconNode = switchIf(matched, head.get(':scope > post-icon'));
+			this.scrollIntoNode = switchIf(matched, head.get(':scope > sub-post > scroll-into'));
+			this.postLeaderNode = switchIf(matched, head.get(':scope > sub-post > post-leader'));
+			this.postLeaderSectionNode = switchIf(matched, head.get(':scope > sub-post > post-leader > post-leader-section'));
+			this.postLeaderOrderNode = switchIf(matched, head.get(':scope > sub-post > post-leader > post-leader-section > post-leader-order'));
+			this.postLeaderTitleNode = switchIf(matched, head.get(':scope > sub-post > post-leader > post-leader-section > post-leader-title'));
+			this.postLeaderAdvanceNode = switchIf(matched, head.get(':scope > sub-post > post-leader > post-leader-advance'));
+			this.postContentNode = switchIf(matched, head.get(':scope > sub-post > post-content'));
+			this.completed = isCompleted(this);
+			freeze(this, true);
 		}
 	};
 	class Dropdown {
 		constructor(head) {
 			[head].constrainedWithAndThrow(Element);
-			this.completed = head.nodeName == 'dropdown'.toUpperCase();
-			if (this.completed) {
-				this.dropdownNode = head;
-				this.innerPaddingNode = head.get(':scope > inner-padding');
-				this.dropdownContentNode = head.get(':scope > dropdown-content');
-				this.outerMarginNode = head.get(':scope > outer-margin');
-			}
-			Object.freeze(this);
+			let matched = isMatched(head, 'dropdown');
+			this.dropdownNode = switchIf(matched, head);
+			this.innerPaddingNode = switchIf(matched, head.get(':scope > inner-padding'));
+			this.dropdownContentNode = switchIf(matched, head.get(':scope > dropdown-content'));
+			this.outerMarginNode = switchIf(matched, head.get(':scope > outer-margin'));
+			this.completed = isCompleted(this);
+			freeze(this, true);
 		}
 	};
 	class Button {
 		constructor(head) {
 			[head].constrainedWithAndThrow(Element);
-			this.completed = head.nodeName == 'button'.toUpperCase();
-			if (this.completed) {
-				this.buttonNode = head;
-			}
-			Object.freeze(this);
+			let matched = isMatched(head, 'button');
+			this.buttonNode = switchIf(matched, head);
+			this.completed = isCompleted(this);
+			freeze(this, true);
 		}
 	};
 	hardFreeze(window, [Top, Major, Post, Dropdown, Button], false);
@@ -519,7 +540,7 @@
 			document.location.hash = hash;
 		}
 	};
-	let marker = () => {
+	let conductMarker = () => {
 		let getMarker = (majorValue, stackCount, postArray, postIndex) => {
 			let markerReversed = false;
 			if (majorValue.majorNode.hasAttribute('marker-reversed')) {
@@ -610,7 +631,7 @@
 			moveOutside('post > sub-post > post-content', 'scroll-into');
 			switchFirst('post > sub-post', 'scroll-into');
 			addFirst('post > sub-post', 'scroll-into');
-			marker();
+			conductMarker();
 			forAllTag('post').map((value) => {
 				return new Post(value);
 			}).forEach((value) => {
@@ -780,7 +801,7 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 		});
 		await suspend();
 		/* post */
-		marker();
+		conductMarker();
 		forAllTag('post').map((value) => {
 			return new Post(value);
 		}).filter((value) => {
