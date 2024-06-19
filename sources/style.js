@@ -1,9 +1,9 @@
 (async () => {
 	/* { binder } */
-	let getSealed = (value, enumerable) => {
+	let makeDescriptor = (value, enumerable = true) => {
 		return { value: value, writable: false, enumerable: enumerable, configurable: false };
 	};
-	let seal = (object, extensible) => {
+	let makeSealed = (object, extensible = false) => {
 		Object.getOwnPropertyNames(object).forEach((name) => {
 			let descriptor = Object.getOwnPropertyDescriptor(object, name);
 			descriptor.configurable = false;
@@ -14,7 +14,7 @@
 		}
 		return object;
 	};
-	let freeze = (object, extensible) => {
+	let makeFrozen = (object, extensible = false) => {
 		Object.getOwnPropertyNames(object).forEach((name) => {
 			let descriptor = Object.getOwnPropertyDescriptor(object, name);
 			if (descriptor.hasOwnProperty('value')) {
@@ -32,14 +32,14 @@
 		this.filter((value) => {
 			return value instanceof Function;
 		}).forEach((value) => {
-			Object.defineProperty(scope, value['name'], getSealed(value, true));
-			Object.defineProperty(value, 'name', getSealed(value['name'], false));
-			Object.defineProperty(value, 'length', getSealed(value['length'], false));
+			Object.defineProperty(scope, value['name'], makeDescriptor(value, true));
+			Object.defineProperty(value, 'name', makeDescriptor(value['name'], false));
+			Object.defineProperty(value, 'length', makeDescriptor(value['length'], false));
 			if (value.hasOwnProperty('prototype')) {
 				let prototype = value['prototype'];
-				Object.defineProperty(value, 'prototype', getSealed(prototype, false));
-				Object.defineProperty(prototype, 'constructor', getSealed(value, false));
-				freeze(prototype, !protoize);
+				Object.defineProperty(value, 'prototype', makeDescriptor(prototype, false));
+				Object.defineProperty(prototype, 'constructor', makeDescriptor(value, false));
+				makeFrozen(prototype, !protoize);
 			}
 			if (sealed) {
 				Object.seal(value);
@@ -47,12 +47,12 @@
 		});
 	};
 	[Array.prototype.bindTo].bindTo(Array.prototype);
-	[getSealed, seal, freeze].bindTo(window);
+	[makeDescriptor, makeSealed, makeFrozen].bindTo(window);
 	/* { reflection } */
 	class Nullable {
 		constructor(type) {
 			this.type = type;
-			freeze(this, true);
+			makeFrozen(this, true);
 		}
 	};
 	[Nullable].bindTo({});
@@ -189,7 +189,7 @@
 			let matched = isMatched(head, 'top');
 			this.topNode = switchIf(matched, head);
 			this.completed = isCompleted(this);
-			freeze(this, true);
+			makeFrozen(this, true);
 		}
 	};
 	class Major {
@@ -199,7 +199,7 @@
 			this.majorNode = switchIf(matched, head);
 			this.subMajorNode = switchIf(matched, head.get(':scope > sub-major'));
 			this.completed = isCompleted(this);
-			freeze(this, true);
+			makeFrozen(this, true);
 		}
 	};
 	class Post {
@@ -217,7 +217,7 @@
 			this.postLeaderAdvanceNode = switchIf(matched, head.get(':scope > sub-post > post-leader > post-leader-advance'));
 			this.postContentNode = switchIf(matched, head.get(':scope > sub-post > post-content'));
 			this.completed = isCompleted(this);
-			freeze(this, true);
+			makeFrozen(this, true);
 		}
 	};
 	class Dropdown {
@@ -229,7 +229,7 @@
 			this.dropdownContentNode = switchIf(matched, head.get(':scope > dropdown-content'));
 			this.outerMarginNode = switchIf(matched, head.get(':scope > outer-margin'));
 			this.completed = isCompleted(this);
-			freeze(this, true);
+			makeFrozen(this, true);
 		}
 	};
 	class Button {
@@ -238,7 +238,7 @@
 			let matched = isMatched(head, 'button');
 			this.buttonNode = switchIf(matched, head);
 			this.completed = isCompleted(this);
-			freeze(this, true);
+			makeFrozen(this, true);
 		}
 	};
 	hardFreeze(window, [Top, Major, Post, Dropdown, Button], false);
