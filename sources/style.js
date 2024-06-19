@@ -7,21 +7,23 @@
 		this.filter((value) => {
 			return value instanceof Function;
 		}).forEach((value) => {
-			Object.defineProperty(scope, value.name, getSealed(value, true));
-			Object.defineProperty(value, 'name', getSealed(value.name, false));
+			Object.defineProperty(scope, value['name'], getSealed(value, true));
+			Object.defineProperty(value, 'name', getSealed(value['name'], false));
+			Object.defineProperty(value, 'length', getSealed(value['length'], false));
 			if (value.hasOwnProperty('prototype')) {
-				Object.defineProperty(value, 'prototype', getSealed(value.prototype, false));
-				Object.defineProperty(value.prototype, 'constructor', getSealed(value, false));
-				Object.getOwnPropertyNames(value.prototype).forEach((name) => {
-					let descriptor = Object.getOwnPropertyDescriptor(value.prototype, name);
+				let prototype = value['prototype'];
+				Object.defineProperty(value, 'prototype', getSealed(prototype, false));
+				Object.defineProperty(prototype, 'constructor', getSealed(value, false));
+				Object.getOwnPropertyNames(prototype).forEach((name) => {
+					let descriptor = Object.getOwnPropertyDescriptor(prototype, name);
 					if (descriptor.hasOwnProperty('value')) {
 						descriptor.writable = false;
 					}
 					descriptor.configurable = false;
-					Object.defineProperty(value.prototype, name, descriptor);
+					Object.defineProperty(prototype, name, descriptor);
 				});
 				if (protoize) {
-					Object.preventExtensions(value.prototype);
+					Object.preventExtensions(prototype);
 				}
 			}
 			if (sealed) {
