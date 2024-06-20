@@ -3,21 +3,16 @@
 	let makeDescriptor = (value, enumerable = true) => {
 		return { value: value, writable: false, enumerable: enumerable, configurable: false };
 	};
-	let makeSealed = (object, extensible = false) => {
-		Object.getOwnPropertyNames(object).forEach((name) => {
-			let descriptor = Object.getOwnPropertyDescriptor(object, name);
-			descriptor.configurable = false;
-			Object.defineProperty(object, name, descriptor);
-		});
-		if (!extensible) {
-			Object.preventExtensions(object);
+	let makeObject = (object, extensible, constantize) => {
+		let names = Object.getOwnPropertyNames(object);
+		if (object instanceof Function) {
+			names = names.filter((name) => {
+				return name != 'arguments' && name != 'caller';
+			});
 		}
-		return object;
-	};
-	let makeFrozen = (object, extensible = false) => {
-		Object.getOwnPropertyNames(object).forEach((name) => {
+		names.forEach((name) => {
 			let descriptor = Object.getOwnPropertyDescriptor(object, name);
-			if (descriptor.hasOwnProperty('value')) {
+			if (constantize && descriptor.hasOwnProperty('value')) {
 				descriptor.writable = false;
 			}
 			descriptor.configurable = false;
@@ -27,6 +22,12 @@
 			Object.preventExtensions(object);
 		}
 		return object;
+	};
+	let makeSealed = (object, extensible = false) => {
+		return makeObject(object, extensible, false);
+	};
+	let makeFrozen = (object, extensible = false) => {
+		return makeObject(object, extensible, true);
 	};
 	Array.prototype.bindTo = function bindTo(scope, sealed = true, protoize = false) {
 		this.filter((value) => {
@@ -41,9 +42,7 @@
 				Object.defineProperty(prototype, 'constructor', makeDescriptor(value, false));
 				makeFrozen(prototype, !protoize);
 			}
-			if (sealed) {
-				Object.seal(value);
-			}
+			makeSealed(value, sealed);
 		});
 	};
 	[Array.prototype.bindTo].bindTo(Array.prototype);
@@ -55,7 +54,7 @@
 			makeFrozen(this, true);
 		}
 	};
-	[Nullable].bindTo({});
+	[Nullable].bindTo(window);
 	[
 		function toNullable() {
 			return new Nullable(this);
@@ -63,15 +62,14 @@
 	].bindTo(Function.prototype);
 	[
 		function isNullable(container) {
-			return container instanceof Nullable;
+			return container instanceof Nullable && container.type instanceof Function;
 		},
 		function removeNullable(container) {
-			if (container instanceof Nullable) {
-				return container.type;
-			} else if (container instanceof Function) {
-				return container;
+			let decay = container instanceof Nullable ? container.type : container;
+			if (decay instanceof Function) {
+				return decay;
 			} else {
-				throw 'The \'container\' argument should be either a \'Nullable\' type or a \'Function\' type.';
+				throw 'The decayed type are not function types.';
 			}
 		}
 	].bindTo(window);
@@ -82,7 +80,7 @@
 				return false;
 			}
 			for (let i = 0; i < arguments.length; i++) {
-				let typeDecayed = removeNullable(types[i]);
+				let decay = removeNullable(types[i]);
 				if (arguments[i] === undefined) {
 					throw 'Some sort of function arguments should be exist.';
 				} else if (arguments[i] == null) {
@@ -91,9 +89,9 @@
 					} else {
 						return false;
 					}
-				} else if (arguments[i] instanceof typeDecayed) {
+				} else if (arguments[i] instanceof decay) {
 					continue;
-				} else if (Object.getPrototypeOf(arguments[i]) == typeDecayed.prototype) {
+				} else if (Object.getPrototypeOf(arguments[i]) == decay.prototype) {
 					continue;
 				} else {
 					return false;
