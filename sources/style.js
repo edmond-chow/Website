@@ -560,7 +560,7 @@
 			}
 			return markerStartedWith;
 		};
-		let markedArray = [];
+		let markedPostNodes = [];
 		let subPostConducting = (majorValue, stackCount, orderString, postValue) => {
 			postValue.postContentNode.getAll(':scope > post').map((value) => {
 				return new Post(value);
@@ -568,7 +568,7 @@
 				return value.completed;
 			}).forEach((subPostValue, subPostIndex, subPostArray) => {
 				let subOrderString = orderString + '.' + getMarker(majorValue, stackCount + 1, subPostArray, subPostIndex).toString();
-				markedArray.push(subPostValue);
+				markedPostNodes.push(subPostValue.postNode);
 				subPostValue.postNode.setAttribute('marker', subOrderString);
 				subPostConducting(majorValue, stackCount + 1, subOrderString, subPostValue);
 			});
@@ -584,7 +584,7 @@
 				return value.completed;
 			}).forEach((postValue, postIndex, postArray) => {
 				let orderString = getMarker(majorValue, 0, postArray, postIndex).toString();
-				markedArray.push(postValue);
+				markedPostNodes.push(postValue.postNode);
 				postValue.postNode.setAttribute('marker', orderString);
 				subPostConducting(majorValue, 0, orderString, postValue);
 			});
@@ -593,13 +593,10 @@
 			return new Post(value);
 		}).filter((value) => {
 			return value.completed;
+		}).filter((postValue) => {
+			return !markedPostNodes.includes(postValue.postNode);
 		}).forEach((postValue) => {
-			let markedIndex = markedArray.findIndex((markedValue) => {
-				return markedValue.postNode == postValue.postNode;
-			});
-			if (markedIndex == -1) {
-				postValue.postNode.removeAttribute('marker');
-			}
+			postValue.postNode.removeAttribute('marker');
 		});
 	};
 	let structuredTag = async () => {
@@ -859,6 +856,7 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 			});
 		});
 		await suspend();
+		/* dropdown */
 		forAllTag('dropdown').map((value) => {
 			return new Dropdown(value);
 		}).filter((value) => {
