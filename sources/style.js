@@ -539,55 +539,47 @@
 		}
 	};
 	let conductMarker = () => {
-		let getMarker = (majorValue, stackCount, postArray, postIndex) => {
-			let markerReversed = false;
-			if (majorValue.majorNode.hasAttribute('marker-reversed')) {
-				if (majorValue.majorNode.getAttribute('marker-reversed').split(' ')[stackCount]?.toLowerCase() == 'true') {
-					markerReversed = true;
-				};
-			}
-			let markerStartedWith = 0;
-			if (majorValue.majorNode.hasAttribute('marker-started-with')) {
-				let value = parseInt(majorValue.majorNode.getAttribute('marker-started-with').split(' ')[stackCount]);
-				if (!isNaN(value)) {
-					markerStartedWith = value;
-				};
-			}
-			if (markerReversed) {
-				markerStartedWith += postArray.length - 1 - postIndex;
-			} else {
-				markerStartedWith += postIndex;
-			}
-			return markerStartedWith;
-		};
 		let markedPostNodes = [];
-		let subPostConducting = (majorValue, stackCount, orderString, postValue) => {
-			postValue.postContentNode.getAll(':scope > post').map((value) => {
-				return new Post(value);
-			}).filter((value) => {
-				return value.completed;
-			}).forEach((subPostValue, subPostIndex, subPostArray) => {
-				let subOrderString = orderString + '.' + getMarker(majorValue, stackCount + 1, subPostArray, subPostIndex).toString();
-				markedPostNodes.push(subPostValue.postNode);
-				subPostValue.postNode.setAttribute('marker', subOrderString);
-				subPostConducting(majorValue, stackCount + 1, subOrderString, subPostValue);
-			});
-		};
 		forAllTag('major').map((value) => {
 			return new Major(value);
 		}).filter((value) => {
 			return value.completed;
 		}).forEach((majorValue) => {
-			majorValue.subMajorNode.getAll(':scope > post').map((value) => {
-				return new Post(value);
-			}).filter((value) => {
-				return value.completed;
-			}).forEach((postValue, postIndex, postArray) => {
-				let orderString = getMarker(majorValue, 0, postArray, postIndex).toString();
-				markedPostNodes.push(postValue.postNode);
-				postValue.postNode.setAttribute('marker', orderString);
-				subPostConducting(majorValue, 0, orderString, postValue);
-			});
+			let markerReversed = [];
+			if (majorValue.majorNode.hasAttribute('marker-reversed')) {
+				markerReversed = majorValue.majorNode.getAttribute('marker-reversed').split(' ').map((value) => {
+					return value.toLowerCase() == 'true';
+				});
+			}
+			let markerStartedWith = [];
+			if (majorValue.majorNode.hasAttribute('marker-started-with')) {
+				markerStartedWith = majorValue.majorNode.getAttribute('marker-started-with').split(' ').map((value) => {
+					return parseInt(value);
+				}).map((value) => {
+					return isNaN(value) ? 0 : value;
+				});
+			}
+			let getPostValues = (node) => {
+				return node.getAll(':scope > post').map((value) => {
+					return new Post(value);
+				}).filter((value) => {
+					return value.completed;
+				});
+			};
+			let getOrder = (layer, index, length) => {
+				let reversed = layer < markerReversed.length ? markerReversed[layer] : false;
+				let startedWith = layer < markerStartedWith.length ? markerStartedWith[layer] : 0;
+				return startedWith + (reversed ? length - 1 - index : index);
+			};
+			let subPostConducting = (headNode, orderString, postLayer) => {
+				getPostValues(headNode).forEach((postValue, postIndex, postArray) => {
+					let subOrderString = orderString + getOrder(postLayer, postIndex, postArray.length).toString();
+					postValue.postNode.setAttribute('marker', subOrderString);
+					markedPostNodes.push(postValue.postNode);
+					subPostConducting(postValue.postContentNode, subOrderString + '.', postLayer + 1);
+				});
+			};
+			subPostConducting(majorValue.subMajorNode, '', 0);
 		});
 		forAllTag('post').map((value) => {
 			return new Post(value);
