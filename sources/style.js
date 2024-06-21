@@ -524,20 +524,17 @@
 					return isNaN(value) ? 0 : value;
 				});
 			}
-			let getPostValues = (node) => {
-				return node.getAll(':scope > post').map((value) => {
-					return new Post(value);
-				}).filter((value) => {
-					return value.completed;
-				});
-			};
 			let getOrder = (layer, index, length) => {
 				let reversed = layer < markerReversed.length ? markerReversed[layer] : false;
 				let startedWith = layer < markerStartedWith.length ? markerStartedWith[layer] : 0;
 				return startedWith + (reversed ? length - 1 - index : index);
 			};
 			let subPostConducting = (headNode, orderString, postLayer) => {
-				getPostValues(headNode).forEach((postValue, postIndex, postArray) => {
+				headNode.getAll(':scope > post').map((value) => {
+					return new Post(value);
+				}).filter((value) => {
+					return value.completed;
+				}).forEach((postValue, postIndex, postArray) => {
 					let subOrderString = orderString + getOrder(postLayer, postIndex, postArray.length).toString();
 					postValue.postNode.setAttribute('marker', subOrderString);
 					markedPostNodes.push(postValue.postNode);
