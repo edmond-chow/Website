@@ -277,9 +277,11 @@
 			[parentSelector, childName].constrainedWithAndThrow(String, String);
 			forAll(parentSelector).forEach((value) => {
 				let childs = value.arrayForChild(childName);
-				if (value.hasParentNode()) {
-					value.parentElement.append(...childs);
+				if (childs.length == 0) {
+					let substance = document.createElement(childName);
+					value.parentElement.append(substance);
 				}
+				value.parentElement.append(...childs);
 			});
 		},
 		function hasSubstance(parentNode) {
