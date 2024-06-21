@@ -253,9 +253,6 @@
 		},
 		function insertSurround(parentSelector, childName) {
 			[parentSelector, childName].constrainedWithAndThrow(String, String);
-			if (childName == '') {
-				return;
-			}
 			forAll(parentSelector).forEach((value) => {
 				if (value.arrayForChild(childName).length == 0) {
 					let substance = document.createElement(childName);
@@ -266,86 +263,73 @@
 		},
 		function switchFirst(parentSelector, childName) {
 			[parentSelector, childName].constrainedWithAndThrow(String, String);
-			if (childName == '') {
-				return;
-			}
 			forAll(parentSelector).forEach((value) => {
 				value.prepend(...value.arrayForChild(childName));
 			});
 		},
 		function addFirst(parentSelector, childName) {
 			[parentSelector, childName].constrainedWithAndThrow(String, String);
-			if (childName == '') {
-				return;
-			}
 			forAll(parentSelector).forEach((value) => {
-				if (value.children.length > 0 && value.children[0].tagName.toUpperCase() == childName.toUpperCase()) {
-					return;
+				if (value.childNodes.length == 0 || value.childNodes[0].nodeName != childName.toUpperCase()) {
+					let substance = document.createElement(childName);
+					value.prepend(substance);
 				}
-				let substance = document.createElement(childName);
-				value.prepend(substance);
 			});
 		},
 		function moveOutside(parentSelector, childName) {
 			[parentSelector, childName].constrainedWithAndThrow(String, String);
-			if (childName == '') {
-				return;
-			}
 			forAll(parentSelector).forEach((value) => {
 				value.parentElement?.prepend(...value.arrayForChild(childName));
 			});
 		},
 		function hasSubstance(parentNode) {
 			[parentNode].constrainedWithAndThrow(Element);
-			let has = false;
-			parentNode.childNodes.forEach((value) => {
+			return !Array.from(parentNode.childNodes).every((value) => {
 				if (value.nodeName == '#comment') {
-					return;
+					return true;
 				} else if (value.nodeName == '#text' && value.wholeText.removeSpace() == '') {
-					return;
+					return true;
 				} else if (value instanceof Element && value.nodeName == 'br'.toUpperCase()) {
-					return;
+					return true;
 				} else if (value instanceof Element && window.getComputedStyle(value).display == 'none') {
-					return;
+					return true;
+				} else {
+					return false;
 				}
-				has = true;
 			});
-			return has;
 		},
 		function hasTextOnly(parentNode) {
 			[parentNode].constrainedWithAndThrow(Element);
-			let has = true;
-			parentNode.childNodes.forEach((value) => {
+			return Array.from(parentNode.childNodes).every((value) => {
 				if (value.nodeName == '#comment') {
-					return;
+					return true;
 				} else if (value.nodeName == '#text') {
-					return;
+					return true;
 				} else if (value instanceof Element && value.nodeName == 'br'.toUpperCase()) {
-					return;
+					return true;
+				} else {
+					return false;
 				}
-				has = false;
 			});
-			return has;
 		},
 		function hasNoTextWithNode(parentNode) {
 			[parentNode].constrainedWithAndThrow(Element);
-			let has = true;
-			parentNode.childNodes.forEach((value) => {
+			return Array.from(parentNode.childNodes).every((value) => {
 				if (value.nodeName == '#comment') {
-					return;
+					return true;
 				} else if (value.nodeName == '#text' && value.wholeText.removeSpace() == '') {
-					return;
+					return true;
 				} else if (value instanceof Element && value.nodeName != 'br'.toUpperCase()) {
-					return;
+					return true;
+				} else {
+					return false;
 				}
-				has = false;
 			});
-			return has;
 		},
 		function isInside(currentNode, parentNode = document.body) {
 			[currentNode, parentNode].constrainedWithAndThrow(Element, Element);
 			if (!currentNode.isOfBodyTree() || !parentNode.isOfBodyTree()) {
-				return;
+				return false;
 			}
 			let rect = currentNode.getBoundingClientRect();
 			let parentRect = parentNode != document.body ? parentNode.getBoundingClientRect() : new DOMRect(0, 0, document.body.clientWidth, document.body.clientHeight);
@@ -358,7 +342,7 @@
 		function isScrollable(currentNode) {
 			[currentNode].constrainedWithAndThrow(Element);
 			if (!currentNode.isOfBodyTree()) {
-				return;
+				return false;
 			}
 			let scrollableX = currentNode.scrollWidth > currentNode.clientWidth;
 			let scrollableY = currentNode.scrollHeight > currentNode.clientHeight;
@@ -367,7 +351,7 @@
 		function getParentNode(currentNode) {
 			[currentNode].constrainedWithAndThrow(Element);
 			if (!currentNode.isOfBodyTree()) {
-				return;
+				return null;
 			}
 			let parentNode = currentNode.parentElement;
 			while (parentNode != document.body && !isScrollable(parentNode)) {
@@ -378,7 +362,7 @@
 		function inScrollable(currentNode) {
 			[currentNode].constrainedWithAndThrow(Element);
 			if (!currentNode.isOfBodyTree()) {
-				return;
+				return false;
 			}
 			while (currentNode != document.body) {
 				let parentNode = getParentNode(currentNode);
@@ -406,36 +390,22 @@
 		function makeCascading(headNode, nodeId, styleText) {
 			[headNode, nodeId, styleText].constrainedWithAndThrow(Element, String, String);
 			let styleNode = (() => {
-				let pseudoNode = (() => {
-					let cascadingNode = headNode.getAll(':scope > style');
-					let filteredNode = [];
-					cascadingNode.forEach((value) => {
-						if (value.id == nodeId) {
-							filteredNode.push(value);
-						}
-					});
-					return filteredNode;
-				})();
-				if (pseudoNode.length == 0) {
+				let cascadingNode = headNode.getAll(':scope > style').filter((value) => {
+					return value.id == nodeId;
+				});
+				if (cascadingNode.length == 0) {
 					let styleNode = document.createElement('style');
 					styleNode.id = nodeId;
 					headNode.append(styleNode);
 					return styleNode;
 				} else {
-					pseudoNode.slice(1).forEach((value) => {
+					cascadingNode.slice(1).forEach((value) => {
 						value.remove();
 					});
-					return pseudoNode[0];
+					return cascadingNode[0];
 				}
 			})();
-			if (styleNode.childNodes.length != 1) {
-				while (styleNode.firstChild != null) {
-					styleNode.removeChild(styleNode.firstChild);
-				}
-				styleNode.append(document.createTextNode(styleText));
-			} else if (styleNode.firstChild.wholeText != styleText) {
-				styleNode.firstChild.textContent = styleText;
-			}
+			styleNode.textContent = styleText;
 		}
 	].bindTo(window);
 	[
@@ -450,13 +420,9 @@
 		},
 		function arrayForChild(childName) {
 			[childName].constrainedWithAndThrow(String);
-			let array = [];
-			Array.from(this.children).forEach((value) => {
-				if (value.tagName.toUpperCase() == childName.toUpperCase()) {
-					array.push(value);
-				}
+			return Array.from(this.childNodes).filter((value) => {
+				return value.nodeName == childName.toUpperCase();
 			});
-			return array;
 		},
 		function isOfHTMLTree() {
 			let self = this;
@@ -489,13 +455,12 @@
 		},
 		function surroundedBy(parent) {
 			arguments.constrainedWithAndThrow(String);
-			if (!this.isOfBodyTree()) {
-				return;
+			if (this.isOfBodyTree() && this != document.body) {
+				let parentNode = this.parentElement;
+				let surroundingNode = document.createElement(parent);
+				surroundingNode.append(this);
+				parentNode.append(surroundingNode);
 			}
-			let parentNode = this.parentElement;
- 			let surroundingNode = document.createElement(parent);
-			surroundingNode.append(this);
-			parentNode?.append(surroundingNode);
 		}
 	].bindTo(Element.prototype);
 	[
@@ -812,24 +777,23 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 				value.postContentNode.classList.add('no-content');
 			}
 			/* '.has-only-post' for the 'post > sub-post > post-content's */
-			function hasOnlyPost(parentNode) {
-				let has = true;
-				parentNode.childNodes.forEach((value) => {
+			let hasOnlyPost = (parentNode) => {
+				return Array.from(parentNode.childNodes).every((value) => {
 					if (value.nodeName == '#comment') {
-						return;
+						return true;
 					} else if (value.nodeName == '#text' && value.wholeText.removeSpace() == '') {
-						return;
+						return true;
 					} else if (value instanceof Element && value.nodeName == 'br'.toUpperCase()) {
-						return;
+						return true;
 					} else if (value instanceof Element && value.nodeName == 'post'.toUpperCase()) {
-						return;
+						return true;
 					} else if (value instanceof Element && window.getComputedStyle(value).display == 'none') {
-						return;
+						return true;
+					} else {
+						return false;
 					}
-					has = false;
 				});
-				return has;
-			}
+			};
 			if (hasOnlyPost(value.postContentNode)) {
 				value.postContentNode.classList.add('has-only-post');
 			} else {
@@ -873,21 +837,18 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 				value.dropdownNode.classList.remove('has-disabled');
 			}
 			/* setting the 'maxHeight', 'left' and 'right' style, and '.hidden' for a 'dropdown-content' */
-			(() => {
-				let top = value.dropdownNode.getBoundingClientRect().bottom + 6;
-				let bottom = document.body.clientHeight - value.dropdownNode.getBoundingClientRect().bottom;
-				if (top < 69 || bottom < 64 || !inScrollable(value.dropdownNode)) {
-					value.dropdownContentNode.hidden = true;
-					value.dropdownContentNode.style.maxHeight = '';
-					value.dropdownContentNode.style.top = '';
-					value.dropdownContentNode.style.left = '';
-					value.dropdownContentNode.style.right = '';
-					return;
-				} else {
-					value.dropdownContentNode.hidden = false;
-					value.dropdownContentNode.style.maxHeight = (bottom - 28).toString() + 'px';
-					value.dropdownContentNode.style.top = top.toString() + 'px';
-				}
+			let top = value.dropdownNode.getBoundingClientRect().bottom + 6;
+			let bottom = document.body.clientHeight - value.dropdownNode.getBoundingClientRect().bottom;
+			if (top < 69 || bottom < 64 || !inScrollable(value.dropdownNode)) {
+				value.dropdownContentNode.hidden = true;
+				value.dropdownContentNode.style.maxHeight = '';
+				value.dropdownContentNode.style.top = '';
+				value.dropdownContentNode.style.left = '';
+				value.dropdownContentNode.style.right = '';
+			} else {
+				value.dropdownContentNode.hidden = false;
+				value.dropdownContentNode.style.maxHeight = (bottom - 28).toString() + 'px';
+				value.dropdownContentNode.style.top = top.toString() + 'px';
 				let left = value.dropdownNode.getBoundingClientRect().left;
 				if (left < 6) {
 					value.dropdownContentNode.style.left = '6px';
@@ -899,7 +860,7 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 					value.dropdownContentNode.style.left = left.toString() + 'px';
 					value.dropdownContentNode.style.right = '';
 				}
-			})();
+			}
 			/* '.no-content' for a 'dropdown-content' */
 			if (hasSubstance(value.dropdownContentNode)) {
 				value.dropdownContentNode.classList.remove('no-content');
