@@ -254,32 +254,32 @@
 		function insertSurround(parentSelector, childName) {
 			[parentSelector, childName].constrainedWithAndThrow(String, String);
 			forAll(parentSelector).forEach((value) => {
-				if (value.arrayForChild(childName).length == 0) {
+				let childs = value.arrayForChild(childName);
+				if (childs.length == 0) {
 					let substance = document.createElement(childName);
-					substance.prepend(...value.childNodes);
-					value.prepend(substance);
+					substance.append(...value.childNodes);
+					value.append(substance);
 				}
 			});
 		},
-		function switchFirst(parentSelector, childName) {
+		function switchBottom(parentSelector, childName) {
 			[parentSelector, childName].constrainedWithAndThrow(String, String);
 			forAll(parentSelector).forEach((value) => {
-				value.prepend(...value.arrayForChild(childName));
-			});
-		},
-		function addFirst(parentSelector, childName) {
-			[parentSelector, childName].constrainedWithAndThrow(String, String);
-			forAll(parentSelector).forEach((value) => {
-				if (value.childNodes.length == 0 || value.childNodes[0].nodeName != childName.toUpperCase()) {
+				let childs = value.arrayForChild(childName);
+				if (childs.length == 0) {
 					let substance = document.createElement(childName);
-					value.prepend(substance);
+					value.append(substance);
 				}
+				value.append(...childs);
 			});
 		},
 		function moveOutside(parentSelector, childName) {
 			[parentSelector, childName].constrainedWithAndThrow(String, String);
 			forAll(parentSelector).forEach((value) => {
-				value.parentElement?.prepend(...value.arrayForChild(childName));
+				let childs = value.arrayForChild(childName);
+				if (value.hasParentNode()) {
+					value.parentElement.append(...childs);
+				}
 			});
 		},
 		function hasSubstance(parentNode) {
@@ -453,9 +453,12 @@
 		function isOfBodyTree() {
 			return this.isOfHTMLTree() && !this.isOfHeadTree();
 		},
+		function hasParentNode() {
+			return this.isOfBodyTree() && this != document.body;
+		},
 		function surroundedBy(parent) {
 			arguments.constrainedWithAndThrow(String);
-			if (this.isOfBodyTree() && this != document.body) {
+			if (this.hasParentNode()) {
 				let parentNode = this.parentElement;
 				let surroundingNode = document.createElement(parent);
 				surroundingNode.append(this);
@@ -563,23 +566,18 @@
 			/* structuring for the 'post's */
 			insertSurround('post', 'sub-post');
 			moveOutside('post > sub-post', 'post-icon');
-			switchFirst('post', 'post-icon');
-			addFirst('post', 'post-icon');
+			switchBottom('post', 'post-icon');
+			switchBottom('post', 'sub-post');
 			insertSurround('post > sub-post', 'post-content');
-			moveOutside('post > sub-post > post-content', 'post-leader');
-			switchFirst('post > sub-post', 'post-leader');
-			addFirst('post > sub-post', 'post-leader');
-			switchFirst('post > sub-post > post-leader', 'post-leader-advance');
-			addFirst('post > sub-post > post-leader', 'post-leader-advance');
-			switchFirst('post > sub-post > post-leader', 'post-leader-section');
-			addFirst('post > sub-post > post-leader', 'post-leader-section');
-			switchFirst('post > sub-post > post-leader > post-leader-section', 'post-leader-title');
-			addFirst('post > sub-post > post-leader > post-leader-section', 'post-leader-title');
-			switchFirst('post > sub-post > post-leader > post-leader-section', 'post-leader-order');
-			addFirst('post > sub-post > post-leader > post-leader-section', 'post-leader-order');
 			moveOutside('post > sub-post > post-content', 'scroll-into');
-			switchFirst('post > sub-post', 'scroll-into');
-			addFirst('post > sub-post', 'scroll-into');
+			moveOutside('post > sub-post > post-content', 'post-leader');
+			switchBottom('post > sub-post', 'scroll-into');
+			switchBottom('post > sub-post', 'post-leader');
+			switchBottom('post > sub-post', 'post-content');
+			switchBottom('post > sub-post > post-leader', 'post-leader-section');
+			switchBottom('post > sub-post > post-leader', 'post-leader-advance');
+			switchBottom('post > sub-post > post-leader > post-leader-section', 'post-leader-order');
+			switchBottom('post > sub-post > post-leader > post-leader-section', 'post-leader-title');
 			conductMarker();
 			forAllTag('post').map((value) => {
 				return new Post(value);
@@ -619,13 +617,11 @@
 		/* dropdown */ {
 			/* structuring for the 'dropdown's */
 			insertSurround('dropdown', 'dropdown-content');
-			moveOutside('dropdown > dropdown-content', 'outer-margin');
-			switchFirst('dropdown', 'outer-margin');
-			addFirst('dropdown', 'outer-margin');
-			switchFirst('dropdown', 'dropdown-content');
 			moveOutside('dropdown > dropdown-content', 'inner-padding');
-			switchFirst('dropdown', 'inner-padding');
-			addFirst('dropdown', 'inner-padding');
+			moveOutside('dropdown > dropdown-content', 'outer-margin');
+			switchBottom('dropdown', 'inner-padding');
+			switchBottom('dropdown', 'dropdown-content');
+			switchBottom('dropdown', 'outer-margin');
 			forAllTag('dropdown').map((value) => {
 				return new Dropdown(value);
 			}).forEach((value) => {
@@ -634,12 +630,9 @@
 		}
 		await suspend();
 		/* background-image with 'basis-layer, backdrop-container > blurred-filter' */ {
-			switchFirst('body', 'basis-layer');
-			addFirst('body', 'basis-layer');
-			switchFirst('body major > sub-major > post > sub-post', 'backdrop-container');
-			addFirst('body major > sub-major > post > sub-post', 'backdrop-container');
-			switchFirst('body major > sub-major > post > sub-post > backdrop-container', 'blurred-filter');
-			addFirst('body major > sub-major > post > sub-post > backdrop-container', 'blurred-filter');
+			switchBottom('body', 'basis-layer');
+			switchBottom('body major > sub-major > post > sub-post', 'backdrop-container');
+			switchBottom('body major > sub-major > post > sub-post > backdrop-container', 'blurred-filter');
 		}
 		await suspend();
 		document.dispatchEvent(eventStructuredTag);
