@@ -469,8 +469,10 @@
 	/* { event-dispatcher } */
 	let isLoaded = false;
 	let hasScrolled = false;
+	let eventDispatcherInitialized = new CustomEvent('dispatcherInitialized');
 	let eventStructuredTag = new CustomEvent('structuredTag');
 	let eventFormedStyle = new CustomEvent('formedStyle');
+	let eventScrollIntoView = new CustomEvent('scrollIntoView');
 	let scrollIntoView = async () => {
 		let hash = document.location.hash;
 		if (hash.length == 0) {
@@ -480,6 +482,8 @@
 			await suspend();
 			document.location.hash = hash;
 		}
+		await suspend();
+		document.dispatchEvent(eventScrollIntoView);
 	};
 	let conductMarker = () => {
 		let markedPostNodes = [];
@@ -930,6 +934,7 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 	await suspend(() => {
 		return document.readyState == 'complete';
 	});
+	document.dispatchEvent(eventDispatcherInitialized);
 	while (true) {
 		await dispatcher();
 		await suspend();
