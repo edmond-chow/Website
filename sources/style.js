@@ -328,53 +328,60 @@
 				}
 			});
 		},
-		function isInside(currentNode, parentNode = document.body) {
+		function isInside(currentNode, parentNode, headNode = document.body) {
 			[currentNode, parentNode].constrainedWithAndThrow(Element, Element);
-			if (!currentNode.isOfBodyTree() || !parentNode.isOfBodyTree()) {
+			if (!currentNode.isOfNodeTree(parentNode) || !parentNode.isOfNodeTree(headNode)) {
 				return false;
 			}
-			let rect = currentNode.getBoundingClientRect();
-			let parentRect = parentNode != document.body ? parentNode.getBoundingClientRect() : new DOMRect(0, 0, document.body.clientWidth, document.body.clientHeight);
-			let left = rect.x < parentRect.x + parentRect.width;
-			let top = rect.y < parentRect.y + parentRect.height;
-			let right = rect.x + rect.width > parentRect.x;
-			let bottom = rect.y + rect.height > parentRect.y;
-			return (left && right) && (top && bottom);
+			let currentRect = currentNode.getBoundingClientRect();
+			let parentRect = parentNode != headNode ? parentNode.getBoundingClientRect() : new DOMRect(0, 0, headNode.clientWidth, headNode.clientHeight);
+			let insideX = currentRect.left < parentRect.right && currentRect.right > parentRect.left;
+			let insideY = currentRect.top < parentRect.bottom && currentRect.bottom > parentRect.top;
+			return insideX && insideY;
 		},
-		function isScrollable(currentNode) {
+		function isScrollable(currentNode, headNode = document.body) {
 			[currentNode].constrainedWithAndThrow(Element);
-			if (!currentNode.isOfBodyTree()) {
+			if (!currentNode.isOfNodeTree(headNode)) {
 				return false;
 			}
 			let scrollableX = currentNode.scrollWidth > currentNode.clientWidth;
 			let scrollableY = currentNode.scrollHeight > currentNode.clientHeight;
 			return scrollableX || scrollableY;
 		},
-		function getParentNode(currentNode) {
+		function getScrollable(currentNode, headNode = document.body) {
 			[currentNode].constrainedWithAndThrow(Element);
-			if (!currentNode.isOfBodyTree()) {
+			if (!currentNode.isOfNodeTree(headNode)) {
 				return null;
 			}
-			let parentNode = currentNode.parentElement;
-			while (parentNode != document.body && !isScrollable(parentNode)) {
-				parentNode = parentNode.parentElement;
+			let container = currentNode.parentElement;
+			while (container != null) {
+				if (container == headNode) {
+					return headNode;
+				} else if (!isScrollable(container, headNode)) {
+					container = container.parentElement;
+				} else {
+					return container;
+				}
 			}
-			return parentNode;
+			return null;
 		},
-		function inScrollable(currentNode) {
+		function inScrollable(currentNode, headNode = document.body) {
 			[currentNode].constrainedWithAndThrow(Element);
-			if (!currentNode.isOfBodyTree()) {
+			if (!currentNode.isOfNodeTree(headNode)) {
 				return false;
 			}
-			while (currentNode != document.body) {
-				let parentNode = getParentNode(currentNode);
-				if (isInside(currentNode, parentNode)) {
-					currentNode = parentNode;
+			let substance = currentNode;
+			while (substance != null) {
+				let container = getScrollable(substance, headNode);
+				if (substance == headNode) {
+					return true;
+				} else if (container != null && isInside(substance, container, headNode)) {
+					substance = container;
 				} else {
 					return false;
 				}
 			}
-			return true;
+			return false;
 		},
 		function setLocked(currentNode) {
 			[currentNode].constrainedWithAndThrow(Element);
@@ -426,37 +433,18 @@
 				return value.nodeName == childName.toUpperCase();
 			});
 		},
-		function isOfHTMLTree() {
-			let self = this;
-			while (self != null) {
-				if (self == document.documentElement) {
+		function isOfNodeTree(headNode = document.body) {
+			let currentNode = this;
+			while (currentNode != null) {
+				if (currentNode == headNode) {
 					return true;
 				}
-				self = self.parentElement;
+				currentNode = currentNode.parentElement;
 			}
 			return false;
 		},
-		function isOfHeadTree() {
-			if (this == document.documentElement) {
-				return true;
-			}
-			let self = this;
-			while (self != document.documentElement) {
-				if (self == document.head) {
-					return true;
-				}
-				self = self.parentElement;
-				if (self == null) {
-					break;
-				}
-			}
-			return false;
-		},
-		function isOfBodyTree() {
-			return this.isOfHTMLTree() && !this.isOfHeadTree();
-		},
-		function hasParentNode() {
-			return this.isOfBodyTree() && this != document.body;
+		function hasParentNode(headNode = document.body) {
+			return this != headNode && this.isOfNodeTree(headNode);
 		},
 		function surroundedBy(parent) {
 			arguments.constrainedWithAndThrow(String);
