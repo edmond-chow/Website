@@ -446,11 +446,11 @@
 		function hasParentNode(headNode = document.body) {
 			return this != headNode && this.isOfNodeTree(headNode);
 		},
-		function surroundedBy(parent) {
+		function surroundedBy(parentName) {
 			arguments.constrainedWithAndThrow(String);
 			if (this.hasParentNode()) {
 				let parentNode = this.parentElement;
-				let surroundingNode = document.createElement(parent);
+				let surroundingNode = document.createElement(parentName);
 				surroundingNode.append(this);
 				parentNode.append(surroundingNode);
 			}
@@ -458,27 +458,12 @@
 	].bindTo(Element.prototype);
 	[
 		function removeSpace() {
-			return this.replace(/\t/g, '').replace(/\r/g, '').replace(/\n/g, '').replace(/\f/g, '')
-				.replace(/\u0020/g, '')
-				.replace(/\u00A0/g, '')
-				.replace(/\u1680/g, '')
-				.replace(/\u180E/g, '')
-				.replace(/\u2000/g, '')
-				.replace(/\u2001/g, '')
-				.replace(/\u2002/g, '')
-				.replace(/\u2003/g, '')
-				.replace(/\u2004/g, '')
-				.replace(/\u2005/g, '')
-				.replace(/\u2006/g, '')
-				.replace(/\u2007/g, '')
-				.replace(/\u2008/g, '')
-				.replace(/\u2009/g, '')
-				.replace(/\u200A/g, '')
-				.replace(/\u200B/g, '')
-				.replace(/\u202F/g, '')
-				.replace(/\u205F/g, '')
-				.replace(/\u3000/g, '')
-				.replace(/\uFEFF/g, '');
+			let spaces = ['\t', '\r', '\n', '\f', '\u0020', '\u00A0', '\u1680', '\u180E', '\u2000', '\u2001', '\u2002', '\u2003', '\u2004', '\u2005', '\u2006', '\u2007', '\u2008', '\u2009', '\u200A', '\u200B', '\u202F', '\u205F', '\u3000', '\uFEFF'];
+			let result = this;
+			spaces.forEach((space) => {
+				result = result.replaceAll(space, '');
+			});
+			return result;
 		}
 	].bindTo(String.prototype);
 	/* { event-dispatcher } */
