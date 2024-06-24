@@ -148,9 +148,14 @@
 					min-width: 1048px;
 				}
 			}
-			@media only screen and (max-width: 570px) {
+			@media only screen and (max-width: 917px) {
 				body {
-					min-width: 570px;
+					min-width: 917px;
+				}
+			}
+			@media only screen and (max-width: 575px) {
+				body {
+					min-width: 575px;
 				}
 			}
 		}
@@ -351,6 +356,7 @@
 				width: 848px;
 			}
 			major.tiny > sub-major {
+				max-width: 847px;
 				width: 100%;
 			}
 			/* post */
@@ -438,8 +444,8 @@
 			post > sub-post > post-leader /* -> */ {
 				display: flex;
 				padding: 0px 0px 0px 20px;
-				width: calc(100% - 20px);
 				max-width: calc(100% - 20px);
+				width: calc(100% - 20px);
 			}
 			major.tiny > sub-major post > sub-post > post-leader {
 				padding: 0px 0px 0px 15px;

@@ -714,10 +714,10 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 			return value.completed;
 		}).forEach((value) => {
 			/* resizing for the 'major' */
-			if (document.body.clientWidth <= 750) {
-				value.majorNode.classList.add('tiny');
-			} else {
+			if (document.body.clientWidth >= 1048) {
 				value.majorNode.classList.remove('tiny');
+			} else {
+				value.majorNode.classList.add('tiny');
 			}
 		});
 		await suspend();
