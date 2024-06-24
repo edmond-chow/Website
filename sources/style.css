@@ -153,9 +153,9 @@
 					min-width: 917px;
 				}
 			}
-			@media only screen and (max-width: 575px) {
+			@media only screen and (max-width: 570px) {
 				body {
-					min-width: 575px;
+					min-width: 570px;
 				}
 			}
 		}
