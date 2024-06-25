@@ -142,18 +142,14 @@
 		@media (pointer:none), (pointer:coarse) {
 			body {
 				min-height: var(--window-inner-height, auto);
+				min-width: 1048px;
 			}
-			@media only screen and (width >= 1048px) {
-				body {
-					min-width: 1048px;
-				}
-			}
-			@media only screen and (918px <= width < 1048px) {
+			@media only screen and (918px <= width < 1048px) and (orientation: portrait) {
 				body {
 					min-width: 918px;
 				}
 			}
-			@media only screen and (570px <= width < 918px) {
+			@media only screen and (width < 918px) and (orientation: portrait) {
 				body {
 					min-width: 570px;
 				}
