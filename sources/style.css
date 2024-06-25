@@ -143,17 +143,17 @@
 			body {
 				min-height: var(--window-inner-height, auto);
 			}
-			@media only screen and (max-width: 1048px) {
+			@media only screen and (width >= 1048px) {
 				body {
 					min-width: 1048px;
 				}
 			}
-			@media only screen and (max-width: 918px) {
+			@media only screen and (918px <= width < 1048px) {
 				body {
 					min-width: 918px;
 				}
 			}
-			@media only screen and (max-width: 570px) {
+			@media only screen and (570px <= width < 918px) {
 				body {
 					min-width: 570px;
 				}
@@ -347,7 +347,7 @@
 				padding: 25px 0px 75px 0px;
 			}
 			major.tiny {
-				min-width: 500px;
+				min-width: 570px;
 				padding: 12px 0px 18px 0px;
 			}
 			top + major, top + major.tiny {
