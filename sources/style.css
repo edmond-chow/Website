@@ -148,9 +148,9 @@
 					min-width: 1048px;
 				}
 			}
-			@media only screen and (max-width: 917px) {
+			@media only screen and (max-width: 918px) {
 				body {
-					min-width: 917px;
+					min-width: 918px;
 				}
 			}
 			@media only screen and (max-width: 570px) {
@@ -342,22 +342,24 @@
 			/* major */
 			major /* -> */ {
 				text-align: center;
-				padding: 69px 0px 75px 0px;
 				min-width: 1048px;
+				width: 100%;
+				padding: 25px 0px 75px 0px;
 			}
 			major.tiny {
 				min-width: 500px;
-				width: calc(100% - 70px);
-				padding-left: 35px;
-				padding-right: 35px;
+				padding: 12px 0px 18px 0px;
+			}
+			top + major, top + major.tiny {
+				padding-top: 69px;
 			}
 			major > sub-major /* -> */ {
 				display: inline-block;
 				width: 848px;
 			}
 			major.tiny > sub-major {
-				max-width: 847px;
-				width: 100%;
+				max-width: 848px;
+				width: calc(100% - 70px);
 			}
 			/* post */
 			post /* -> */ {

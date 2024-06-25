@@ -645,7 +645,7 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 		}
 		await suspend();
 		/* top */
-		forAllTag('top').map((value) => {
+		forAll('body top').map((value) => {
 			return new Top(value);
 		}).filter((value) => {
 			return value.completed;
@@ -708,7 +708,7 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 		});
 		await suspend();
 		/* major */
-		forAllTag('major').map((value) => {
+		forAll('body top + major').map((value) => {
 			return new Major(value);
 		}).filter((value) => {
 			return value.completed;
@@ -886,7 +886,7 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 		});
 		await suspend();
 		/* background-image with 'basis-layer, backdrop-container > blurred-filter' */
-		forAll('body major').map((value) => {
+		forAll('body top + major').map((value) => {
 			return new Major(value);
 		}).filter((value) => {
 			return value.completed;
