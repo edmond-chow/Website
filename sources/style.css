@@ -1,7 +1,7 @@
 @charset 'UTF-8';
 @import url('font/font.css');
-@layer /* basis */ {
-	@layer /* initializer */ {
+@layer basis {
+	@layer initializer {
 		/* default */
 		::selection {
 			color: white;
@@ -156,7 +156,7 @@
 			}
 		}
 	}
-	@layer /* scrollable */ {
+	@layer scrollable {
 		/* ::-webkit-scrollbar */
 		@supports selector(::-webkit-scrollbar) {
 			::-webkit-scrollbar {
@@ -193,8 +193,8 @@
 			}
 		}
 	}
-	@layer /* features-before */ {
-		@layer /* structured-container */ {
+	@layer features-before {
+		@layer structured-container {
 			/* top */
 			@keyframes show-top {
 				from {
@@ -205,7 +205,7 @@
 				}
 			}
 		}
-		@layer /* constrained-container */ {
+		@layer constrained-container {
 			/* post */
 			post > sub-post > post-content :is(h1, h2, h3, h4, h5, h6, p, pre) {
 				color: white;
@@ -215,8 +215,8 @@
 			}
 		}
 	}
-	@layer /* features */ {
-		@layer /* structured-container */ {
+	@layer features {
+		@layer structured-container {
 			/* top */
 			top /* -> */ {
 				overflow: hidden;
@@ -735,7 +735,7 @@
 				height: 36px;
 			}
 		}
-		@layer /* constrained-container */ {
+		@layer constrained-container {
 			/* post */
 			post > sub-post > post-leader > post-leader-advance > :is(button.advance, dropdown.has-single-button) {
 				display: inline-block;
@@ -746,8 +746,8 @@
 			}
 		}
 	}
-	@layer /* features-after */ {
-		@layer /* structured-container */ {
+	@layer features-after {
+		@layer structured-container {
 			/* major */
 			major > sub-major:not(:first-of-type) {
 				display: none;
@@ -800,14 +800,14 @@
 				display: none;
 			}
 		}
-		@layer /* constrained-container */ {
+		@layer constrained-container {
 			/* post */
 			post > sub-post > post-leader > post-leader-advance > :not(button.advance, dropdown.has-single-button) {
 				display: none;
 			}
 		}
 	}
-	@layer /* backdrop-before */ {
+	@layer backdrop-before {
 		@media (pointer: coarse), (pointer: none) {
 			@keyframes show-backdrop {
 				from {
@@ -821,7 +821,7 @@
 			}
 		}
 	}
-	@layer /* backdrop */ {
+	@layer backdrop {
 		/* background-image with 'basis-layer, backdrop-container > blurred-filter' */
 		body basis-layer {
 			position: fixed;
@@ -877,7 +877,7 @@
 			}
 		}
 	}
-	@layer /* backdrop-after */ {
+	@layer backdrop-after {
 		/* background-image with 'basis-layer, backdrop-container > blurred-filter' */
 		body basis-layer:not(:first-of-type) {
 			display: none;
@@ -889,7 +889,7 @@
 			display: none;
 		}
 	}
-	@layer /* extensions */ {
+	@layer extensions {
 		/* icons */
 		.air-play {
 			background-image: url('icons8-air-play-64.png');
