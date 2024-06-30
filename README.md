@@ -1,2 +1,2 @@
 # Website
-Providing a webpage framework for you to construct a page more faster!
+A framework makes it simple to create pages!
