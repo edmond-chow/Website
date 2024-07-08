@@ -218,7 +218,9 @@
 			[head].constrainedWithAndThrow(Element);
 			let matched = isMatched(head, 'major');
 			this.majorNode = switchIf(matched, head);
+			this.majorMenuNode = switchIf(matched, head.get(':scope > major-menu'));
 			this.subMajorNode = switchIf(matched, head.get(':scope > sub-major'));
+			this.majorPostNode = switchIf(matched, head.get(':scope > sub-major > major-post'));
 			this.completed = isCompleted(this);
 			makeFrozen(this, true);
 		}
@@ -546,7 +548,7 @@
 					subPostConducting(postValue.postContentNode, subOrderString + '.', postLayer + 1);
 				});
 			};
-			subPostConducting(majorValue.subMajorNode, '', 0);
+			subPostConducting(majorValue.majorPostNode, '', 0);
 		});
 		forAllTag('post').map((value) => {
 			return new Post(value);
@@ -562,6 +564,17 @@
 		/* major */ {
 			/* structuring for the 'major' */ 
 			insertSurround('major', 'sub-major');
+			moveOutside('major > sub-major', 'major-menu');
+			switchBottom('major', 'major-menu');
+			switchBottom('major', 'sub-major');
+			insertSurround('major > sub-major', 'major-post');
+			forAllTag('major').map((value) => {
+				return new Major(value);
+			}).forEach((value) => {
+				/* transferring for the 'major > major-menu's */
+				let topNodes = value.majorPostNode.getAll(':scope > top');
+				value.majorMenuNode.prepend(...topNodes);
+			});
 		}
 		await suspend();
 		/* post */ {
@@ -633,8 +646,8 @@
 		await suspend();
 		/* background-image with 'basis-layer, backdrop-container > blurred-filter' */ {
 			switchBottom('body', 'basis-layer');
-			switchBottom('body major > sub-major > post > sub-post', 'backdrop-container');
-			switchBottom('body major > sub-major > post > sub-post > backdrop-container', 'blurred-filter');
+			switchBottom('body major > sub-major > major-post > post > sub-post', 'backdrop-container');
+			switchBottom('body major > sub-major > major-post > post > sub-post > backdrop-container', 'blurred-filter');
 		}
 		await suspend();
 		document.dispatchEvent(eventStructuredTag);
@@ -644,13 +657,13 @@
 			/* style#background-image */ {
 				if (document.body.hasAttribute('background-image')) {
 					makeCascading(document.head, 'background-image', `
-body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-container > blurred-filter {
+body basis-layer, body.blur major > sub-major > major-post > post > sub-post > backdrop-container > blurred-filter {
 	--background-image: url('` + new URL(document.body.getAttribute('background-image'), document.baseURI).href + `');
 }
 `);
 				} else {
 					makeCascading(document.head, 'background-image', `
-body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-container > blurred-filter {
+body basis-layer, body.blur major > sub-major > major-post > post > sub-post > backdrop-container > blurred-filter {
 	--background-image: unset;
 }
 `);
@@ -668,27 +681,13 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 		}
 		await suspend();
 		/* top */
-		forAll('body top').map((value) => {
+		forAllTag('top').map((value) => {
 			return new Top(value);
 		}).filter((value) => {
 			return value.completed;
 		}).forEach((value) => {
-			/* '.no-text' for the 'top' */
+			/* '.no-text' for the 'top's */
 			value.topNode.classList.add('no-text');
-			/* resizing for the 'top' */
-			if (document.body.clientWidth > 1226) {
-				value.topNode.classList.remove('small');
-				value.topNode.classList.remove('medium');
-				value.topNode.classList.add('large');
-			} else if (document.body.clientWidth >= 1048) {
-				value.topNode.classList.remove('small');
-				value.topNode.classList.add('medium');
-				value.topNode.classList.remove('large');
-			} else {
-				value.topNode.classList.add('small');
-				value.topNode.classList.remove('medium');
-				value.topNode.classList.remove('large');
-			}
 			/* locking an option and scrolling into the '.lock' when has been unlocked */
 			if (value.topNode.matches(':not(:is(:hover, :focus-within))')) {
 				value.topNode.classList.remove('unlocked');
@@ -731,16 +730,54 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 		});
 		await suspend();
 		/* major */
-		forAll('body top + major').map((value) => {
+		forAllTag('major').map((value) => {
 			return new Major(value);
 		}).filter((value) => {
 			return value.completed;
 		}).forEach((value) => {
-			/* resizing for the 'major' */
-			if (document.body.clientWidth >= 1048) {
+			/* resizing for the 'major's */
+			if (value.majorNode.clientWidth >= 1048) {
 				value.majorNode.classList.remove('tiny');
 			} else {
 				value.majorNode.classList.add('tiny');
+			}
+			/* '.no-menu' for the 'major's */
+			if (value.majorMenuNode.getAll(':scope > top').length == 0) {
+				value.majorNode.classList.add('no-menu');
+			} else {
+				value.majorNode.classList.remove('no-menu');
+			}
+			/* resizing for the 'major > major-menu > top's */
+			if (value.majorMenuNode.clientWidth > 1226) {
+				value.majorMenuNode.getAll(':scope > top').map((value) => {
+					return new Top(value);
+				}).filter((value) => {
+					return value.completed;
+				}).forEach((value) => {
+					value.topNode.classList.remove('small');
+					value.topNode.classList.remove('medium');
+					value.topNode.classList.add('large');
+				});
+			} else if (value.majorMenuNode.clientWidth >= 1048) {
+				value.majorMenuNode.getAll(':scope > top').map((value) => {
+					return new Top(value);
+				}).filter((value) => {
+					return value.completed;
+				}).forEach((value) => {
+					value.topNode.classList.remove('small');
+					value.topNode.classList.add('medium');
+					value.topNode.classList.remove('large');
+				});
+			} else {
+				value.majorMenuNode.getAll(':scope > top').map((value) => {
+					return new Top(value);
+				}).filter((value) => {
+					return value.completed;
+				}).forEach((value) => {
+					value.topNode.classList.add('small');
+					value.topNode.classList.remove('medium');
+					value.topNode.classList.remove('large');
+				});
 			}
 		});
 		await suspend();
@@ -887,7 +924,7 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 			value.buttonNode.disabled = value.buttonNode.classList.contains('disabled');
 		});
 		await suspend();
-		/* .no-space */
+		/* '.no-space' */
 		forAllClass('no-space').map((value) => {
 			return value.childNodes;
 		}).forEach((value) => {
@@ -897,7 +934,7 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 				}
 			});
 		});
-		/* .no-text */
+		/* '.no-text' */
 		forAllClass('no-text').map((value) => {
 			return value.childNodes;
 		}).forEach((value) => {
@@ -909,12 +946,12 @@ body basis-layer, body#blur major > sub-major > post > sub-post > backdrop-conta
 		});
 		await suspend();
 		/* background-image with 'basis-layer, backdrop-container > blurred-filter' */
-		forAll('body top + major').map((value) => {
+		forAllTag('major').map((value) => {
 			return new Major(value);
 		}).filter((value) => {
 			return value.completed;
 		}).forEach((value) => {
-			value.subMajorNode.getAll(':scope > post').map((value) => {
+			value.majorPostNode.getAll(':scope > post').map((value) => {
 				return new Post(value);
 			}).filter((value) => {
 				return value.completed;

@@ -186,15 +186,14 @@
 				width: 14px;
 				height: 14px;
 			}
-			::-webkit-scrollbar-track, ::-webkit-scrollbar-corner {
-				background-color: transparent;
+			body.blur::-webkit-scrollbar-thumb, body.blur ::-webkit-scrollbar-thumb {
+				border-radius: 8px;
 			}
 			body::-webkit-scrollbar-track, body::-webkit-scrollbar-corner {
 				background-color: #f1f1f1;
 			}
-			body.blur top::-webkit-scrollbar-track:vertical, body.blur dropdown > dropdown-content::-webkit-scrollbar-track:vertical {
-				border-top-right-radius: 5px;
-				border-bottom-right-radius: 5px;
+			::-webkit-scrollbar-track, ::-webkit-scrollbar-corner {
+				background-color: transparent;
 			}
 			::-webkit-scrollbar-thumb {
 				background-color: #888;
@@ -210,9 +209,6 @@
 				background-color: #555;
 				border: 4px solid transparent;
 				background-clip: padding-box;
-			}
-			body.blur::-webkit-scrollbar-thumb, body.blur ::-webkit-scrollbar-thumb {
-				border-radius: 8px;
 			}
 		}
 	}
@@ -241,9 +237,12 @@
 	@layer features {
 		@layer structured-container {
 			/* top */
+			body > top {
+				position: fixed;
+			}
 			top /* -> */ {
 				overflow: hidden;
-				position: fixed;
+				position: absolute;
 				margin: 0px -1px;
 				border: 1px solid #e7e7e7;
 				transition-property: margin-left, margin-right, max-height, width, left, right;
@@ -296,7 +295,7 @@
 				margin-right: 0px;
 			}
 			top:is(:hover, :focus-within) {
-				max-height: calc(70% - 18px);
+				max-height: calc(70vh - 18px);
 				overflow: auto;
 				animation-name: show-top;
 				animation-duration: 0.5s;
@@ -360,25 +359,55 @@
 			}
 			/* major */
 			major /* -> */ {
-				text-align: center;
-				min-width: 1048px;
 				width: 100%;
-				padding: 25px 0px 75px 0px;
+				height: 100%;
+			}
+			body > top + major, body > top + major.tiny {
+				padding-top: 69px;
+				height: auto;
 			}
 			major.tiny {
 				min-width: 570px;
-				padding: 12px 0px 18px 0px;
 			}
-			top + major, top + major.tiny {
-				padding-top: 69px;
+			major > major-menu /* -> */ {
+				position: relative;
+				display: inline-block;
+				width: 100%;
+				height: 69px;
+			}
+			major.no-menu > major-menu {
+				display: none;
 			}
 			major > sub-major /* -> */ {
+				position: relative;
+				text-align: center;
+				overflow-y: auto;
+				top: -69px;
+				width: 100%;
+				height: 100%;
+			}
+			major.no-menu > sub-major {
+				top: 0px;
+			}
+			major > sub-major > major-post /* -> */ {
 				display: inline-block;
 				width: 848px;
+				padding-top: 69px;
+				padding-bottom: 75px;
 			}
-			major.tiny > sub-major {
+			major.no-menu > sub-major > major-post {
+				padding-top: 25px;
+			}
+			major.tiny > sub-major > major-post {
 				max-width: 848px;
 				width: calc(100% - 70px);
+				padding-bottom: 18px;
+			}
+			major.tiny.no-menu > sub-major > major-post {
+				padding-top: 12px;
+			}
+			body > top + major.no-menu > sub-major > major-post, body > top + major.tiny.no-menu > sub-major > major-post {
+				padding-top: 0px;
 			}
 			/* post */
 			post /* -> */ {
@@ -771,9 +800,45 @@
 	}
 	@layer features-after {
 		@layer structured-container {
+			/* top */
+			@supports selector(::-webkit-scrollbar) {
+				body.blur top::-webkit-scrollbar-track:vertical {
+					border-top-right-radius: 5px;
+					border-bottom-right-radius: 5px;
+				}
+				top::-webkit-scrollbar-thumb {
+					background-color: #708090;
+					border: 4px solid transparent;
+					background-clip: padding-box;
+				}
+				top::-webkit-scrollbar-thumb:hover {
+					background-color: #A6BFD9;
+					border: 4px solid transparent;
+					background-clip: padding-box;
+				}
+				top::-webkit-scrollbar-thumb:active {
+					background-color: #36454F;
+					border: 4px solid transparent;
+					background-clip: padding-box;
+				}
+			}
 			/* major */
-			major > sub-major:not(:first-of-type) {
-				display: none;
+			@supports selector(::-webkit-scrollbar) {
+				major > sub-major::-webkit-scrollbar-thumb {
+					background-color: #D3D3D3;
+					border: 4px solid transparent;
+					background-clip: padding-box;
+				}
+				major > sub-major::-webkit-scrollbar-thumb:hover {
+					background-color: #F5F5F5;
+					border: 4px solid transparent;
+					background-clip: padding-box;
+				}
+				major > sub-major::-webkit-scrollbar-thumb:active {
+					background-color: #A9A9A9;
+					border: 4px solid transparent;
+					background-clip: padding-box;
+				}
 			}
 			/* post */
 			post:first-of-type {
@@ -816,6 +881,27 @@
 				display: none;
 			}
 			/* dropdown */
+			@supports selector(::-webkit-scrollbar) {
+				body.blur dropdown > dropdown-content::-webkit-scrollbar-track:vertical {
+					border-top-right-radius: 5px;
+					border-bottom-right-radius: 5px;
+				}
+				dropdown > dropdown-content::-webkit-scrollbar-thumb {
+					background-color: #888;
+					border: 4px solid transparent;
+					background-clip: padding-box;
+				}
+				dropdown > dropdown-content::-webkit-scrollbar-thumb:hover {
+					background-color: #AAA;
+					border: 4px solid transparent;
+					background-clip: padding-box;
+				}
+				dropdown > dropdown-content::-webkit-scrollbar-thumb:active {
+					background-color: #555;
+					border: 4px solid transparent;
+					background-clip: padding-box;
+				}
+			}
 			dropdown:hover > inner-padding:not(:first-of-type) {
 				display: none;
 			}
@@ -824,6 +910,10 @@
 			}
 		}
 		@layer constrained-container {
+			/* major */
+			major > major-menu > :not(top:first-of-type) {
+				display: none;
+			}
 			/* post */
 			post > sub-post > post-leader > post-leader-advance > :not(button.advance, dropdown.has-single-button) {
 				display: none;
@@ -854,47 +944,47 @@
 			left: 0px;
 			z-index: -3; /* -> layer[basis-backdrop] */
 		}
-		body major > sub-major > post > sub-post > backdrop-container {
+		body major > sub-major > major-post > post > sub-post > backdrop-container {
 			position: absolute;
 			width: 100%;
 			height: 100%;
 			z-index: -2; /* -> layer[container-backdrop] */
 		}
-		body.blur major > sub-major > post > sub-post > backdrop-container {
+		body.blur major > sub-major > major-post > post > sub-post > backdrop-container {
 			background-color: black;
 			clip-path: inset(0px round 8px);
 		}
 		body.blur major.tiny > sub-major > post > sub-post > backdrop-container {
 			clip-path: inset(0px round 5px);
 		}
-		body major > sub-major > post > sub-post > backdrop-container > blurred-filter {
+		body major > sub-major > major-post > post > sub-post > backdrop-container > blurred-filter {
 			position: fixed;
 			width: calc(100% + 100px);
 			height: calc(100% + 100px);
 			top: -50px;
 			left: -50px;
 		}
-		body.blur major > sub-major > post > sub-post > backdrop-container > blurred-filter {
+		body.blur major > sub-major > major-post > post > sub-post > backdrop-container > blurred-filter {
 			filter: blur(20px);
 		}
-		body basis-layer, body.blur major > sub-major > post > sub-post > backdrop-container > blurred-filter {
+		body basis-layer, body.blur major > sub-major > major-post > post > sub-post > backdrop-container > blurred-filter {
 			background-repeat: no-repeat;
 			background-position: center;
 			background-size: cover;
 			background-image: var(--background-image, url('lake.jpg'));
 		}
 		@media (pointer: coarse), (pointer: none) {
-			body major > sub-major > post > sub-post {
+			body major > sub-major > major-post > post > sub-post {
 				transition-property: background-color;
 				transition-duration: 0.5s;
 			}
-			body major > sub-major > post > sub-post.suspended-backdrop:before {
+			body major > sub-major > major-post > post > sub-post.suspended-backdrop:before {
 				background-color: transparent;
 			}
-			body major > sub-major > post > sub-post.suspended-backdrop > backdrop-container {
+			body major > sub-major > major-post > post > sub-post.suspended-backdrop > backdrop-container {
 				display: none;
 			}
-			body major > sub-major > post > sub-post:not(.suspended-backdrop) > backdrop-container {
+			body major > sub-major > major-post > post > sub-post:not(.suspended-backdrop) > backdrop-container {
 				animation-name: show-backdrop;
 				animation-duration: 0.5s;
 			}
@@ -905,10 +995,10 @@
 		body basis-layer:not(:first-of-type) {
 			display: none;
 		}
-		body.blur major > sub-major > post > sub-post > backdrop-container:not(:first-of-type) {
+		body.blur major > sub-major > major-post > post > sub-post > backdrop-container:not(:first-of-type) {
 			display: none;
 		}
-		body.blur major > sub-major > post > sub-post > backdrop-container > blurred-filter:not(:first-of-type) {
+		body.blur major > sub-major > major-post > post > sub-post > backdrop-container > blurred-filter:not(:first-of-type) {
 			display: none;
 		}
 	}
