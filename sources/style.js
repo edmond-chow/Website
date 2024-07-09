@@ -230,15 +230,15 @@
 			[head].constrainedWithAndThrow(Element);
 			let matched = isMatched(head, 'post');
 			this.postNode = switchIf(matched, head);
-			this.subPostNode = switchIf(matched, head.get(':scope > sub-post'));
 			this.postIconNode = switchIf(matched, head.get(':scope > post-icon'));
+			this.subPostNode = switchIf(matched, head.get(':scope > sub-post'));
 			this.scrollIntoNode = switchIf(matched, head.get(':scope > sub-post > scroll-into'));
 			this.postLeaderNode = switchIf(matched, head.get(':scope > sub-post > post-leader'));
+			this.postContentNode = switchIf(matched, head.get(':scope > sub-post > post-content'));
 			this.postLeaderSectionNode = switchIf(matched, head.get(':scope > sub-post > post-leader > post-leader-section'));
+			this.postLeaderAdvanceNode = switchIf(matched, head.get(':scope > sub-post > post-leader > post-leader-advance'));
 			this.postLeaderOrderNode = switchIf(matched, head.get(':scope > sub-post > post-leader > post-leader-section > post-leader-order'));
 			this.postLeaderTitleNode = switchIf(matched, head.get(':scope > sub-post > post-leader > post-leader-section > post-leader-title'));
-			this.postLeaderAdvanceNode = switchIf(matched, head.get(':scope > sub-post > post-leader > post-leader-advance'));
-			this.postContentNode = switchIf(matched, head.get(':scope > sub-post > post-content'));
 			this.completed = isCompleted(this);
 			makeFrozen(this, true);
 		}
