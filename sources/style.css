@@ -244,7 +244,7 @@
 			top /* -> */ {
 				overflow: hidden;
 				position: relative;
-				margin: 4px;
+				margin: 8px;
 				border: 1px solid #e7e7e7;
 				transition-property: margin-left, margin-right, max-height, width, left, right, box-shadow;
 				transition-duration: 0.5s;
