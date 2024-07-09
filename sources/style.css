@@ -162,19 +162,14 @@
 			line-height: 18px;
 		}
 		/* mobile-sizing */
-		@media (pointer:none), (pointer:coarse) {
+		@media (pointer: none), (pointer: coarse) {
 			body {
 				min-height: var(--window-inner-height, auto);
 				min-width: 1048px;
 			}
-			@media only screen and (918px <= width < 1048px) and (orientation: portrait) {
+			@media only screen and (width < 1048px) and (orientation: portrait) {
 				body {
-					min-width: 918px;
-				}
-			}
-			@media only screen and (width < 918px) and (orientation: portrait) {
-				body {
-					min-width: 570px;
+					min-width: 480px;
 				}
 			}
 		}
@@ -249,14 +244,13 @@
 				position: relative;
 				margin: 8px 0px;
 				border: 1px solid #e7e7e7;
-				transition-property: max-height, left, right, box-shadow;
+				transition-property: max-height, box-shadow;
 				transition-duration: 0.5s;
 				background-color: #f3f3f3;
 				box-sizing: border-box;
 				max-height: 53px;
-				left: 10%;
-				right: 10%;
-				width: 80%;
+				left: min(max(calc(50% - 516px), 8px), 10%);
+				width: max(min(calc(100% - 16px), 1032px), 80%);
 			}
 			body.blur top {
 				border-radius: 5px;
@@ -271,11 +265,6 @@
 				overflow-y: auto;
 				animation-name: show-top;
 				animation-duration: 0.5s;
-			}
-			top.small {
-				left: max(calc(50% - 516px), 8px);
-				right: max(calc(50% - 516px), 8px);
-				width: min(calc(100% - 16px), 1032px);
 			}
 			top > a /* -> */ {
 				text-align: center;
@@ -347,9 +336,6 @@
 			}
 			body.blur > top + :is(major, major.tiny) {
 				padding-top: 67px;
-			}
-			major.tiny {
-				min-width: 570px;
 			}
 			major > major-menu /* -> */ {
 				position: relative;
