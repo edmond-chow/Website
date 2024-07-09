@@ -218,8 +218,8 @@
 			[head].constrainedWithAndThrow(Element);
 			let matched = isMatched(head, 'major');
 			this.majorNode = switchIf(matched, head);
-			this.majorMenuNode = switchIf(matched, head.get(':scope > major-menu'));
 			this.subMajorNode = switchIf(matched, head.get(':scope > sub-major'));
+			this.majorMenuNode = switchIf(matched, head.get(':scope > major-menu'));
 			this.majorPostNode = switchIf(matched, head.get(':scope > sub-major > major-post'));
 			this.completed = isCompleted(this);
 			makeFrozen(this, true);
@@ -565,8 +565,8 @@
 			/* structuring for the 'major' */ 
 			insertSurround('major', 'sub-major');
 			moveOutside('major > sub-major', 'major-menu');
-			switchBottom('major', 'major-menu');
 			switchBottom('major', 'sub-major');
+			switchBottom('major', 'major-menu');
 			insertSurround('major > sub-major', 'major-post');
 			forAllTag('major').map((value) => {
 				return new Major(value);
@@ -688,6 +688,24 @@ body basis-layer, body.blur major > sub-major > major-post > post > sub-post > b
 		}).forEach((value) => {
 			/* '.no-text' for the 'top's */
 			value.topNode.classList.add('no-text');
+			/* resizing for the 'top's */
+			if (!value.topNode.hasParentNode()) {
+				value.topNode.classList.remove('small');
+				value.topNode.classList.remove('medium');
+				value.topNode.classList.remove('large');
+			} else if (value.topNode.parentElement.clientWidth > 1226) {
+				value.topNode.classList.remove('small');
+				value.topNode.classList.remove('medium');
+				value.topNode.classList.add('large');
+			} else if (value.topNode.parentElement.clientWidth >= 1048) {
+				value.topNode.classList.remove('small');
+				value.topNode.classList.add('medium');
+				value.topNode.classList.remove('large');
+			} else {
+				value.topNode.classList.add('small');
+				value.topNode.classList.remove('medium');
+				value.topNode.classList.remove('large');
+			}
 			/* locking an option and scrolling into the '.lock' when has been unlocked */
 			if (value.topNode.matches(':not(:is(:hover, :focus-within))')) {
 				value.topNode.classList.remove('unlocked');
@@ -746,38 +764,6 @@ body basis-layer, body.blur major > sub-major > major-post > post > sub-post > b
 				value.majorNode.classList.add('no-menu');
 			} else {
 				value.majorNode.classList.remove('no-menu');
-			}
-			/* resizing for the 'major > major-menu > top's */
-			if (value.majorMenuNode.clientWidth > 1226) {
-				value.majorMenuNode.getAll(':scope > top').map((value) => {
-					return new Top(value);
-				}).filter((value) => {
-					return value.completed;
-				}).forEach((value) => {
-					value.topNode.classList.remove('small');
-					value.topNode.classList.remove('medium');
-					value.topNode.classList.add('large');
-				});
-			} else if (value.majorMenuNode.clientWidth >= 1048) {
-				value.majorMenuNode.getAll(':scope > top').map((value) => {
-					return new Top(value);
-				}).filter((value) => {
-					return value.completed;
-				}).forEach((value) => {
-					value.topNode.classList.remove('small');
-					value.topNode.classList.add('medium');
-					value.topNode.classList.remove('large');
-				});
-			} else {
-				value.majorMenuNode.getAll(':scope > top').map((value) => {
-					return new Top(value);
-				}).filter((value) => {
-					return value.completed;
-				}).forEach((value) => {
-					value.topNode.classList.add('small');
-					value.topNode.classList.remove('medium');
-					value.topNode.classList.remove('large');
-				});
 			}
 		});
 		await suspend();

@@ -239,26 +239,35 @@
 			/* top */
 			body > top {
 				position: fixed;
+				z-index: 4; /* -> layer[fixed] */
 			}
 			top /* -> */ {
 				overflow: hidden;
-				position: absolute;
-				margin: 0px -1px;
+				position: relative;
+				margin: 4px;
 				border: 1px solid #e7e7e7;
-				transition-property: margin-left, margin-right, max-height, width, left, right;
+				transition-property: margin-left, margin-right, max-height, width, left, right, box-shadow;
 				transition-duration: 0.5s;
 				background-color: #f3f3f3;
 				max-height: 51px;
 				width: 84%;
-				top: 8px;
 				left: 8%;
 				right: 8%;
+			}
+			major > major-menu > top {
+				position: absolute;
+				margin: 0px -1px;
+				top: 8px;
 			}
 			body.blur top {
 				border-radius: 5px;
 				border: 0px;
+			}
+			body.blur major > major-menu > top {
 				top: 9px;
-				box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.5);
+			}
+			body.blur top:is(:hover, :focus-within) {
+				box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.5);
 			}
 			top.small {
 				left: 8px;
@@ -295,7 +304,7 @@
 			}
 			top:is(:hover, :focus-within) {
 				max-height: calc(70vh - 18px);
-				overflow: auto;
+				overflow-y: auto;
 				animation-name: show-top;
 				animation-duration: 0.5s;
 			}
@@ -358,6 +367,8 @@
 			}
 			/* major */
 			major /* -> */ {
+				display: flex;
+				flex-direction: column-reverse;
 				width: 100%;
 				height: 100%;
 			}
@@ -371,9 +382,7 @@
 			major > major-menu /* -> */ {
 				position: relative;
 				width: 100%;
-				height: 69px;
-				margin-bottom: -69px;
-				z-index: 3; /* -> layer[top] */
+				z-index: 2; /* -> layer[top] */
 			}
 			major.no-menu > major-menu {
 				display: none;
@@ -397,10 +406,10 @@
 			major.tiny > sub-major > major-post {
 				max-width: 848px;
 				width: calc(100% - 70px);
-				padding-bottom: 18px;
+				padding-bottom: 54px;
 			}
 			major.tiny.no-menu > sub-major > major-post {
-				padding-top: 12px;
+				padding-top: 18px;
 			}
 			body > top + major.no-menu > sub-major > major-post, body > top + major.tiny.no-menu > sub-major > major-post {
 				padding-top: 0px;
@@ -477,6 +486,9 @@
 				border-radius: inherit;
 				background-color: rgba(255, 255, 255, 0.3);
 				box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.5);
+			}
+			body.blur major.tiny > sub-major post > sub-post:before {
+				box-shadow: 0px 0px 24px rgba(0, 0, 0, 0.5);
 			}
 			body.blur post > sub-post:after {
 				border-radius: inherit;
@@ -558,6 +570,7 @@
 				border-top-right-radius: inherit;
 			}
 			post > sub-post > post-content /* -> */ {
+				overflow: auto;
 				padding: 0px 40px 20px 40px;
 				flex-grow: 1;
 			}
@@ -592,13 +605,6 @@
 			dropdown.has-disabled {
 				pointer-events: none;
 			}
-			dropdown:not(.has-disabled):is(:hover, :focus-within) {
-				z-index: 2; /* -> layer[dropdown] */
-			}
-			dropdown:not(.has-disabled):is(:hover, :focus-within) > :not(dropdown-content, inner-padding, outer-margin) {
-				position: relative;
-				z-index: 1; /* -> layer[dropdown] -> layer[dropdown-element] */
-			}
 			dropdown > inner-padding /* -> */ {
 				display: none;
 			}
@@ -623,7 +629,10 @@
 				background-color: rgb(40, 40, 40);
 				min-height: 36px;
 				min-width: 175px;
-				box-shadow: 0 0 32px rgba(0, 0, 0, 0.5);
+				box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+			}
+			dropdown:not(.has-disabled):is(:hover, :focus-within) > dropdown-content {
+				z-index: 3; /* -> layer[dropdown] */
 			}
 			body.blur dropdown > dropdown-content {
 				border-radius: 5px;
@@ -747,7 +756,10 @@
 				outline-offset: 0px;
 			}
 			body.blur button:hover {
-				box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.5);
+				box-shadow: 0px 0px 24px rgba(0, 0, 0, 0.5);
+			}
+			body.blur button.advance:hover {
+				box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.5);
 			}
 			button:hover:active {
 				background-color: rgba(188, 188, 188, 0.9);
@@ -837,6 +849,23 @@
 				}
 			}
 			/* post */
+			@supports selector(::-webkit-scrollbar) {
+				post > sub-post > post-content::-webkit-scrollbar-thumb {
+					background-color: #4CAF50;
+					border: 4px solid transparent;
+					background-clip: padding-box;
+				}
+				post > sub-post > post-content::-webkit-scrollbar-thumb:hover {
+					background-color: #71CC19;
+					border: 4px solid transparent;
+					background-clip: padding-box;
+				}
+				post > sub-post > post-content::-webkit-scrollbar-thumb:active {
+					background-color: #106601;
+					border: 4px solid transparent;
+					background-clip: padding-box;
+				}
+			}
 			post:first-of-type {
 				padding-top: 0px;
 			}
