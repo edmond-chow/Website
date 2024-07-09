@@ -689,22 +689,10 @@ body basis-layer, body.blur major > sub-major > major-post > post > sub-post > b
 			/* '.no-text' for the 'top's */
 			value.topNode.classList.add('no-text');
 			/* resizing for the 'top's */
-			if (!value.topNode.hasParentNode()) {
-				value.topNode.classList.remove('small');
-				value.topNode.classList.remove('medium');
-				value.topNode.classList.remove('large');
-			} else if (value.topNode.parentElement.clientWidth > 1226) {
-				value.topNode.classList.remove('small');
-				value.topNode.classList.remove('medium');
-				value.topNode.classList.add('large');
-			} else if (value.topNode.parentElement.clientWidth >= 1048) {
-				value.topNode.classList.remove('small');
-				value.topNode.classList.add('medium');
-				value.topNode.classList.remove('large');
-			} else {
+			if (value.topNode.hasParentNode() && value.topNode.parentElement.clientWidth <= 1290) {
 				value.topNode.classList.add('small');
-				value.topNode.classList.remove('medium');
-				value.topNode.classList.remove('large');
+			} else {
+				value.topNode.classList.remove('small');
 			}
 			/* locking an option and scrolling into the '.lock' when has been unlocked */
 			if (value.topNode.matches(':not(:is(:hover, :focus-within))')) {

@@ -241,72 +241,41 @@
 				position: fixed;
 				z-index: 4; /* -> layer[fixed] */
 			}
+			major > major-menu > top {
+				position: absolute;
+			}
 			top /* -> */ {
 				overflow: hidden;
 				position: relative;
-				margin: 8px;
+				margin: 8px 0px;
 				border: 1px solid #e7e7e7;
-				transition-property: margin-left, margin-right, max-height, width, left, right, box-shadow;
+				transition-property: max-height, left, right, box-shadow;
 				transition-duration: 0.5s;
 				background-color: #f3f3f3;
-				max-height: 51px;
-				width: 84%;
-				left: 8%;
-				right: 8%;
-			}
-			major > major-menu > top {
-				position: absolute;
-				margin: 0px -1px;
-				top: 8px;
+				box-sizing: border-box;
+				max-height: 53px;
+				left: 10%;
+				right: 10%;
+				width: 80%;
 			}
 			body.blur top {
 				border-radius: 5px;
 				border: 0px;
-			}
-			body.blur major > major-menu > top {
-				top: 9px;
+				max-height: 51px;
 			}
 			body.blur top:hover {
 				box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.5);
 			}
-			top.small {
-				left: 8px;
-				right: 8px;
-				margin-left: 0px;
-				margin-right: 0px;
-				width: calc(100% - 18px);
-			}
-			body.blur top.small {
-				left: 9px;
-				right: 9px;
-			}
-			top.medium {
-				left: calc((100% - 1032px) / 2);
-				right: calc((100% - 1032px) / 2);
-				margin-left: 0px;
-				margin-right: 0px;
-				width: 1030px;
-			}
-			body.blur top.medium {
-				left: calc((100% - 1032px) / 2 + 1px);
-				right: calc((100% - 1032px) / 2 + 1px);
-			}
-			top.large {
-				left: 8%;
-				right: 8%;
-				margin-left: -1px;
-				margin-right: -1px;
-				width: 84%;
-			}
-			body.blur top.large {
-				margin-left: 0px;
-				margin-right: 0px;
-			}
-			top:hover {
+			top:hover, body.blur top:hover {
 				max-height: calc(70vh - 18px);
 				overflow-y: auto;
 				animation-name: show-top;
 				animation-duration: 0.5s;
+			}
+			top.small {
+				left: max(calc(50% - 516px), 8px);
+				right: max(calc(50% - 516px), 8px);
+				width: min(calc(100% - 16px), 1032px);
 			}
 			top > a /* -> */ {
 				text-align: center;
@@ -372,9 +341,12 @@
 				width: 100%;
 				height: 100%;
 			}
-			body > top + major, body > top + major.tiny {
+			body > top + :is(major, major.tiny) {
 				padding-top: 69px;
 				height: auto;
+			}
+			body.blur > top + :is(major, major.tiny) {
+				padding-top: 67px;
 			}
 			major.tiny {
 				min-width: 570px;
@@ -399,6 +371,9 @@
 				width: 848px;
 				padding-top: 69px;
 				padding-bottom: 75px;
+			}
+			body.blur major > sub-major > major-post {
+				padding-top: 67px;
 			}
 			major.no-menu > sub-major > major-post {
 				padding-top: 25px;
@@ -595,7 +570,7 @@
 				top: -70px;
 			}
 			body.blur post > sub-post > scroll-into {
-				top: -69px;
+				top: -67px;
 			}
 			/* dropdown */
 			dropdown /* -> */ {
