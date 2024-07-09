@@ -418,13 +418,13 @@
 			post /* -> */ {
 				padding: 4px 0px;
 			}
-			major.tiny > sub-major post {
+			major.tiny > sub-major > major-post post {
 				padding: 3px 0px;
 			}
 			body.blur post {
 				border-radius: 8px;
 			}
-			body.blur major.tiny > sub-major post {
+			body.blur major.tiny > sub-major > major-post post {
 				border-radius: 6px;
 			}
 			post > post-icon /* -> */ {
@@ -439,7 +439,7 @@
 				-webkit-user-drag: none;
 				z-index: 1; /* -> layer[post-icon] */
 			}
-			major.tiny > sub-major post > post-icon {
+			major.tiny > sub-major > major-post post > post-icon {
 				width: 48px;
 				margin: 0px 0px -48px 0px;
 				top: 6px;
@@ -475,7 +475,7 @@
 			post[icon-src] > post-icon + sub-post {
 				min-height: 80px;
 			}
-			major.tiny > sub-major post[icon-src] > post-icon + sub-post {
+			major.tiny > sub-major > major-post post[icon-src] > post-icon + sub-post {
 				min-height: 60px;
 			}
 			body.blur post > sub-post {
@@ -487,7 +487,7 @@
 				background-color: rgba(255, 255, 255, 0.3);
 				box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.5);
 			}
-			body.blur major.tiny > sub-major post > sub-post:before {
+			body.blur major.tiny > sub-major > major-post post > sub-post:before {
 				box-shadow: 0px 0px 24px rgba(0, 0, 0, 0.5);
 			}
 			body.blur post > sub-post:after {
@@ -505,7 +505,7 @@
 				max-width: calc(100% - 20px);
 				width: calc(100% - 20px);
 			}
-			major.tiny > sub-major post > sub-post > post-leader {
+			major.tiny > sub-major > major-post post > sub-post > post-leader {
 				padding: 0px 0px 0px 15px;
 				max-width: calc(100% - 15px);
 				width: calc(100% - 15px);
@@ -528,7 +528,7 @@
 				color: white;
 				overflow-wrap: break-word;
 			}
-			major.tiny > sub-major post > sub-post > post-leader > post-leader-section > post-leader-order {
+			major.tiny > sub-major > major-post post > sub-post > post-leader > post-leader-section > post-leader-order {
 				padding: 15px 15px 24px 15px;
 			}
 			body.blur post > sub-post > post-leader > post-leader-section > post-leader-order {
@@ -543,7 +543,7 @@
 				color: white;
 				flex-grow: 1;
 			}
-			major.tiny > sub-major post > sub-post > post-leader > post-leader-section > post-leader-title {
+			major.tiny > sub-major > major-post post > sub-post > post-leader > post-leader-section > post-leader-title {
 				padding: 15px 15px 24px 15px;
 			}
 			body.blur post > sub-post > post-leader > post-leader-section > post-leader-title {
@@ -556,14 +556,14 @@
 				min-height: 42px;
 				max-width: calc(40% - 30px);
 			}
-			major.tiny > sub-major post > sub-post > post-leader > post-leader-advance {
+			major.tiny > sub-major > major-post post > sub-post > post-leader > post-leader-advance {
 				padding: 9px 9px 9px 12px;
 				max-width: calc(40% - 21px);
 			}
 			post > sub-post > post-leader > post-leader-advance.no-content {
 				padding: 13px 20px 13px 0px;
 			}
-			major.tiny > sub-major post > sub-post > post-leader > post-leader-advance.no-content {
+			major.tiny > sub-major > major-post post > sub-post > post-leader > post-leader-advance.no-content {
 				padding: 9px 15px 9px 0px;
 			}
 			body.blur post > sub-post > post-leader > post-leader-advance {
@@ -578,10 +578,10 @@
 				padding: 0px;
 				min-height: 8px;
 			}
-			major.tiny > sub-major post > sub-post > post-content {
+			major.tiny > sub-major > major-post post > sub-post > post-content {
 				padding: 0px 30px 15px 30px;
 			}
-			major.tiny > sub-major post > sub-post > post-content.no-content {
+			major.tiny > sub-major > major-post post > sub-post > post-content.no-content {
 				padding: 0px;
 				min-height: 6px;
 			}
@@ -899,7 +899,7 @@
 			post > sub-post > post-content:not(.has-only-post) > post:first-of-type {
 				padding-top: 20px;
 			}
-			major.tiny > sub-major post > sub-post > post-content:not(.has-only-post) > post:first-of-type {
+			major.tiny > sub-major > major-post post > sub-post > post-content:not(.has-only-post) > post:first-of-type {
 				padding-top: 15px;
 			}
 			post > sub-post > scroll-into:not(:first-of-type) {
@@ -979,7 +979,7 @@
 			background-color: black;
 			clip-path: inset(0px round 8px);
 		}
-		body.blur major.tiny > sub-major > post > sub-post > backdrop-container {
+		body.blur major.tiny > sub-major > major-post > post > sub-post > backdrop-container {
 			clip-path: inset(0px round 5px);
 		}
 		body major > sub-major > major-post > post > sub-post > backdrop-container > blurred-filter {
