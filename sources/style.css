@@ -266,7 +266,7 @@
 			body.blur major > major-menu > top {
 				top: 9px;
 			}
-			body.blur top:is(:hover, :focus-within) {
+			body.blur top:hover {
 				box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.5);
 			}
 			top.small {
@@ -302,7 +302,7 @@
 				margin-left: 0px;
 				margin-right: 0px;
 			}
-			top:is(:hover, :focus-within) {
+			top:hover {
 				max-height: calc(70vh - 18px);
 				overflow-y: auto;
 				animation-name: show-top;
@@ -333,7 +333,7 @@
 				background-position: 10px 10px;
 				padding-left: 49px;
 			}
-			top:is(:hover, :focus-within) > a.icon {
+			top:hover > a.icon {
 				background-position: 10px center;
 			}
 			top > a.icon.no-content {
