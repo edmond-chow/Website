@@ -236,9 +236,6 @@
 				position: fixed;
 				z-index: 4; /* -> layer[fixed] */
 			}
-			major > major-menu > top {
-				position: absolute;
-			}
 			top /* -> */ {
 				overflow: hidden;
 				position: relative;
@@ -325,28 +322,28 @@
 			}
 			/* major */
 			major /* -> */ {
-				display: flex;
-				flex-direction: column-reverse;
+				position: relative;
 				width: 100%;
 				height: 100%;
 			}
 			body > top + :is(major, major.tiny) {
-				padding-top: 69px;
 				height: auto;
+				padding-top: 69px;
 			}
 			body.blur > top + :is(major, major.tiny) {
 				padding-top: 67px;
 			}
 			major > major-menu /* -> */ {
-				position: relative;
+				position: absolute;
 				width: 100%;
+				left: 0px;
+				top: 0px;
 				z-index: 2; /* -> layer[top] */
 			}
 			major.no-menu > major-menu {
 				display: none;
 			}
 			major > sub-major /* -> */ {
-				position: relative;
 				text-align: center;
 				overflow-y: auto;
 				width: 100%;
@@ -355,24 +352,22 @@
 			major > sub-major > major-post /* -> */ {
 				display: inline-block;
 				width: 848px;
-				padding-top: 69px;
-				padding-bottom: 75px;
-			}
-			body.blur major > sub-major > major-post {
-				padding-top: 67px;
-			}
-			major.no-menu > sub-major > major-post {
 				padding-top: 25px;
+				padding-bottom: 75px;
 			}
 			major.tiny > sub-major > major-post {
 				max-width: 848px;
 				width: calc(100% - 70px);
+				padding-top: 18px;
 				padding-bottom: 54px;
 			}
-			major.tiny.no-menu > sub-major > major-post {
-				padding-top: 18px;
+			:is(major, major.tiny):not(.no-menu) > sub-major > major-post {
+				padding-top: 69px;
 			}
-			body > top + major.no-menu > sub-major > major-post, body > top + major.tiny.no-menu > sub-major > major-post {
+			body.blur :is(major, major.tiny):not(.no-menu) > sub-major > major-post {
+				padding-top: 67px;
+			}
+			body > top + :is(major, major.tiny).no-menu > sub-major > major-post {
 				padding-top: 0px;
 			}
 			/* post */
