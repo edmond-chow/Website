@@ -239,6 +239,7 @@
 			this.postLeaderAdvanceNode = switchIf(matched, head.get(':scope > sub-post > post-leader > post-leader-advance'));
 			this.postLeaderOrderNode = switchIf(matched, head.get(':scope > sub-post > post-leader > post-leader-section > post-leader-order'));
 			this.postLeaderTitleNode = switchIf(matched, head.get(':scope > sub-post > post-leader > post-leader-section > post-leader-title'));
+			this.postContentContainerNode = switchIf(matched, head.get(':scope > sub-post > post-content > post-content-container'));
 			this.completed = isCompleted(this);
 			makeFrozen(this, true);
 		}
@@ -545,7 +546,7 @@
 					let subOrderString = orderString + getOrder(postLayer, postIndex, postArray.length).toString();
 					postValue.postNode.setAttribute('marker', subOrderString);
 					markedPostNodes.push(postValue.postNode);
-					subPostConducting(postValue.postContentNode, subOrderString + '.', postLayer + 1);
+					subPostConducting(postValue.postContentContainerNode, subOrderString + '.', postLayer + 1);
 				});
 			};
 			subPostConducting(majorValue.majorPostNode, '', 0);
@@ -593,6 +594,8 @@
 			switchBottom('post > sub-post > post-leader', 'post-leader-advance');
 			switchBottom('post > sub-post > post-leader > post-leader-section', 'post-leader-order');
 			switchBottom('post > sub-post > post-leader > post-leader-section', 'post-leader-title');
+			insertSurround('post > sub-post > post-content', 'post-content-container');
+			switchBottom('post > sub-post > post-content', 'post-content-container');
 			conductMarker();
 			forAllTag('post').map((value) => {
 				return new Post(value);
@@ -605,7 +608,7 @@
 				}
 				/* transferring 'inner-class'-list for the 'post's */
 				if (value.postNode.hasAttribute('inner-class')) {
-					value.postContentNode.setAttribute('class', value.postNode.getAttribute('inner-class'));
+					value.postContentContainerNode.setAttribute('class', value.postNode.getAttribute('inner-class'));
 				}
 				/* ordering and hashing for the 'post's */
 				let orderString = '{index}';
@@ -621,10 +624,10 @@
 				value.postLeaderOrderNode.innerText = '#' + orderString;
 				value.scrollIntoNode.id = orderString;
 				/* dragging to the bottom for the 'post's */
-				let subPostNode = value.postContentNode.getAll(':scope > post');
-				value.postContentNode.append(...subPostNode);
+				let subPostNode = value.postContentContainerNode.getAll(':scope > post');
+				value.postContentContainerNode.append(...subPostNode);
 				/* transferring for the 'post > sub-post > post-leader > post-leader-advance's */
-				let advanceChildNode = value.postContentNode.getAll(':scope > advance > *');
+				let advanceChildNode = value.postContentContainerNode.getAll(':scope > advance > *');
 				value.postLeaderAdvanceNode.prepend(...advanceChildNode);
 			});
 		}
@@ -762,16 +765,17 @@ body basis-layer, body.blur major > sub-major > major-post > post > sub-post > b
 			} else {
 				value.postIconNode.style.backgroundImage = 'unset';
 			}
-			/* '.no-content' for the pairs of 'post > sub-post > post-leader > post-leader-advance' and 'post > sub-post > post-content' */
+			/* '.no-content' for the 'post > sub-post > post-leader > post-leader-advance's */
 			if (hasSubstance(value.postLeaderAdvanceNode)) {
 				value.postLeaderAdvanceNode.classList.remove('no-content');
 			} else {
 				value.postLeaderAdvanceNode.classList.add('no-content');
 			}
-			if (hasSubstance(value.postContentNode)) {
-				value.postContentNode.classList.remove('no-content');
+			/* '.no-content' for the 'post > sub-post > post-content > post-content-container's */
+			if (hasSubstance(value.postContentContainerNode)) {
+				value.postContentContainerNode.classList.remove('no-content');
 			} else {
-				value.postContentNode.classList.add('no-content');
+				value.postContentContainerNode.classList.add('no-content');
 			}
 			/* '.has-only-post' for the 'post > sub-post > post-content's */
 			let hasOnlyPost = (parentNode) => {
@@ -791,10 +795,10 @@ body basis-layer, body.blur major > sub-major > major-post > post > sub-post > b
 					}
 				});
 			};
-			if (hasOnlyPost(value.postContentNode)) {
-				value.postContentNode.classList.add('has-only-post');
+			if (hasOnlyPost(value.postContentContainerNode)) {
+				value.postContentContainerNode.classList.add('has-only-post');
 			} else {
-				value.postContentNode.classList.remove('has-only-post');
+				value.postContentContainerNode.classList.remove('has-only-post');
 			}
 			/* '.non-blur' for the 'post's */
 			if (value.postNode.hasAttribute('marker')) {
