@@ -544,12 +544,7 @@
 				padding: 15px 30px;
 			}
 			post > sub-post > post-content > post-content-container.no-content {
-				padding: 0px;
-				min-height: 8px;
-			}
-			post.tiny > sub-post > post-content > post-content-container.no-content {
-				padding: 0px;
-				min-height: 6px;
+				padding-top: 0px;
 			}
 			body.blur post > sub-post > post-content > post-content-container {
 				border-bottom-left-radius: inherit;
