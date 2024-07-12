@@ -511,13 +511,14 @@
 		await suspend();
 		document.dispatchEvent(eventScrollIntoView);
 	};
-	let conductMarker = () => {
+	let conveyMajorToPosts = () => {
 		let markedPostNodes = [];
 		forAllTag('major').map((value) => {
 			return new Major(value);
 		}).filter((value) => {
 			return value.completed;
 		}).forEach((majorValue) => {
+			let shouldTinyPosts = majorValue.majorNode.classList.contains('tiny');
 			let markerReversed = [];
 			if (majorValue.majorNode.hasAttribute('marker-reversed')) {
 				markerReversed = majorValue.majorNode.getAttribute('marker-reversed').split(' ').map((value) => {
@@ -545,13 +546,18 @@
 				}).forEach((postValue, postIndex, postArray) => {
 					let subOrderString = orderString + getOrder(postLayer, postIndex, postArray.length).toString();
 					postValue.postNode.setAttribute('marker', subOrderString);
+					if (shouldTinyPosts) {
+						postValue.postNode.classList.add('tiny');
+					} else {
+						postValue.postNode.classList.remove('tiny');
+					}
 					markedPostNodes.push(postValue.postNode);
 					subPostConducting(postValue.postContentContainerNode, subOrderString + '.', postLayer + 1);
 				});
 			};
 			subPostConducting(majorValue.majorPostNode, '', 0);
 		});
-		forAllTag('post').map((value) => {
+		forAll('post[marker]').map((value) => {
 			return new Post(value);
 		}).filter((value) => {
 			return value.completed;
@@ -559,6 +565,7 @@
 			return !markedPostNodes.includes(postValue.postNode);
 		}).forEach((postValue) => {
 			postValue.postNode.removeAttribute('marker');
+			postValue.postNode.classList.remove('tiny');
 		});
 	};
 	let structuredTag = async () => {
@@ -596,7 +603,7 @@
 			switchBottom('post > sub-post > post-leader > post-leader-section', 'post-leader-title');
 			insertSurround('post > sub-post > post-content', 'post-content-container');
 			switchBottom('post > sub-post > post-content', 'post-content-container');
-			conductMarker();
+			conveyMajorToPosts();
 			forAllTag('post').map((value) => {
 				return new Post(value);
 			}).forEach((value) => {
@@ -660,14 +667,22 @@
 			/* style#background-image */ {
 				if (document.body.hasAttribute('background-image')) {
 					makeCascading(document.head, 'background-image', `
-body basis-layer, body.blur major > sub-major > major-post > post > sub-post > backdrop-container > blurred-filter {
-	--background-image: url('` + new URL(document.body.getAttribute('background-image'), document.baseURI).href + `');
+@layer basis {
+	@layer backdrop-before {
+		body basis-layer, body.blur major > sub-major > major-post > post > sub-post > backdrop-container > blurred-filter {
+			--background-image: url('` + new URL(document.body.getAttribute('background-image'), document.baseURI).href + `');
+		}
+	}
 }
 `);
 				} else {
 					makeCascading(document.head, 'background-image', `
-body basis-layer, body.blur major > sub-major > major-post > post > sub-post > backdrop-container > blurred-filter {
-	--background-image: unset;
+@layer basis {
+	@layer backdrop-before {
+		body basis-layer, body.blur major > sub-major > major-post > post > sub-post > backdrop-container > blurred-filter {
+			--background-image: unset;
+		}
+	}
 }
 `);
 				}
@@ -753,7 +768,7 @@ body basis-layer, body.blur major > sub-major > major-post > post > sub-post > b
 		});
 		await suspend();
 		/* post */
-		conductMarker();
+		conveyMajorToPosts();
 		forAllTag('post').map((value) => {
 			return new Post(value);
 		}).filter((value) => {
