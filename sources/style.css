@@ -526,18 +526,22 @@
 				border-top-right-radius: inherit;
 			}
 			post > sub-post > post-content /* -> */ {
+				margin-top: -20px;
 				flex-grow: 1;
+			}
+			post.tiny > sub-post > post-content {
+				margin-top: -15px;
 			}
 			body.blur post > sub-post > post-content {
 				border-bottom-left-radius: inherit;
 				border-bottom-right-radius: inherit;
 			}
 			post > sub-post > post-content > post-content-container /* -> */ {
-				padding: 0px 40px 20px 40px;
+				padding: 20px 40px;
 				overflow-x: auto;
 			}
 			post.tiny > sub-post > post-content > post-content-container {
-				padding: 0px 30px 15px 30px;
+				padding: 15px 30px;
 			}
 			post > sub-post > post-content > post-content-container.no-content {
 				padding: 0px;
