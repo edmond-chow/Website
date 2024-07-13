@@ -239,7 +239,7 @@
 			this.postLeaderAdvanceNode = switchIf(matched, head.get(':scope > sub-post > post-leader > post-leader-advance'));
 			this.postLeaderOrderNode = switchIf(matched, head.get(':scope > sub-post > post-leader > post-leader-section > post-leader-order'));
 			this.postLeaderTitleNode = switchIf(matched, head.get(':scope > sub-post > post-leader > post-leader-section > post-leader-title'));
-			this.postContentContainerNode = switchIf(matched, head.get(':scope > sub-post > post-content > post-content-container'));
+			this.postContentSubstanceNode = switchIf(matched, head.get(':scope > sub-post > post-content > post-content-substance'));
 			this.completed = isCompleted(this);
 			makeFrozen(this, true);
 		}
@@ -552,7 +552,7 @@
 						postValue.postNode.classList.remove('tiny');
 					}
 					markedPostNodes.push(postValue.postNode);
-					subPostConducting(postValue.postContentContainerNode, subOrderString + '.', postLayer + 1);
+					subPostConducting(postValue.postContentSubstanceNode, subOrderString + '.', postLayer + 1);
 				});
 			};
 			subPostConducting(majorValue.majorPostNode, '', 0);
@@ -601,8 +601,8 @@
 			switchBottom('post > sub-post > post-leader', 'post-leader-advance');
 			switchBottom('post > sub-post > post-leader > post-leader-section', 'post-leader-order');
 			switchBottom('post > sub-post > post-leader > post-leader-section', 'post-leader-title');
-			insertSurround('post > sub-post > post-content', 'post-content-container');
-			switchBottom('post > sub-post > post-content', 'post-content-container');
+			insertSurround('post > sub-post > post-content', 'post-content-substance');
+			switchBottom('post > sub-post > post-content', 'post-content-substance');
 			conveyMajorToPosts();
 			forAllTag('post').map((value) => {
 				return new Post(value);
@@ -615,7 +615,7 @@
 				}
 				/* transferring 'inner-class'-list for the 'post's */
 				if (value.postNode.hasAttribute('inner-class')) {
-					value.postContentContainerNode.setAttribute('class', value.postNode.getAttribute('inner-class'));
+					value.postContentSubstanceNode.setAttribute('class', value.postNode.getAttribute('inner-class'));
 				}
 				/* ordering and hashing for the 'post's */
 				let orderString = '{index}';
@@ -631,10 +631,10 @@
 				value.postLeaderOrderNode.innerText = '#' + orderString;
 				value.scrollIntoNode.id = orderString;
 				/* dragging to the bottom for the 'post's */
-				let subPostNode = value.postContentContainerNode.getAll(':scope > post');
-				value.postContentContainerNode.append(...subPostNode);
+				let subPostNode = value.postContentSubstanceNode.getAll(':scope > post');
+				value.postContentSubstanceNode.append(...subPostNode);
 				/* transferring for the 'post > sub-post > post-leader > post-leader-advance's */
-				let advanceChildNode = value.postContentContainerNode.getAll(':scope > advance > *');
+				let advanceChildNode = value.postContentSubstanceNode.getAll(':scope > advance > *');
 				value.postLeaderAdvanceNode.prepend(...advanceChildNode);
 			});
 		}
@@ -786,11 +786,11 @@
 			} else {
 				value.postLeaderAdvanceNode.classList.add('no-content');
 			}
-			/* '.no-content' for the 'post > sub-post > post-content > post-content-container's */
-			if (hasSubstance(value.postContentContainerNode)) {
-				value.postContentContainerNode.classList.remove('no-content');
+			/* '.no-content' for the 'post > sub-post > post-content > post-content-substance's */
+			if (hasSubstance(value.postContentSubstanceNode)) {
+				value.postContentSubstanceNode.classList.remove('no-content');
 			} else {
-				value.postContentContainerNode.classList.add('no-content');
+				value.postContentSubstanceNode.classList.add('no-content');
 			}
 			/* '.has-only-post' for the 'post > sub-post > post-content's */
 			let hasOnlyPost = (parentNode) => {
@@ -810,10 +810,10 @@
 					}
 				});
 			};
-			if (hasOnlyPost(value.postContentContainerNode)) {
-				value.postContentContainerNode.classList.add('has-only-post');
+			if (hasOnlyPost(value.postContentSubstanceNode)) {
+				value.postContentSubstanceNode.classList.add('has-only-post');
 			} else {
-				value.postContentContainerNode.classList.remove('has-only-post');
+				value.postContentSubstanceNode.classList.remove('has-only-post');
 			}
 			/* '.non-blur' for the 'post's */
 			if (value.postNode.hasAttribute('marker')) {
