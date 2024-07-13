@@ -485,6 +485,7 @@
 				position: relative;
 				display: flex;
 				border: 1px solid transparent;
+				height: 100%;
 				flex-flow: column;
 			}
 			post > sub-post:before {
