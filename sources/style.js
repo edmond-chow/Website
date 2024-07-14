@@ -793,8 +793,8 @@
 				value.postContentSubstanceNode.classList.add('no-content');
 			}
 			/* '.has-only-post' for the 'post > sub-post > post-content's */
-			let hasOnlyPost = (parentNode) => {
-				return Array.from(parentNode.childNodes).every((value) => {
+			let hasOnlyPost = (postContentSubstanceNode) => {
+				return Array.from(postContentSubstanceNode.childNodes).every((value) => {
 					if (value.nodeName == '#comment') {
 						return true;
 					} else if (value.nodeName == '#text' && value.wholeText.removeSpace() == '') {
@@ -811,9 +811,9 @@
 				});
 			};
 			if (hasOnlyPost(value.postContentSubstanceNode)) {
-				value.postContentSubstanceNode.classList.add('has-only-post');
+				value.postContentNode.classList.add('has-only-post');
 			} else {
-				value.postContentSubstanceNode.classList.remove('has-only-post');
+				value.postContentNode.classList.remove('has-only-post');
 			}
 			/* '.non-blur' for the 'post's */
 			if (value.postNode.hasAttribute('marker')) {

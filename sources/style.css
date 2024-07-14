@@ -256,10 +256,6 @@
 			}
 			/* post */
 			@supports selector(::-webkit-scrollbar) {
-				body.blur post > sub-post > post-content > post-content-substance::-webkit-scrollbar-track:horizontal {
-					border-bottom-left-radius: 5px;
-					border-bottom-right-radius: 5px;
-				}
 				post > sub-post > post-content > post-content-substance::-webkit-scrollbar-thumb {
 					background-color: #4CAF50;
 					border: 4px solid transparent;
@@ -606,10 +602,12 @@
 			}
 			post > sub-post > post-content /* -> */ {
 				overflow: hidden;
-				margin-top: -16px;
 				flex-grow: 1;
 			}
-			post.tiny > sub-post > post-content {
+			post > sub-post > post-content.has-only-post {
+				margin-top: -16px;
+			}
+			post.tiny > sub-post > post-content.has-only-post {
 				margin-top: -12px;
 			}
 			body.blur post > sub-post > post-content {
@@ -617,18 +615,23 @@
 				border-bottom-right-radius: inherit;
 			}
 			post > sub-post > post-content > post-content-substance /* -> */ {
-				padding: 16px 40px 20px;
-				overflow: auto hidden;
+				overflow: auto;
+				padding: 0px 40px 20px;
+				box-sizing: border-box;
+				height: 100%;
 			}
 			post.tiny > sub-post > post-content > post-content-substance {
-				padding: 12px 30px 15px;
+				padding: 0px 30px 15px;
+			}
+			post > sub-post > post-content.has-only-post > post-content-substance {
+				overflow: auto hidden;
+				padding-top: 16px;
+			}
+			post.tiny > sub-post > post-content.has-only-post > post-content-substance {
+				padding-top: 12px;
 			}
 			post > sub-post > post-content > post-content-substance.no-content {
-				padding-top: 0px;
-			}
-			body.blur post > sub-post > post-content > post-content-substance {
-				border-bottom-left-radius: inherit;
-				border-bottom-right-radius: inherit;
+				padding-bottom: 0px;
 			}
 			post > sub-post > scroll-into /* -> */ {
 				position: relative;
@@ -893,12 +896,6 @@
 			post > sub-post > post-content > post-content-substance:not(:first-of-type) {
 				display: none;
 			}
-			post > sub-post > post-content > post-content-substance:not(.has-only-post) > post:first-of-type {
-				padding-top: 20px;
-			}
-			post.tiny > sub-post > post-content > post-content-substance:not(.has-only-post) > post:first-of-type {
-				padding-top: 15px;
-			}
 			post > sub-post > scroll-into:not(:first-of-type) {
 				display: none;
 			}
@@ -918,6 +915,12 @@
 			/* post */
 			post > sub-post > post-leader > post-leader-advance > :not(button.advance, dropdown.has-single-button) {
 				display: none;
+			}
+			post > sub-post > post-content:not(.has-only-post) > post-content-substance > post:first-of-type {
+				padding-top: 20px;
+			}
+			post.tiny > sub-post > post-content:not(.has-only-post) > post-content-substance > post:first-of-type {
+				padding-top: 15px;
 			}
 		}
 	}
