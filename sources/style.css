@@ -615,7 +615,7 @@
 				border-bottom-right-radius: inherit;
 			}
 			post > sub-post > post-content > post-content-substance /* -> */ {
-				overflow: auto;
+				overflow: auto hidden;
 				padding: 0px 40px 20px;
 				box-sizing: border-box;
 				height: 100%;
@@ -624,7 +624,6 @@
 				padding: 0px 30px 15px;
 			}
 			post > sub-post > post-content.has-only-post > post-content-substance {
-				overflow: auto hidden;
 				padding-top: 16px;
 			}
 			post.tiny > sub-post > post-content.has-only-post > post-content-substance {
