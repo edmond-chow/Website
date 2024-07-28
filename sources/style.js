@@ -826,6 +826,12 @@
 			value.postLeaderAdvanceNode.getAll(':scope > dropdown').forEach((value) => {
 				value.classList.add('no-text');
 			});
+			/* '.wrap-leader' for the 'post's */
+			if (value.postNode.offsetWidth < 320) {
+				value.postNode.classList.add('wrap-leader');
+			} else {
+				value.postNode.classList.remove('wrap-leader');
+			}
 		});
 		await suspend();
 		/* dropdown */
