@@ -611,21 +611,20 @@
 				if (value.postNode.hasAttribute('headline')) {
 					value.postLeaderTitleNode.innerText = value.postNode.getAttribute('headline');
 				} else {
-					value.postLeaderTitleNode.innerText = '{headline}';
+					value.postLeaderTitleNode.innerText = '';
 				}
 				/* transferring 'inner-class'-list for the 'post's */
 				if (value.postNode.hasAttribute('inner-class')) {
 					value.postContentSubstanceNode.setAttribute('class', value.postNode.getAttribute('inner-class'));
 				}
 				/* ordering and hashing for the 'post's */
-				let orderString = '{index}';
+				let orderString = '';
 				if (value.postNode.hasAttribute('hash-id')) {
 					orderString = value.postNode.getAttribute('hash-id');
 				} else if (value.postNode.hasAttribute('marker')) {
+					orderString = value.postNode.getAttribute('marker');
 					if (value.postNode.hasAttribute('partial-hash-id')) {
-						orderString = value.postNode.getAttribute('marker').substring(0, value.postNode.getAttribute('marker').lastIndexOf('.') + 1) + value.postNode.getAttribute('partial-hash-id');
-					} else {
-						orderString = value.postNode.getAttribute('marker');
+						orderString = orderString.substring(0, orderString.lastIndexOf('.') + 1) + value.postNode.getAttribute('partial-hash-id');
 					}
 				}
 				value.postLeaderOrderNode.innerText = '#' + orderString;
@@ -779,6 +778,16 @@
 				value.postIconNode.style.backgroundImage = `url('` + new URL(value.postNode.getAttribute('icon-src'), document.baseURI).href + `')`;
 			} else {
 				value.postIconNode.style.backgroundImage = 'unset';
+			}
+			/* marking for the 'post > sub-post > post-leader > post-leader-section > post-leader-order's */
+			if (value.postLeaderOrderNode.innerText[0] != '#') {
+				value.postLeaderOrderNode.innerText = '#' + value.postLeaderOrderNode.innerText;
+			}
+			/* '.no-content' for the 'post > sub-post > post-leader > post-leader-section > post-leader-title's */
+			if (hasSubstance(value.postLeaderTitleNode)) {
+				value.postLeaderTitleNode.classList.remove('no-content');
+			} else {
+				value.postLeaderTitleNode.classList.add('no-content');
 			}
 			/* '.no-content' for the 'post > sub-post > post-leader > post-leader-advance's */
 			if (hasSubstance(value.postLeaderAdvanceNode)) {

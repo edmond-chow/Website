@@ -583,6 +583,9 @@
 				font-size: 16px;
 				color: white;
 			}
+			post > sub-post > post-leader > post-leader-section > post-leader-title.no-content {
+				display: none;
+			}
 			body.blur post > sub-post > post-leader > post-leader-section > post-leader-title {
 				color: rgba(0, 0, 0, 0.5);
 			}
@@ -922,7 +925,19 @@
 				display: none;
 			}
 			/* post */
+			post > sub-post > post-leader > post-leader-section > post-leader-order > * {
+				display: none;
+			}
+			post > sub-post > post-leader > post-leader-section > post-leader-title > * {
+				display: none;
+			}
 			post > sub-post > post-leader > post-leader-advance > :not(button.advance, dropdown.has-single-button) {
+				display: none;
+			}
+			post > sub-post > post-leader > post-leader-advance > button.advance > * {
+				display: none;
+			}
+			post > sub-post > post-leader > post-leader-advance > dropdown.has-single-button > button.advance > * {
 				display: none;
 			}
 			post > sub-post > post-content:not(.has-only-post) > post-content-substance > post:first-of-type {
@@ -930,6 +945,13 @@
 			}
 			post.tiny > sub-post > post-content:not(.has-only-post) > post-content-substance > post:first-of-type {
 				padding-top: 15px;
+			}
+			/* dropdown */
+			dropdown:hover > inner-padding > * {
+				display: none;
+			}
+			dropdown:hover > outer-margin > * {
+				display: none;
 			}
 		}
 	}
