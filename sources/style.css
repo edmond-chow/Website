@@ -535,10 +535,12 @@
 				flex-wrap: wrap;
 				justify-content: flex-end;
 				align-content: flex-start;
-				padding-left: 20px;
+				padding: 0px 16px;
+				gap: 0px 16px;
 			}
 			post.tiny > sub-post > post-leader {
-				padding-left: 15px;
+				padding: 0px 12px;
+				gap: 0px 12px;
 			}
 			body.blur post > sub-post > post-leader {
 				border-top-left-radius: inherit;
@@ -546,22 +548,22 @@
 			}
 			post > sub-post > post-leader > post-leader-section /* -> */ {
 				display: inline-flex;
-				flex-basis: 60%;
+				justify-content: flex-start;
 				flex-grow: 1;
+				flex-basis: 60%;
+				padding: 20px 24px;
 				box-sizing: border-box;
-				padding: 20px;
-				gap: 40px;
+				gap: 6px 40px;
 			}
 			post.tiny > sub-post > post-leader > post-leader-section {
-				padding: 15px;
-				gap: 30px;
+				padding: 15px 18px;
+				gap: 6px 30px;
 			}
 			post.wrap-leader > sub-post > post-leader > post-leader-section {
 				flex-basis: 100%;
 				padding-bottom: 0px;
 			}
 			post > sub-post > post-leader > post-leader-section > post-leader-order /* -> */ {
-				display: inline-block;
 				line-height: 21px;
 				min-height: 21px;
 				max-width: 80px;
@@ -576,29 +578,28 @@
 				color: rgba(0, 0, 0, 0.5);
 			}
 			post > sub-post > post-leader > post-leader-section > post-leader-title /* -> */ {
-				display: inline-flex;
 				line-height: 21px;
 				min-height: 21px;
 				font-size: 16px;
 				color: white;
-				flex-grow: 1;
 			}
 			body.blur post > sub-post > post-leader > post-leader-section > post-leader-title {
 				color: rgba(0, 0, 0, 0.5);
 			}
 			post > sub-post > post-leader > post-leader-advance /* -> */ {
 				display: inline-flex;
-				flex-basis: 40%;
 				flex-wrap: wrap;
 				justify-content: flex-end;
 				align-content: flex-start;
-				padding: 16px 16px 16px 20px;
+				flex-basis: calc(40% - 16px);
+				padding: 16px 0px;
 				min-height: 36px;
 				box-sizing: border-box;
 				gap: 6px;
 			}
 			post.tiny > sub-post > post-leader > post-leader-advance {
-				padding: 12px 12px 12px 15px;
+				flex-basis: calc(40% - 12px);
+				padding: 12px 0px;
 			}
 			post.wrap-leader > sub-post > post-leader > post-leader-advance {
 				flex-basis: 100%;
