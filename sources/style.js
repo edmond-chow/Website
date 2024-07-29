@@ -512,6 +512,7 @@
 		document.dispatchEvent(eventScrollIntoView);
 	};
 	let conveyMajorToPosts = () => {
+		let inlinedMajorNodes = forAll('body > top + major, body > major:not(.no-menu)');
 		let markedPostNodes = [];
 		forAllTag('major').map((value) => {
 			return new Major(value);
@@ -519,6 +520,7 @@
 			return value.completed;
 		}).forEach((majorValue) => {
 			let shouldTinyPosts = majorValue.majorNode.classList.contains('tiny');
+			let shouldAdjustPosts = inlinedMajorNodes.length > 0;
 			let markerReversed = [];
 			if (majorValue.majorNode.hasAttribute('marker-reversed')) {
 				markerReversed = majorValue.majorNode.getAttribute('marker-reversed').split(' ').map((value) => {
@@ -551,6 +553,11 @@
 					} else {
 						postValue.postNode.classList.remove('tiny');
 					}
+					if (shouldAdjustPosts) {
+						postValue.postNode.classList.add('adjust');
+					} else {
+						postValue.postNode.classList.remove('adjust');
+					}
 					markedPostNodes.push(postValue.postNode);
 					subPostConducting(postValue.postContentSubstanceNode, subOrderString + '.', postLayer + 1);
 				});
@@ -566,6 +573,7 @@
 		}).forEach((postValue) => {
 			postValue.postNode.removeAttribute('marker');
 			postValue.postNode.classList.remove('tiny');
+			postValue.postNode.classList.remove('adjust');
 		});
 	};
 	let structuredTag = async () => {
