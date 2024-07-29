@@ -512,7 +512,6 @@
 		document.dispatchEvent(eventScrollIntoView);
 	};
 	let conveyMajorToPosts = () => {
-		let inlinedMajorNodes = forAll('body > top + major, body > major:not(.no-menu)');
 		let markedPostNodes = [];
 		forAllTag('major').map((value) => {
 			return new Major(value);
