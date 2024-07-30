@@ -519,25 +519,23 @@
 			return value.completed;
 		}).forEach((majorValue) => {
 			let shouldTinyPosts = majorValue.majorNode.classList.contains('tiny');
-			let shouldAdjustPosts = false;
-			let container = majorValue.majorNode;
-			while (true) {
-				let value = new Major(container);
-				if (value.completed) {
-					if (!value.majorNode.classList.contains('no-menu') && isScrollable(value.subMajorNode)) {
-						shouldAdjustPosts = true;
-						break;
+			let shouldAdjustPosts = (() => {
+				let container = majorValue.majorNode;
+				while (container != null) {
+					let value = new Major(container);
+					if (value.completed) {
+						if (!value.majorNode.classList.contains('no-menu') && isScrollable(value.subMajorNode)) {
+							return true;
+						}
+						container = getScrollable(container);
+					} else if (container == document.body && container.has(':scope > top + major')) {
+						return true;
+					} else {
+						container = container.parentElement;
 					}
-					container = getScrollable(container);
-				} else if (container == document.body && container.has(':scope > top + major')) {
-					shouldAdjustPosts = true;
-					break;
-				} else if (container.hasParentNode()) {
-					container = container.parentElement;
-				} else {
-					break;
 				}
-			}
+				return false;
+			})();
 			let markerReversed = [];
 			if (majorValue.majorNode.hasAttribute('marker-reversed')) {
 				markerReversed = majorValue.majorNode.getAttribute('marker-reversed').split(' ').map((value) => {
