@@ -23,58 +23,46 @@
  */
 (async () => {
 	/* { binder } */
-	let makeDescriptor = (value, enumerable = true) => {
-		return { value: value, writable: false, enumerable: enumerable, configurable: false };
-	};
-	let makeObject = (object, extensible, constantize) => {
-		let names = Object.getOwnPropertyNames(object);
-		if (object instanceof Function) {
-			names = names.filter((name) => {
-				return name != 'arguments' && name != 'caller';
-			});
-		}
-		names.forEach((name) => {
-			let descriptor = Object.getOwnPropertyDescriptor(object, name);
-			if (constantize && descriptor.hasOwnProperty('value')) {
-				descriptor.writable = false;
+	let constant = { writable: false, enumerable: true, configurable: false };
+	let transcendent = { writable: false, enumerable: false, configurable: false };
+	let lockScope = (scope, extensible, constantize) => {
+		Object.getOwnPropertyNames(scope).forEach((name) => {
+			let descriptor = Object.getOwnPropertyDescriptor(scope, name);
+			if (descriptor.configurable) {
+				if (constantize && descriptor.hasOwnProperty('value')) {
+					descriptor.writable = false;
+				}
+				descriptor.configurable = false;
+				Object.defineProperty(scope, name, descriptor);
 			}
-			descriptor.configurable = false;
-			Object.defineProperty(object, name, descriptor);
 		});
 		if (!extensible) {
-			Object.preventExtensions(object);
+			Object.preventExtensions(scope);
 		}
-		return object;
-	};
-	let makeSealed = (object, extensible = false) => {
-		return makeObject(object, extensible, false);
-	};
-	let makeFrozen = (object, extensible = false) => {
-		return makeObject(object, extensible, true);
 	};
 	Array.prototype.bindTo = function bindTo(scope, sealed = true, protoize = false) {
-		this.filter((value) => {
-			return value instanceof Function;
-		}).forEach((value) => {
-			Object.defineProperty(scope, value['name'], makeDescriptor(value, true));
-			Object.defineProperty(value, 'name', makeDescriptor(value['name'], false));
-			Object.defineProperty(value, 'length', makeDescriptor(value['length'], false));
-			if (value.hasOwnProperty('prototype')) {
-				let prototype = value['prototype'];
-				Object.defineProperty(value, 'prototype', makeDescriptor(prototype, false));
-				Object.defineProperty(prototype, 'constructor', makeDescriptor(value, false));
-				makeFrozen(prototype, !protoize);
+		this.filter((type) => {
+			return type instanceof Function;
+		}).forEach((type) => {
+			scope[type.name] = type;
+			Object.defineProperty(scope, type.name, constant);
+			Object.defineProperty(type, 'name', transcendent);
+			Object.defineProperty(type, 'length', transcendent);
+			if (type.hasOwnProperty('prototype')) {
+				Object.defineProperty(type, 'prototype', transcendent);
+				Object.defineProperty(type.prototype, 'constructor', transcendent);
+				lockScope(type.prototype, !protoize, true);
 			}
-			makeSealed(value, sealed);
+			lockScope(type, !sealed, false);
 		});
 	};
 	[Array.prototype.bindTo].bindTo(Array.prototype);
-	[makeDescriptor, makeSealed, makeFrozen].bindTo(window);
+	[lockScope].bindTo(window);
 	/* { reflection } */
 	class Nullable {
 		constructor(type) {
 			this.type = type;
-			makeFrozen(this, true);
+			lockScope(this, true, true);
 		}
 	};
 	[Nullable].bindTo(window);
@@ -210,7 +198,7 @@
 			let matched = isMatched(head, 'top');
 			this.topNode = switchIf(matched, head);
 			this.completed = isCompleted(this);
-			makeFrozen(this, true);
+			lockScope(this, true, true);
 		}
 	};
 	class Major {
@@ -222,7 +210,7 @@
 			this.majorMenuNode = switchIf(matched, head.get(':scope > major-menu'));
 			this.majorPostNode = switchIf(matched, head.get(':scope > sub-major > major-post'));
 			this.completed = isCompleted(this);
-			makeFrozen(this, true);
+			lockScope(this, true, true);
 		}
 	};
 	class Post {
@@ -241,7 +229,7 @@
 			this.postLeaderTitleNode = switchIf(matched, head.get(':scope > sub-post > post-leader > post-leader-section > post-leader-title'));
 			this.postContentSubstanceNode = switchIf(matched, head.get(':scope > sub-post > post-content > post-content-substance'));
 			this.completed = isCompleted(this);
-			makeFrozen(this, true);
+			lockScope(this, true, true);
 		}
 	};
 	class Dropdown {
@@ -253,7 +241,7 @@
 			this.dropdownContentNode = switchIf(matched, head.get(':scope > dropdown-content'));
 			this.outerMarginNode = switchIf(matched, head.get(':scope > outer-margin'));
 			this.completed = isCompleted(this);
-			makeFrozen(this, true);
+			lockScope(this, true, true);
 		}
 	};
 	class Button {
@@ -262,7 +250,7 @@
 			let matched = isMatched(head, 'button');
 			this.buttonNode = switchIf(matched, head);
 			this.completed = isCompleted(this);
-			makeFrozen(this, true);
+			lockScope(this, true, true);
 		}
 	};
 	hardFreeze(window, [Top, Major, Post, Dropdown, Button], false);
